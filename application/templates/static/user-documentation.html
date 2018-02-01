@@ -1,9 +1,8 @@
-<%include file="../snippets/head.mako" />
-
-<%include file="../snippets/header.mako" />
+{% include "../snippets/head.html" %}
+{% include "../snippets/header.html" %}
 
 <div id="goals-page" class="container">
-	<%include file="../snippets/docs-menu.mako"/>
+	{% include "../snippets/docs-menu.html" %}
 	<div class="page-intro-section">
 			<h2 class="intro-header dark-blue">Datafields and definitions</h2>
 	</div>
@@ -21,7 +20,7 @@
 	</section>
 
 	<hr/>
-	
+
 	<section class="page-content">
 		<h2 class="section-header dark-blue">More information about workshops and networks</h2>
 		<div class="columns">
@@ -32,13 +31,13 @@
 			<div>
 				<h3>Makerspaces</h3>
 			<p>There are few clear distinctions between makerspaces and hackerspaces, but generally makerspaces focus more on education and tinkering than social/technological activism—they often embrace open-source and democratic ideals, but don’t tend to be as politically engaged as hackerspaces. Schools, governments, and corporations tend to favor makerspaces with more traditional, hierarchical governance structures. MAKE popularized the concept with their Maker Faires across the USA back in the early 2000s, and today makerspaces have spread worldwide. Here’s <a href="http://makezine.com/2013/05/22/the-difference-between-hackerspaces-makerspaces-techshops-and-fablabs/">some history and more details on these distinctions</a> from the founder of a Boston makerspace. For those interested in further academic research, you can read <a href="http://peerproduction.net/issues/issue-2/peer-reviewed-papers/hacklabs-and-hackerspaces/">maxigas’s comprehensive genealogical history of hacklabs and hackerspaces</a>, and <a href="https://docs.google.com/document/d/1yRyWCpd1IpTuyM7ck6xWOvAzbqNmo9B1vKRbOu_-MeE/edit">we’ve got an exhaustive compilation of links on the topic.</a></p>
- 		
+
 			</div>
 			<div>
 				<h3>Fab Labs</h3>
-				<p>The Fab Lab network is a verified community of creative spaces that all agree to the Fab Charter and contain a certain minimum set of digital fabrication capabilities (machines like laser cutters and 3D printers). Any new space can apply to join the network for free if you <a href="http://www.fabfoundation.org/fab-labs/fab-lab-criteria/">comply with these basic requirements</a>. The Fab Labs started in 2001 as the requisite “community outreach” portion of a research grant to build the Star Trek Replicator, given to the <a href="http://cba.mit.edu/">MIT Center for Bits and Atoms</a> director Dr. Neil Gershenfeld. He had to find some way to share his research, so he created a publicly accessible workshop in which community members could “make almost anything,” <a href="http://www.ted.com/talks/neil_gershenfeld_on_fab_labs?language=en">as described in his TED talk</a>.</p> 
+				<p>The Fab Lab network is a verified community of creative spaces that all agree to the Fab Charter and contain a certain minimum set of digital fabrication capabilities (machines like laser cutters and 3D printers). Any new space can apply to join the network for free if you <a href="http://www.fabfoundation.org/fab-labs/fab-lab-criteria/">comply with these basic requirements</a>. The Fab Labs started in 2001 as the requisite “community outreach” portion of a research grant to build the Star Trek Replicator, given to the <a href="http://cba.mit.edu/">MIT Center for Bits and Atoms</a> director Dr. Neil Gershenfeld. He had to find some way to share his research, so he created a publicly accessible workshop in which community members could “make almost anything,” <a href="http://www.ted.com/talks/neil_gershenfeld_on_fab_labs?language=en">as described in his TED talk</a>.</p>
 				<p>Today there are nearly 1000 Fab Labs around the world, many of which are part of universities, research institutions, and government programs. They’ve got their own online Academy of courses, and you can watch <a href="http://archive.fabacademy.org/archives/2017/master/lectures/index.html">this year’s How to Make Almost Anything lectures for free</a>. Fab Labs tend to have more structured programs and be better-networked than other spaces, since they’re all part of one global community.</p>
-			
+
 			</div>
 			<div>
 				<h3>Appropriate Technology Workshops</h3>
@@ -49,4 +48,4 @@
 
 </div>
 
-<%include file="../snippets/footer.mako" />
+{% include "../snippets/footer.html" %}

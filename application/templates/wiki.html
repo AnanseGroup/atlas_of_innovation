@@ -1,7 +1,6 @@
 <%! import random %>
-
-<%include file="snippets/head.mako" />
-<%include file="snippets/header.mako" />
+{% include "snippets/head.html" %}
+{% include "snippets/header.html" %}
 
 <div class="container wiki-content source-sans">
 	<div class="columns two columns-wide">
@@ -45,15 +44,14 @@
 					<a href="#_" class="see-all">See All</a>
 				</div>
 				<ul class="wiki-list">
-				% for service in ("Agriculture","Appropriate Technology","Biology","Design","Education","Food","Materials","Media","Politics","Science","Youth"):
-	
-				<a href="/uifunc/wikilist/theme/${service}"><li>${service}<!--span class="count pink">(${random.randrange(1,350)})</span--></li>
+					% for service in ("Agriculture","Appropriate Technology","Biology","Design","Education","Food","Materials","Media","Politics","Science","Youth"):
+						<a href="/uifunc/wikilist/theme/${service}"><li>${service}<!--span class="count pink">(${random.randrange(1,350)})</span--></li>
 					% endfor
 				</ul>
 			</div>
 		</div>
 	</div>
 </div>
-<script type='text/javascript' src="static/js/wiki.js"></script>
+<script src="{% static 'js/wiki.js' %}"></script>
 
-<%include file="snippets/footer.mako" />
+{% include "snippets/footer.html" %}
