@@ -1,0 +1,9 @@
+<div id="wiki-filter-bar" class="source-sans">
+	<h4 class="filter-title">Filter by:</h4>
+	<ul class="filter-menu">
+		% for filterType in ("Residences", "Host", "Type", "Network Affiliation"):
+			<li class="filter-type"><a href="#_" class="filter-button">${filterType}<span class="filter-plus">+</span></a></li>
+		% endfor
+	</ul>
+	<a href="#" class="clear-filters">Clear all</a>
+</div>
