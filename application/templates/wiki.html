@@ -1,4 +1,4 @@
-<%! import random %>
+{% load static %}
 {% include "snippets/head.html" %}
 {% include "snippets/header.html" %}
 
@@ -18,9 +18,9 @@
 					<a href="#_" class="see-all">See All</a>
 				</div>
 				<ul class="wiki-list">
-					% for country in countries:
-						<a href="/uifunc/wikilist/country/${country}"<li>${country}<!--span class="count pink">(${random.randrange(1,100)})</span--></li></a> <br/>
-					% endfor
+					{% for country in countries %}
+						<a href="/uifunc/wikilist/country/{{country}}"<li>{{country}}<!--span class="count pink">(${random.randrange(1,100)})</span--></li></a> <br/>
+					{% endfor %}
 				</ul>
 			</div>
 		</div>
@@ -44,9 +44,9 @@
 					<a href="#_" class="see-all">See All</a>
 				</div>
 				<ul class="wiki-list">
-					% for service in ("Agriculture","Appropriate Technology","Biology","Design","Education","Food","Materials","Media","Politics","Science","Youth"):
-						<a href="/uifunc/wikilist/theme/${service}"><li>${service}<!--span class="count pink">(${random.randrange(1,350)})</span--></li>
-					% endfor
+					{% for x in themes %}
+						<a href="/uifunc/wikilist/theme/{{x}}"><li>{{x}}<!--span class="count pink">(${random.randrange(1,350)})</span--></li>
+					{% endfor %}
 				</ul>
 			</div>
 		</div>
