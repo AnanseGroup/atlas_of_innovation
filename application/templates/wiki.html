@@ -44,8 +44,8 @@
 					<a href="#_" class="see-all">See All</a>
 				</div>
 				<ul class="wiki-list">
-					{% for x in themes %}
-						<a href="/uifunc/wikilist/theme/{{x}}"><li>{{x}}<!--span class="count pink">(${random.randrange(1,350)})</span--></li>
+					{% for theme in themes %}
+						<a href="/uifunc/wikilist/theme/{{theme}}"><li>{{theme}}<!--span class="count pink">(${random.randrange(1,350)})</span--></li>
 					{% endfor %}
 				</ul>
 			</div>
