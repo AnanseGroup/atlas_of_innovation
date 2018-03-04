@@ -7,3 +7,4 @@ from .menus import Breakfast. This one-line syntax -- from .<file> import
 <model_class> -- must be used in __init__.py for every model declared in .py
 files inside the models folder.
 """
+from .spaces import Space
