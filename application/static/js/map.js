@@ -32,7 +32,7 @@ var allTypes = {
 };
 
 var myIcon = L.icon({
-    iconUrl: 'static/images/pin1.png',
+    iconUrl: '/static/images/pin1.png',
     iconSize: [23, 30],
     iconAnchor: [11, 29],
     popupAnchor: [0, -30]
@@ -41,7 +41,7 @@ var myIcon = L.icon({
 var allMarkers = [];
 var noLocation = [];
 
-$.get('api/getAllSpaces',{cache: true}, function(spaces) {
+$.get('/api/getAllSpaces',{cache: true}, function(spaces) {
 	buildMarkers(spaces);
 });
 
@@ -75,7 +75,7 @@ function createPopup(space) {
 	var popupText = "<div class='popup-header'>";
 	popupText += "<h3>"+space.name+"</h3>";
 	popupText += "</div>";
-	popupText += "<p><img src='static/images/pin2.png' height='14' class='popup-location-text'><span style='margin-bottom:3px;position:fixed;'>";
+	popupText += "<p><img src='/static/images/pin2.png' height='14' class='popup-location-text'><span style='margin-bottom:3px;position:fixed;'>";
 
 	if (space.city != "") {
 		popupText += space.city+", "+space.country;
