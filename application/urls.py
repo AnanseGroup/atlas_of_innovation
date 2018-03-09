@@ -3,7 +3,7 @@ from . import views
 
 urlpatterns = [
     # None of these pages require access to the database
-    path('', views.home, name='home'),
+    path('', views.map, name='home'),
     path('map/', views.map, name='map'),
     path('about/', views.about, name='about'),
     path('about/goals/', views.goals, name='goals'),
