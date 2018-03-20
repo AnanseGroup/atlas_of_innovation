@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields import JSONField
+from django.forms import ModelForm
+from django.urls import reverse
 
 
 class Space(models.Model):
@@ -33,5 +35,12 @@ class Space(models.Model):
     last_updated = models.DateTimeField(null=False, auto_now=True)
     data_credit = models.CharField(max_length=100, null=True, blank=True)
 
-    other_data = JSONField()
+    other_data = JSONField(null=True, blank=True)
 
+    def get_absolute_url(self):
+        return reverse('space_profile', kwargs={'id':self.id})
+
+class SpaceForm(ModelForm):
+    class Meta:
+        model = Space
+        fields = '__all__'

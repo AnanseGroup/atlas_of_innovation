@@ -13,8 +13,10 @@ urlpatterns = [
     path('contribute/', views.contribute, name='contribute'),
 
     # Individual spaces
-    path('space_page/<int:id>/', views.space_page, name='space_page'),
-    path('edit_space/<int:id>/', views.edit_space, name='edit_space'),
+    path('space/<int:id>/', views.space_profile, name='space_profile'),
+    path('space/<int:pk>/edit/', views.edit_space, name='edit_space'),
+    path('space/add/', views.add_space, name='create_space'),
+    path('space/<int:pk>/delete/', views.delete_space, name='delete_space'),
 
     # API-based CRUD
     path('api/get_space/<int:id>/', views.get_space, name='get_space'),
@@ -24,4 +26,4 @@ urlpatterns = [
 
     # Bulk actions
     path('api/getAllSpaces/', views.all_innovation_spaces, name='all_innovation_spaces'),
-    ]
+]

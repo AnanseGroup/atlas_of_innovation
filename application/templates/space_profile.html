@@ -30,7 +30,7 @@
   {% if website %}
   <a id="wWebsite" href="{{space.website}}" target="_blank">{{space.website}}</a>
   {% else %}
-  <a id="wWebsite" href="{%url 'space_page' id %}" target="_blank">Link to Atlas Profile</a>
+  <a id="wWebsite" href="{%url 'space_profile' id %}" target="_blank">Link to Atlas Profile</a>
   {% endif %}
 
   <p id="w-space-short-description">{{space.short_description| default_if_none:""}}</p>

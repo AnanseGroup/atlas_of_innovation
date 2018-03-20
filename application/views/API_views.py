@@ -15,7 +15,7 @@ def get_space(request, id):
     serializer = SpaceSerializer(space)
     return JsonResponse(serializer.data)
 
-def change_space(request):
+def edit_space(request):
     return render(
         request,
         'static/thanks.mako',

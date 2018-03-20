@@ -2,18 +2,34 @@
 # touch the database directly
 from django.shortcuts import render
 from application.models import Space
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
 
-def space_page(request, id):
+def space_profile(request, id):
     space = Space.objects.get(id=id)
     return render(
         request,
-        'spacepage.html',
+        'space_profile.html',
         {"id": id, "space":space}
     )
 
-def edit_space(request):
-    return render(
-        request,
-        'formedit.mako',
-    )
+class SpaceCreate(CreateView):
+    model = Space
+    template_name = 'space_edit.html'
+    fields = '__all__'
 
+add_space = SpaceCreate.as_view()
+
+class SpaceEdit(UpdateView):
+    model = Space
+    template_name = 'space_edit.html'
+    fields = '__all__'
+
+edit_space = SpaceEdit.as_view()
+
+class SpaceDelete(DeleteView):
+    model = Space
+    success_url = reverse_lazy("map")
+    template_name = "space_confirm_delete.html"
+
+delete_space = SpaceDelete.as_view()
