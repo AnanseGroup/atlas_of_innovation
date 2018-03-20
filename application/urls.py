@@ -13,13 +13,15 @@ urlpatterns = [
     path('contribute/', views.contribute, name='contribute'),
 
     # Individual spaces
-    path('wikipage/<str:id>/', views.spacepage, name='spacepage'),
-    path('editspace/<str:id>/', views.editspace, name='editspace'),
-    path('api/getSpace/<str:id>/', views.getspace, name='getspace'),
-    path('api/changeSpace/<str:id>/', views.change_space, name='change_space'),
+    path('space_page/<int:id>/', views.space_page, name='space_page'),
+    path('edit_space/<int:id>/', views.edit_space, name='edit_space'),
+
+    # API-based CRUD
+    path('api/get_space/<int:id>/', views.get_space, name='get_space'),
+    path('api/edit_space/<int:id>/', views.edit_space, name='edit_space'),
+    path('api/add_space/<int:id>/', views.add_space, name='add_space'),
+    path('api/delete_space/<int:id>/', views.delete_space, name='delete_space'),
 
     # Bulk actions
     path('api/getAllSpaces/', views.all_innovation_spaces, name='all_innovation_spaces'),
-    path('uifunc/wikilist/<str:param>/<str:value>/', views.singlefilterlist, name='singlefilterlist'),
-    path('searchapi/findSpacesByType/', views.singlefilter, name='singlefilter'),
-]
+    ]

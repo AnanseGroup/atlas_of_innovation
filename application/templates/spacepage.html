@@ -1,0 +1,100 @@
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville|Source+Sans+Pro:200,300,300i,400,600" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="/static/css/wikipage.css"/>
+  <link rel="stylesheet" type="text/css" href="/static/css/stylesheet.css"/>
+  <script type='text/javascript' src='/js/wiki.js'></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+</head>
+    {% include "snippets/header.html" %}
+ 
+ <div class="wBlockHeader">
+  <div class="w-top-navigation">
+    <a href="/edit_space/{{id}}" >
+    	<img src="/static/images/edit_button.png" id="w-top-navigation-bar-edit-button">
+    </a>
+<!--a href="/" >
+    	<img src="/assets/flag_button.png" id="w-top-navigation-bar-flag-incorrect-button">
+    </a-->
+<!--/div>
+ <div class="wnavigation-bar">
+    <a href="/" id="wnavigation-bar-article-button" class="navigation-bar-button selected-navigation-bar-button">Article</a>
+    <a href="/" id="wnavigation-bar-talk-button" class="navigation-bar-button">Talk</a>
+    <a href="/" id="wnavigation-bar-document-revision-button" class="navigation-bar-button">Revision</a>
+	</div>
+</div-->
+ <div class="wBlockOne">
+  <!-- <img src="/static/images/Placeholder_logo.png" alt="#" style="height: 100px; display:block;margin-left: auto;margin-right: auto;"> -->
+  <p ></p>
+  <h2 id="wTitle">{{space.name}}</h2>
+  {% if website %}
+  <a id="wWebsite" href="{{space.website}}" target="_blank">{{space.website}}</a>
+  {% else %}
+  <a id="wWebsite" href="{%url 'space_page' id %}" target="_blank">Link to Atlas Profile</a>
+  {% endif %}
+
+  <p id="w-space-short-description">{{space.short_description| default_if_none:""}}</p>
+  <p id="w-space-description">{{space.description | default_if_none:""}}</p>
+  <hr />
+</div>
+
+<div class="wBlockFour">
+  <div class="rowAlign">
+    <div class="rowTextBlock">
+      <p id="wBlockSubTitle">Contact Info</p>
+      <a href= "mailto:{{space.email}}">{{space.email | default_if_none:""}}</a> 
+      {{space.phone | default_if_none:""}} 
+      <br/>
+      <div id="w-address">  
+       <p><img src="/static/images/pin_map.png" alt="" style="width:8px;height: 10px;">{{space.address1 | default_if_none:""}}</p> 
+       {{space.address2 | default_if_none:""}}
+       {% if space.city %}
+          {{space.city}}, 
+       {% endif %}
+       {% if space.province %}
+          {{space.province}}, 
+       {% endif %}
+       {{space.country | default_if_none:""}}
+       {{space.postal_code | default_if_none:""}}
+       {{space.additional_directions | default_if_none:""}}
+     </div> 
+   </div>
+
+<!-- No special display, but with some data cleaning, so it's not in the
+generic dictionary datafield.  -->
+
+        {% if space.date_founded %}
+         <div class="rowTextBlock">
+          <p id="wBlockSubTitle">date_founded</p>
+          <p id="textBlock">{{space.date_founded}}</p>
+        </div>
+        {% endif %}
+        {% if space.residencies %}
+         <div class="rowTextBlock">
+          <p id="wBlockSubTitle">residencies</p>
+          <p id="textBlock">{{space.residencies}}</p>
+        </div>
+        {% endif %}
+        {% if space.data_credit %}
+         <div class="rowTextBlock">
+          <p id="wBlockSubTitle">data_credit</p>
+          <p id="textBlock">{{space.data_credit}}</p>
+        </div>
+        {% endif %}
+
+<!-- There is a generic datafield where people can put whatever data they
+want. We display it here.   -->
+
+   {% for field, value in space.other_data.items %}
+      {% if value %}
+         <div class="rowTextBlock">
+          <p id="wBlockSubTitle">{{field}}</p>
+          <p id="textBlock">{{value}}</p>
+        </div>
+      {% endif %}
+   {% endfor %}
+</div>
+
+<p>{{space.last_updated}}</p>
+</body>
+</html>
