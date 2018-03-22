@@ -19,10 +19,10 @@ urlpatterns = [
     path('space/<int:pk>/delete/', views.delete_space, name='delete_space'),
 
     # API-based CRUD
-    path('api/get_space/<int:id>/', views.get_space, name='get_space'),
-    path('api/edit_space/<int:id>/', views.edit_space, name='edit_space'),
-    path('api/add_space/<int:id>/', views.add_space, name='add_space'),
-    path('api/delete_space/<int:id>/', views.delete_space, name='delete_space'),
+    path('api/space/<int:id>/', views.get_space, name='get_space'),
+    path('api/space/<int:id>/edit/', views.edit_space, name='edit_space'),
+    path('api/space/add/', views.add_space, name='add_space'),
+    path('api/space/<int:id>/delete/', views.delete_space, name='delete_space'),
 
     # Bulk actions
     path('api/getAllSpaces/', views.all_innovation_spaces, name='all_innovation_spaces'),
