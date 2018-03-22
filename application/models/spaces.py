@@ -14,6 +14,7 @@ class Space(models.Model):
     # google: https://developers.google.com/maps/documentation/geocoding/start
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
+    # address fields inspired by https://help.wufoo.com/articles/en_US/kb/Address
     address1 = models.CharField(max_length=255, null=True, blank=True)
     address2 = models.CharField(max_length=150, null=True, blank=True)
     city = models.CharField(max_length=150, null=True, blank=True)
