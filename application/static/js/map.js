@@ -75,36 +75,28 @@ function createPopup(space) {
 	var popupText = "<div class='popup-header'>";
 	popupText += "<h3>"+space.name+"</h3>";
 	popupText += "</div>";
-	popupText += "<p><img src='/static/images/pin2.png' height='14' class='popup-location-text'><span style='margin-bottom:3px;position:fixed;'>";
+	popupText += "<p><img src='/static/images/pin2.png' \
+						  height='14' \
+						  class='popup-location-text'>\
+				   <span style='margin-bottom:3px;position:fixed;'>";
 
-	if (space.city != "") {
+	if (space.city) {
 		popupText += space.city+", "+space.country;
  	} else {
 		popupText += space.country;
  	}
-	popupText += "</span></p>"+"<a class='popup-website-link' target='_blank' href='http://"+space.website+"'>"+space.website+"</a><div class='popup-type-container'>"; 
+ 	popupText += "</span></p>"
+ 	if (space.website){
+		popupText += "<a class='popup-website-link' \
+						target='_blank' \
+						href='http://"+space.website+"'>"
+						+ space.website + "</a>"; 
+	} 
 
-	// var types = [];
-	// if (space.types.trim() != "" && types.indexOf(space.types) === -1) {
-	// 	types = space.types.split(",");
-	// } else {
-	// 	console.log("No type: " + space.name);
-	// }
-
-	// for (k=0; k<types.length; k++) {
-	// 	var color = "";
-	// 	var type = types[k];
-	// 	type = allTypes[type.toLowerCase().trim()]
-	// 	if (type) {
-	// 			popupText += "<div class='popup-type-color " + type.toLowerCase().replace(" ", "-")+"-color" + "'></div><span class='popup-type-text'>"
-	// 						+type+"</span>";
-	// 	} else {
-	// 		console.log("Unknown type: "+types[k]);
-	// 	}
- // 	}
-	popupText += "</div>";
-	popupText += "<p>"+space.short_description+"</p>";			
-	// popupText += "<a href='"+space.wiki+"'><img src='static/images/space_page.png' class='space-page-button'></a>";
+	if (space.short_description){
+		popupText += "<p>"+space.short_description+"</p>";
+	}			
+	popupText += "<a href='/space/"+space.id+"'><img src='/static/images/space_page.png' class='space-page-button'></a>";
 
 	return popupText;
  }

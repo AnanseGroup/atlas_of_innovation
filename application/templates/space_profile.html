@@ -10,7 +10,7 @@
  
  <div class="wBlockHeader">
   <div class="w-top-navigation">
-    <a href="/edit_space/{{id}}" >
+    <a href="{% url 'edit_space' space.id %}" >
     	<img src="/static/images/edit_button.png" id="w-top-navigation-bar-edit-button">
     </a>
 <!--a href="/" >
@@ -27,10 +27,10 @@
   <!-- <img src="/static/images/Placeholder_logo.png" alt="#" style="height: 100px; display:block;margin-left: auto;margin-right: auto;"> -->
   <p ></p>
   <h2 id="wTitle">{{space.name}}</h2>
-  {% if website %}
+  {% if space.website %}
   <a id="wWebsite" href="{{space.website}}" target="_blank">{{space.website}}</a>
   {% else %}
-  <a id="wWebsite" href="{%url 'space_profile' id %}" target="_blank">Link to Atlas Profile</a>
+  <a id="wWebsite" href="{%url 'space_profile' space.id %}" target="_blank">Link to Atlas Profile</a>
   {% endif %}
 
   <p id="w-space-short-description">{{space.short_description| default_if_none:""}}</p>

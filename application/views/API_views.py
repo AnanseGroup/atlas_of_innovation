@@ -15,22 +15,6 @@ def get_space(request, id):
     serializer = SpaceSerializer(space)
     return JsonResponse(serializer.data)
 
-def edit_space(request):
-    return render(
-        request,
-        'static/thanks.mako',
-    )
-
-def add_space(request):
-    return render(
-        request,
-        'static/thanks.mako',
-    )
-
-def delete_space(request):
-    return render(
-        request,
-        'static/thanks.mako',
-    )
-
-
+# We're not going to allow for programmatic creation/editing/deleting for fear
+# that there will be spambots that take advantage of those features and ruin
+# the database
