@@ -19,33 +19,7 @@
 				</div>
 				<ul class="wiki-list">
 					{% for country in countries %}
-						<a href="/uifunc/wikilist/country/{{country}}"<li>{{country}}<!--span class="count pink">(${random.randrange(1,100)})</span--></li></a> <br/>
-					{% endfor %}
-				</ul>
-			</div>
-		</div>
-		<!--div>
-			<div class="column-content">
-				<div class="column-header">
-					<h3>Services</h3>
-					<a href="#_" class="see-all">See All</a>
-				</div>
-				<ul class="wiki-list">
-					% for service in ("Coworking", "Hosting", "Events", "Selling and trading", "Incubating", "Startups", "Educating", "Vocational training", "Mentoring", "Donating", "Transferring", "Technology", "Co-living", "Repairing", "Manufacturing"):
-						<li>${service} <span class="count pink">(${random.randrange(1,350)})</span></li>
-					% endfor
-				</ul>
-			</div>
-		</div-->
-		<div>
-			<div class="column-content">
-				<div class="column-header">
-					<h3>Themes</h3>
-					<a href="#_" class="see-all">See All</a>
-				</div>
-				<ul class="wiki-list">
-					{% for theme in themes %}
-						<a href="/uifunc/wikilist/theme/{{theme}}"><li>{{theme}}<!--span class="count pink">(${random.randrange(1,350)})</span--></li>
+						<a href="{% url 'list_spaces' %}?country={{country}}"<li>{{country}}<!--span class="count pink">(${random.randrange(1,100)})</span--></li></a> <br/>
 					{% endfor %}
 				</ul>
 			</div>

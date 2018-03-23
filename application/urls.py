@@ -9,7 +9,7 @@ urlpatterns = [
     path('about/goals/', views.goals, name='goals'),
     path('docs/', views.userDocs, name='userDocs'),
     path('docs/developer/', views.devDocs, name='devDocs'),
-    path('wiki/', views.wiki, name='wiki'),
+    path('filter/', views.wiki, name='wiki'),
     path('contribute/', views.contribute, name='contribute'),
 
     # Individual spaces
@@ -18,8 +18,11 @@ urlpatterns = [
     path('space/add/', views.add_space, name='create_space'),
     path('space/<int:pk>/delete/', views.delete_space, name='delete_space'),
 
-    # API-based CRUD (all of the above, but in JSON)
+    path('space/filter/', views.list_spaces, name='list_spaces'),
+
+    # REST API
     path('api/space/<int:id>/', views.get_space, name='get_space'),
+    path('api/space/filter/', views.filter_spaces, name='filter_spaces'),
 
     # Bulk actions
     path('api/getAllSpaces/', views.all_innovation_spaces, name='all_innovation_spaces'),

@@ -1,9 +1,14 @@
-var type_filter = document.getElementById('filter_type').value;
-var name_filter = document.getElementById('filter_name').value;
+var url_string = window.location.href
+var url = new URL(url_string);
+var country = url.searchParams.get("country");
+
+var type_filter = "country";
+var name_filter = country;
 var name_f = name_filter.split('+').join(' ');
-$.get('/searchapi/findSpacesByType',{'type':type_filter,'name':(name_f)}, function(spaces) {
+$.get('/api/space/filter/?country='+country, function(spaces) {
 	if(spaces!="")
 	{
+		console.log(spaces)
 	 $('#wiki-list-content').prepend(
  $('<span>').attr('class', 'tab').append("All the spaces of "+type_filter+" "+name_f+" are:" ));
    for (i=0; i<spaces.length; ++i) {	

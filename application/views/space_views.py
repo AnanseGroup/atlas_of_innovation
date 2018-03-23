@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.base import TemplateView
 from django.urls import reverse_lazy
 
 from django.shortcuts import render, redirect
@@ -37,3 +38,7 @@ class SpaceDelete(DeleteView):
     template_name = "space_confirm_delete.html"
 
 delete_space = SpaceDelete.as_view()
+
+class ListSpaces(TemplateView):
+    template_name = "list.html"
+list_spaces = ListSpaces.as_view()

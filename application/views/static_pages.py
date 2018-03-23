@@ -48,8 +48,7 @@ def wiki(request):
         c_list=[]
         for p in data['country']:
             c_list.append(p['countryName'])
-    themes = ['Agriculture', 'Appropriate Technology', 'Biology', 'Design', 'Education', 'Food', 'Materials', 'Media', 'Politics', 'Science', 'Youth']
-    context = {'countries':c_list, 'themes':themes}
+    context = {'countries':c_list}
     return render(
         request,
         'wiki.html',
