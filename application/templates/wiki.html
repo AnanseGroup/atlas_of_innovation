@@ -18,8 +18,8 @@
 					<a href="#_" class="see-all">See All</a>
 				</div>
 				<ul class="wiki-list">
-					{% for country in countries %}
-						<a href="{% url 'list_spaces' %}?country={{country}}"<li>{{country}}<!--span class="count pink">(${random.randrange(1,100)})</span--></li></a> <br/>
+					{% for code, name in countries %}
+						<a href="{% url 'list_spaces' %}?country={{code}}"<li>{{name}}<!--span class="count pink">(${random.randrange(1,100)})</span--></li></a> <br/>
 					{% endfor %}
 				</ul>
 			</div>

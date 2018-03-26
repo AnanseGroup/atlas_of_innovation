@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.core.exceptions import ValidationError
 from application.models import Space
+from django_countries import countries
 import csv
 
 class Command(BaseCommand):
@@ -11,15 +12,37 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         data_filename = options['data_file_csv']
+
+        reverse_country_list = {name:code for code, name in countries}
+
         with open(data_filename) as csvfile:
             reader = csv.DictReader(csvfile)
             # replace empty strings with None
-            complete_spaces = [{key: value if not value == '' else None for key, value in row.items()} for row in reader]
+            complete_spaces = [{key: value if not value == '' else None \
+                                for key, value in row.items()} for row in reader]
             processed_spaces = []
             for space in complete_spaces:
                 processed_space = {}
+
+                # Fields that can be named other things
+                processed_space['address1'] = space.pop('street_address', None)
+                space_country_name = space.pop('country', None)
+                if space_country_name in reverse_country_list:
+                    processed_space['country'] = reverse_country_list[space_country_name]
+                else: # if the country name isn't in the dictionary:
+                    # put the country name back in the unvalidated space
+                    space['country'] = space_country_name
+                processed_space['website'] = space.pop('primary_website', None)
+                processed_space['province'] = space.pop('state', None)
+                if processed_space['province']:
+                    processed_space['province'] = processed_space['province'].strip()
+                processed_space['data_credit'] = space.pop('source', None)
+
+                # Fields that share the name of where they are going
                 for field in Space._meta.get_fields():
-                    processed_space[field.name]=space.pop(field.name, None)
+                    if not field.name in processed_space:
+                        processed_space[field.name]=space.pop(field.name, None)
+                space = {field:space[field] for field in space if space[field]}
                 processed_space['other_data'] = space
                 processed_spaces.append(processed_space)
             spaces = [Space(**space) for space in processed_spaces]

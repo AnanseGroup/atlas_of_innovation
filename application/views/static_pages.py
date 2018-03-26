@@ -1,5 +1,6 @@
 import json
 from django.shortcuts import render
+from django_countries import countries
 
 
 def map(request):
@@ -43,12 +44,8 @@ def devDocs(request):
 
 
 def wiki(request):
-    with open('countries.json') as json_file:    
-        data = json.load(json_file)
-        c_list=[]
-        for p in data['country']:
-            c_list.append(p['countryName'])
-    context = {'countries':c_list}
+    print(countries)
+    context = {'countries':countries}
     return render(
         request,
         'wiki.html',

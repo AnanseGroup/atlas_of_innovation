@@ -15,7 +15,7 @@ $.get('/api/space/filter/?country='+country, function(spaces) {
 		var spaceitem = spaces[i];
 		$('#wiki-list-content ul').append(
     $('<li>').append(
-        $('<a>').attr('href',"/wikipage/"+spaceitem['primary_id']).append(
+        $('<a>').attr('href',"/space/"+spaceitem['id']).append(
             $('<span>').attr('class', 'tab').append(spaceitem["name"])
 ))); 
 		}

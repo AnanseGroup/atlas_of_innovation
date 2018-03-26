@@ -3,6 +3,7 @@ from django.contrib.postgres.fields import JSONField
 from django.forms import ModelForm
 from django.urls import reverse
 from captcha.fields import ReCaptchaField
+from django_countries.fields import CountryField
 from django import forms
 
 
@@ -25,7 +26,7 @@ class Space(models.Model):
     # documentation (https://github.com/SmileyChris/django-countries/) says
     # how to return the full country name.  This would be nice to do, because
     # it will make it easier to consume for unsophisticated consumers.
-    country = models.CharField(max_length=20, null=True, blank=True)
+    country = CountryField(max_length=20, null=True, blank=True)
     additional_directions = models.CharField(max_length=255, null=True, blank=True)
     # public_trans = EnumField(PublicTransAccess, null=True, blank=True)
 
