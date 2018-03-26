@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from application.models import Space
 from django_countries import countries
 import csv
+import datetime
 
 class Command(BaseCommand):
     help = 'Closes the specified poll for voting'
@@ -29,6 +30,9 @@ class Command(BaseCommand):
                 space_country_name = space.pop('country', None)
                 if space_country_name in reverse_country_list:
                     processed_space['country'] = reverse_country_list[space_country_name]
+                elif space_country_name == "United States":
+                    processed_space['country'] = \
+                                    reverse_country_list['United States of America']
                 else: # if the country name isn't in the dictionary:
                     # put the country name back in the unvalidated space
                     space['country'] = space_country_name
@@ -37,6 +41,15 @@ class Command(BaseCommand):
                 if processed_space['province']:
                     processed_space['province'] = processed_space['province'].strip()
                 processed_space['data_credit'] = space.pop('source', None)
+                processed_space['date_founded'] = space.pop('date_of_founding', None)
+                if processed_space['date_founded']:
+                    try:
+                        month, day, year = processed_space['date_founded'].split("/")
+                        processed_space['date_founded'] = datetime.date(month=int(month), \
+                                                                    day=int(day), \
+                                                                    year=int(year))
+                    except ValueError:
+                        pass
 
                 # Fields that share the name of where they are going
                 for field in Space._meta.get_fields():
