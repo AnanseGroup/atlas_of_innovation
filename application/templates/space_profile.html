@@ -54,7 +54,7 @@
        {% if space.province %}
           {{space.province}}, 
        {% endif %}
-       {{space.country | default_if_none:""}}
+       {{space.country.name | default_if_none:""}}
        {{space.postal_code | default_if_none:""}}
        {{space.additional_directions | default_if_none:""}}
      </div> 
