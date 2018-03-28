@@ -21,27 +21,57 @@ class Space(models.Model):
     city = models.CharField(max_length=150, null=True, blank=True)
     province = models.CharField(max_length=255, null=True, blank=True)
     postal_code = models.CharField(max_length=15, null=True, blank=True)
-    # There is some stuff we have to do with Django REST Framework,
-    # https://github.com/SmileyChris/django-countries/ The last point in the
-    # documentation (https://github.com/SmileyChris/django-countries/) says
-    # how to return the full country name.  This would be nice to do, because
-    # it will make it easier to consume for unsophisticated consumers.
     country = CountryField(max_length=20, null=True, blank=True)
     additional_directions = models.CharField(max_length=255, null=True, blank=True)
     # public_trans = EnumField(PublicTransAccess, null=True, blank=True)
 
     email = models.EmailField(null=True, blank=True)
-    # internationalize with https://github.com/stefanfoulis/django-
-    # phonenumber-field/tree/master/phonenumber_field
-    phone = models.CharField(max_length=15, null=True, blank=True)
+    phone = models.CharField(max_length=128, null=True, blank=True)
 
     website = models.CharField(max_length=255, null=True, blank=True)
-    date_founded = models.DateField(null=True, blank=True)
+    date_opened = models.DateField(null=True, blank=True)
+    date_closed = models.DateField(null=True, blank=True)
     short_description = models.CharField(max_length=140, null=True, blank=True)
     description = models.CharField(max_length=500, null=True, blank=True)
-    residencies = models.NullBooleanField(null=True, blank=True)
     last_updated = models.DateTimeField(null=False, auto_now=True)
     data_credit = models.CharField(max_length=100, null=True, blank=True)
+
+    residencies = models.NullBooleanField(null=True, blank=True)
+    membership = models.IntegerField(null=True, blank=True)
+    users = models.IntegerField(null=True, blank=True)
+    size_in_sq_meters = models.IntegerField(null=True, blank=True)
+    wheelchair_accessibility = models.NullBooleanField(null=True, blank=True)
+    business_model = models.CharField(max_length=1000, null=True, blank=True)
+    
+
+    IN_OPERATION = 'OP'
+    PLANNED = 'PL'
+    CLOSED = 'CL'
+    UNKNOWN = 'UK'
+    STATUS_OPTIONS = (
+        (IN_OPERATION, 'In Operation'),
+        (PLANNED, 'Planned'),
+        (CLOSED, 'Closed'),
+        (UNKNOWN, 'Unknown Operation Status'),
+    )
+    operational_status = models.CharField(
+        max_length=2,
+        choices=STATUS_OPTIONS,
+        default=UNKNOWN,
+    )
+
+    VERIFIED = 'VE'
+    FLAGGED = 'FL'
+    VALIDATION_OPTIONS = (
+        (VERIFIED, 'Verified'),
+        (FLAGGED, 'Flagged'),
+        (UNKNOWN, 'Unknown Data Status'),
+    )
+    validation_status = models.CharField(
+        max_length=2,
+        choices=VALIDATION_OPTIONS,
+        default=UNKNOWN,
+    )
 
     other_data = JSONField(null=True, blank=True)
 

@@ -41,7 +41,7 @@ class Command(BaseCommand):
                 if processed_space['province']:
                     processed_space['province'] = processed_space['province'].strip()
                 processed_space['data_credit'] = space.pop('source', None)
-                processed_space['date_founded'] = space.pop('date_of_founding', None)
+                processed_space['date_opened'] = space.pop('date_of_founding', None)
                 if processed_space['date_founded']:
                     try:
                         month, day, year = processed_space['date_founded'].split("/")

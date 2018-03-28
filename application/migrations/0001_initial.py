@@ -7,8 +7,6 @@ import django_countries.fields
 
 class Migration(migrations.Migration):
 
-    replaces = [('application', '0001_squashed_0006_auto_20180326_1421'), ('application', '0002_auto_20180326_1755'), ('application', '0003_auto_20180326_1800'), ('application', '0004_auto_20180326_1813')]
-
     initial = True
 
     dependencies = [
