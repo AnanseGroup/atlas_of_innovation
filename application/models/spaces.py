@@ -4,6 +4,7 @@ from django.forms import ModelForm
 from django.urls import reverse
 from captcha.fields import ReCaptchaField
 from django_countries.fields import CountryField
+from multiselectfield import MultiSelectField
 from django import forms
 
 
@@ -72,6 +73,53 @@ class Space(models.Model):
         choices=VALIDATION_OPTIONS,
         default=UNKNOWN,
     )
+
+    PRIVATE_SECTOR = "PRI"
+    NON_PROFIT = "NON"
+    EDU_PRIMARY = "EP"
+    EDU_SECONDARY = "ES"
+    EDU_UNI = "EU"
+    EDU_VOCATIONAL = "EV"
+    GOV_LOCAL = "GL"
+    GOV_PROV = "GP"
+    GOV_NATIONAL = "GN"
+    UNINCORPORATED = "UN"
+    LIBRARY = "LIB"
+    OWNERSHIP_OPTIONS = (
+        (PRIVATE_SECTOR, "Private Sector: a for-profit business, " + \
+            "corporation, or startup"),
+        (NON_PROFIT, "Non-Profit: a registered non-profit organization"),
+        (EDU_PRIMARY, "Educational: primary school"),
+        (EDU_SECONDARY, "Educational: secondary school"),
+        (EDU_UNI, "Educational: university"),
+        (EDU_VOCATIONAL, "Educational: vocational school"),
+        (GOV_LOCAL, "Government: Local or Municipal"),
+        (GOV_PROV, "Government: Provincial"),
+        (GOV_NATIONAL, "Government: National"),
+        (UNINCORPORATED, "Unincorporated"),
+        (LIBRARY, "Library"),
+    )
+
+    ownership_type = MultiSelectField(choices=OWNERSHIP_OPTIONS, 
+                                        null=True, blank=True)
+
+
+    COOPERATIVE = "COOP"
+    DEMOCRATIC = "DEM"
+    COMPANY = "COM"
+    SATELLITE = "SAT"
+    
+    GOVERNANCE_OPTIONS = (
+        (COOPERATIVE, "Cooperative: members make decisions collectively"),
+        (DEMOCRATIC, "Democratic: member-elected board makes decisions"),
+        (COMPANY, "Company: founders and/or hired staff make decisions"),
+        (SATELLITE, "Satellite: decisions are made by an external organization"),
+    )
+
+    governance_type = MultiSelectField(choices=GOVERNANCE_OPTIONS, 
+                                        null=True, blank=True)
+
+
 
     other_data = JSONField(null=True, blank=True)
 
