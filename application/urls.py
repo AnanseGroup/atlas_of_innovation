@@ -16,7 +16,6 @@ urlpatterns = [
     path('space/<int:id>/', views.space_profile, name='space_profile'),
     path('space/<int:pk>/edit/', views.edit_space, name='edit_space'),
     path('space/add/', views.add_space, name='create_space'),
-    path('space/<int:pk>/delete/', views.delete_space, name='delete_space'),
 
     path('space/filter/', views.list_spaces, name='list_spaces'),
 

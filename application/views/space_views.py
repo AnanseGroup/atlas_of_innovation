@@ -32,13 +32,6 @@ class SpaceEdit(UpdateView):
 
 edit_space = SpaceEdit.as_view()
 
-class SpaceDelete(DeleteView):
-    model = Space
-    success_url = reverse_lazy("map")
-    template_name = "space_confirm_delete.html"
-
-delete_space = SpaceDelete.as_view()
-
 class ListSpaces(TemplateView):
     template_name = "list.html"
 list_spaces = ListSpaces.as_view()
