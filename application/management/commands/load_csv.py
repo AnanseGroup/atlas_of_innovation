@@ -42,14 +42,22 @@ class Command(BaseCommand):
                     processed_space['province'] = processed_space['province'].strip()
                 processed_space['data_credit'] = space.pop('source', None)
                 processed_space['date_opened'] = space.pop('date_of_founding', None)
-                if processed_space['date_founded']:
+                if processed_space['date_opened']:
                     try:
-                        month, day, year = processed_space['date_founded'].split("/")
-                        processed_space['date_founded'] = datetime.date(month=int(month), \
+                        month, day, year = processed_space['date_opened'].split("/")
+                        processed_space['date_opened'] = datetime.date(month=int(month), \
                                                                     day=int(day), \
                                                                     year=int(year))
                     except ValueError:
                         pass
+                activity_level = space.pop('status', None)
+                if activity_level == 'active' or activity_level == 'Active':
+                    processed_space['operational_status'] = "In Operation"
+                elif activity_level == 'planned' or activity_level == 'Planned':
+                    processed_space['operational_status'] = "Planned"
+                elif activity_level == 'inactive':
+                    processed_space['operational_status'] = "Closed"
+                
 
                 # Fields that share the name of where they are going
                 for field in Space._meta.get_fields():

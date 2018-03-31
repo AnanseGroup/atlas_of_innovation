@@ -31,6 +31,16 @@ def filter_spaces(request):
     if 'country' in filter_terms:
         spaces = spaces.filter(country__iexact=filter_terms['country'])
 
+    if 'operational_status' in filter_terms:
+        if filter_terms['operational_status'] == "null":
+            spaces = spaces.filter(operational_status__isnull=True)
+        else:
+            spaces = spaces.filter(operational_status__iexact=\
+                                filter_terms['operational_status'])
+
+    if 'not_closed' in filter_terms:
+        spaces = spaces.exclude(operational_status__iexact="Closed")
+
     serializer = SpaceSerializer(spaces, many=True)
     return JsonResponse(serializer.data, safe=False)
 

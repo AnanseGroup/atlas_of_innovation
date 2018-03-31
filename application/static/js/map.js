@@ -41,7 +41,7 @@ var myIcon = L.icon({
 var allMarkers = [];
 var noLocation = [];
 
-$.get('/api/getAllSpaces',{cache: true}, function(spaces) {
+$.get('/api/space/filter/?not_closed=True',{cache: true}, function(spaces) {
 	buildMarkers(spaces);
 });
 
