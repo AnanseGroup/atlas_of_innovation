@@ -22,6 +22,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'l^o92!g+^lp459xkndhnc620hutn8lb%fueku1n4pxe+2vch1i'
 
+# SECURITY_WARNING: don't use these keys in production 
+RECAPTCHA_PUBLIC_KEY = '6Lf_uiQUAAAAALicrb1JbiITWdIdOTuQzIHnnodJ'
+RECAPTCHA_PRIVATE_KEY = '6Lf_uiQUAAAAABHjt9ryEqxIOPTSMDeEQSrz7O-q'
+NOCAPTCHA = True
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -38,6 +43,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'application.apps.ApplicationConfig',
+    'django_countries',
+    'rest_framework',
+    'captcha'
 ]
 
 MIDDLEWARE = [
@@ -78,12 +86,16 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'atlas',
-        'USER': 'jodi',
+        'USER': 'lyla',
         'PASSWORD': '',
         'HOST': '',
         'PORT': '',
     }
 }
+
+FIXTURE_DIRS = (
+   'application/tests/fixtures/',
+)
 
 
 # Password validation
@@ -123,3 +135,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+

@@ -1,31 +1,37 @@
 from django.shortcuts import render
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.base import TemplateView
+from django.urls import reverse_lazy
 
-def spacepage(request):
+from django.shortcuts import render, redirect
+from django.conf import settings
+from django.contrib import messages
+
+from application.models import Space
+from application.models.spaces import SpaceForm
+
+def space_profile(request, id):
+    space = Space.objects.get(id=id)
     return render(
         request,
-        'wikipage.mako',
+        'space_profile.html',
+        {"id": id, "space":space}
     )
 
-def editspace(request):
-    return render(
-        request,
-        'formedit.mako',
-    )
+class SpaceCreate(CreateView):
+    form_class = SpaceForm
+    model = Space
+    template_name = 'space_edit.html'
 
-def getspace(request):
-    return render(
-        request,
-        'json',
-    )
+add_space = SpaceCreate.as_view()
 
-def change_space(request):
-    return render(
-        request,
-        'static/thanks.mako',
-    )
+class SpaceEdit(UpdateView):
+    form_class = SpaceForm
+    model = Space
+    template_name = 'space_edit.html'
 
-def singlefilterlist(request):
-    return render(
-        request,
-        'list.mako',
-    )
+edit_space = SpaceEdit.as_view()
+
+class ListSpaces(TemplateView):
+    template_name = "list.html"
+list_spaces = ListSpaces.as_view()

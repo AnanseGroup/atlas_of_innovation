@@ -29,45 +29,6 @@
         </div>
     </div>
     <div id="filter-bar">
-        <div id="filters">
-            <ul id="type-filter" class="filter-menu">
-				{% for x in type %}
-                    <li>
-                        <a href="#" class="filter-item" data-filter-group="{{x}}" data-filter-item="{{x}}">
-                            <div class="filter-type-color {{x}}.lower()-color"></div>
-                            {% if x == 'Workshop' %}
-                                Workshops
-                            {% elif x == 'Hub' %}
-                                Hubs
-                            {% elif x == 'Virtual' %}
-                                Virtual Spaces
-                            {% elif x == 'All' %}
-                                All
-                            {% else %}
-                                {{x}} +'s'
-                            {% endif %}
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
-            <ul id="theme-filter" class="filter-menu">
-                {% for y in theme %}
-                    <li>
-                        <span class="filter-type-color agriculture-color"></span>
-						<a href="#" class="filter-item" data-filter-group="{{y}}" data-filter-item="{{y}}">{{y}}</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
-        <div class="filter-buttons">
-			{% for z in filter %}
-                <a href="/" id="filter-bar-type-button" class="filter-bar-button" data-filter="{{z}}.lower()">
-                    <span class="filter-button-text">{{z}}</span>
-                    <img src="{% static 'images/plus.png' %}" class="filter-button-plus">
-                    <img src="{% static 'images/minus.png' %}" class="filter-button-minus">
-                </a>
-            {% endfor %}
-        </div>
         <a id="sponsor-giz" href="http://www.bmz.de/en/index.html" target="_blank">
 			<img src="{% static 'images/giz-logo.png' %}"/>
         </a>
