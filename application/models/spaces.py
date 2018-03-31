@@ -48,30 +48,27 @@ class Space(models.Model):
     IN_OPERATION = 'OP'
     PLANNED = 'PL'
     CLOSED = 'CL'
-    UNKNOWN = 'UK'
     STATUS_OPTIONS = (
         (IN_OPERATION, 'In Operation'),
         (PLANNED, 'Planned'),
         (CLOSED, 'Closed'),
-        (UNKNOWN, 'Unknown Operation Status'),
     )
     operational_status = models.CharField(
         max_length=2,
         choices=STATUS_OPTIONS,
-        default=UNKNOWN,
+        null=True, blank=True,
     )
 
     VERIFIED = 'VE'
     FLAGGED = 'FL'
     VALIDATION_OPTIONS = (
-        (VERIFIED, 'Verified'),
+        (VERIFIED, 'Verified Address and Operation Status'),
         (FLAGGED, 'Flagged'),
-        (UNKNOWN, 'Unknown Data Status'),
     )
     validation_status = models.CharField(
         max_length=2,
         choices=VALIDATION_OPTIONS,
-        default=UNKNOWN,
+        null=True, blank=True,
     )
 
     PRIVATE_SECTOR = "PRI"
@@ -118,8 +115,6 @@ class Space(models.Model):
 
     governance_type = MultiSelectField(choices=GOVERNANCE_OPTIONS, 
                                         null=True, blank=True)
-
-
 
     other_data = JSONField(null=True, blank=True)
 

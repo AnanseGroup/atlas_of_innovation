@@ -44,7 +44,6 @@ def devDocs(request):
 
 
 def wiki(request):
-    print(countries)
     context = {'countries':countries}
     return render(
         request,

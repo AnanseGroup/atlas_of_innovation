@@ -30,10 +30,12 @@
   {% if space.website %}
   <a id="wWebsite" href="{{space.website}}" target="_blank">{{space.website}}</a>
   {% else %}
-  <a id="wWebsite" href="{%url 'space_profile' space.id %}" target="_blank">Link to Atlas Profile</a>
+  <a id="wWebsite" href="{%url 'space_profile' space.id %}" target="_blank">
+  Link to Atlas Profile</a>
   {% endif %}
 
-  <p id="w-space-short-description">{{space.short_description| default_if_none:""}}</p>
+  <p id="w-space-short-description">
+  {{space.short_description| default_if_none:""}}</p>
   <p id="w-space-description">{{space.description | default_if_none:""}}</p>
   <hr />
 </div>
@@ -63,22 +65,79 @@
 <!-- No special display, but with some data cleaning, so it's not in the
 generic dictionary datafield.  -->
 
-        {% if space.date_founded %}
+        {% if space.date_opened %}
          <div class="rowTextBlock">
-          <p id="wBlockSubTitle">date_founded</p>
+          <p id="wBlockSubTitle">date_opened</p>
           <p id="textBlock">{{space.date_founded}}</p>
         </div>
         {% endif %}
-        {% if space.residencies %}
+        {% if space.date_closed %}
          <div class="rowTextBlock">
-          <p id="wBlockSubTitle">residencies</p>
-          <p id="textBlock">{{space.residencies}}</p>
+          <p id="wBlockSubTitle">date_closed</p>
+          <p id="textBlock">{{space.date_closed}}</p>
         </div>
         {% endif %}
+
         {% if space.data_credit %}
          <div class="rowTextBlock">
           <p id="wBlockSubTitle">data_credit</p>
           <p id="textBlock">{{space.data_credit}}</p>
+        </div>
+        {% endif %}
+
+        {% if space.users %}
+         <div class="rowTextBlock">
+          <p id="wBlockSubTitle">users</p>
+          <p id="textBlock">{{space.users}}</p>
+        </div>
+        {% endif %}
+        {% if space.membership %}
+         <div class="rowTextBlock">
+          <p id="wBlockSubTitle">membership</p>
+          <p id="textBlock">{{space.membership}}</p>
+        </div>
+        {% endif %}
+        {% if space.size_in_sq_meters %}
+         <div class="rowTextBlock">
+          <p id="wBlockSubTitle">size_in_sq_meters</p>
+          <p id="textBlock">{{space.size_in_sq_meters}}</p>
+        </div>
+        {% endif %}
+        {% if space.wheelchair_accessibility %}
+         <div class="rowTextBlock">
+          <p id="wBlockSubTitle">wheelchair_accessibility</p>
+          <p id="textBlock">{{space.wheelchair_accessibility}}</p>
+        </div>
+        {% endif %}
+        {% if space.business_model %}
+         <div class="rowTextBlock">
+          <p id="wBlockSubTitle">Access, Cost Structure, and/or Membership model (business_model)</p>
+          <p id="textBlock">{{space.business_model}}</p>
+        </div>
+        {% endif %}
+
+        {% if space.operational_status %}
+         <div class="rowTextBlock">
+          <p id="wBlockSubTitle">operational_status</p>
+          <p id="textBlock">{{space.operational_status}}</p>
+        </div>
+        {% endif %}
+        {% if space.validation_status %}
+         <div class="rowTextBlock">
+          <p id="wBlockSubTitle">validation_status</p>
+          <p id="textBlock">{{space.validation_status}}</p>
+        </div>
+        {% endif %}
+        {% if space.ownership_type %}
+         <div class="rowTextBlock">
+          <p id="wBlockSubTitle">ownership_type</p>
+          <p id="textBlock">{{space.ownership_type}}</p>
+        </div>
+        {% endif %}
+        {% if space.governance_type %}
+         <div class="rowTextBlock">
+          <p id="wBlockSubTitle">governance_type</p>
+          <p id="textBlock">{{space.governance_type}}</p>
         </div>
         {% endif %}
 
