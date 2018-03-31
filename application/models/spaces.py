@@ -46,43 +46,43 @@ class Space(models.Model):
     hours_of_operation = models.CharField(max_length=1000, null=True, blank=True)
     
 
-    IN_OPERATION = 'OP'
-    PLANNED = 'PL'
-    CLOSED = 'CL'
+    IN_OPERATION = 'In Operation'
+    PLANNED = 'Planned'
+    CLOSED = 'Closed'
     STATUS_OPTIONS = (
         (IN_OPERATION, 'In Operation'),
         (PLANNED, 'Planned'),
         (CLOSED, 'Closed'),
     )
     operational_status = models.CharField(
-        max_length=2,
+        max_length=12,
         choices=STATUS_OPTIONS,
         null=True, blank=True,
     )
 
-    VERIFIED = 'VE'
-    FLAGGED = 'FL'
+    VERIFIED = 'Verified'
+    FLAGGED = 'Flagged'
     VALIDATION_OPTIONS = (
         (VERIFIED, 'Verified Address and Operation Status'),
         (FLAGGED, 'Flagged'),
     )
     validation_status = models.CharField(
-        max_length=2,
+        max_length=8,
         choices=VALIDATION_OPTIONS,
         null=True, blank=True,
     )
 
-    PRIVATE_SECTOR = "PRI"
-    NON_PROFIT = "NON"
-    EDU_PRIMARY = "EP"
-    EDU_SECONDARY = "ES"
-    EDU_UNI = "EU"
-    EDU_VOCATIONAL = "EV"
-    GOV_LOCAL = "GL"
-    GOV_PROV = "GP"
-    GOV_NATIONAL = "GN"
-    UNINCORPORATED = "UN"
-    LIBRARY = "LIB"
+    PRIVATE_SECTOR = "Private Sector"
+    NON_PROFIT = "Non-Profit"
+    EDU_PRIMARY = "Primary Education"
+    EDU_SECONDARY = "Secondary Education"
+    EDU_UNI = "University"
+    EDU_VOCATIONAL = "Vocational"
+    GOV_LOCAL = "Local Government"
+    GOV_PROV = "Provincial Government"
+    GOV_NATIONAL = "National Government"
+    UNINCORPORATED = "Unincorporated"
+    LIBRARY = "Library"
     OWNERSHIP_OPTIONS = (
         (PRIVATE_SECTOR, "Private Sector: a for-profit business, " + \
             "corporation, or startup"),
@@ -102,10 +102,10 @@ class Space(models.Model):
                                         null=True, blank=True)
 
 
-    COOPERATIVE = "COOP"
-    DEMOCRATIC = "DEM"
-    COMPANY = "COM"
-    SATELLITE = "SAT"
+    COOPERATIVE = "Cooperative"
+    DEMOCRATIC = "Democratic"
+    COMPANY = "Company"
+    SATELLITE = "Satellite"
     
     GOVERNANCE_OPTIONS = (
         (COOPERATIVE, "Cooperative: members make decisions collectively"),
