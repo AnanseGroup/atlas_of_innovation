@@ -43,6 +43,7 @@ class Space(models.Model):
     size_in_sq_meters = models.IntegerField(null=True, blank=True)
     wheelchair_accessibility = models.NullBooleanField(null=True, blank=True)
     business_model = models.CharField(max_length=1000, null=True, blank=True)
+    hours_of_operation = models.CharField(max_length=1000, null=True, blank=True)
     
 
     IN_OPERATION = 'OP'

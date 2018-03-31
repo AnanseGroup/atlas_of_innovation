@@ -140,6 +140,12 @@ generic dictionary datafield.  -->
           <p id="textBlock">{{space.governance_type}}</p>
         </div>
         {% endif %}
+        {% if space.hours_of_operation %}
+         <div class="rowTextBlock">
+          <p id="wBlockSubTitle">hours_of_operation</p>
+          <p id="textBlock">{{space.hours_of_operation}}</p>
+        </div>
+        {% endif %}
 
 <!-- There is a generic datafield where people can put whatever data they
 want. We display it here.   -->
