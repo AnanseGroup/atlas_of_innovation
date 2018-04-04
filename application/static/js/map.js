@@ -41,7 +41,7 @@ var myIcon = L.icon({
 var allMarkers = [];
 var noLocation = [];
 
-$.get('/api/space/filter/?not_closed=True',{cache: true}, function(spaces) {
+$.get('/api/space/filter/?not_closed=True&fields=latitude,longitude,name,city,country,website,short_description,id',{cache: true}, function(spaces) {
 	buildMarkers(spaces);
 });
 

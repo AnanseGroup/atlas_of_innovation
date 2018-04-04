@@ -41,7 +41,14 @@ def filter_spaces(request):
     if 'not_closed' in filter_terms:
         spaces = spaces.exclude(operational_status__iexact="Closed")
 
-    serializer = SpaceSerializer(spaces, many=True)
+
+    if 'fields' in filter_terms:
+        fields = filter_terms['fields'].split(",")
+    else:
+        fields = None
+
+    serializer = SpaceSerializer(spaces, fields=fields, many=True)
+
     return JsonResponse(serializer.data, safe=False)
 
 # We're not going to allow for programmatic creation/editing/deleting for fear
