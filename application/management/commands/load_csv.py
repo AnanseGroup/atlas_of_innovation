@@ -6,7 +6,7 @@ import csv
 import datetime
 
 class Command(BaseCommand):
-    help = 'Closes the specified poll for voting'
+    help = 'Loads a CSV file into the database.'
 
     def add_arguments(self, parser):
         parser.add_argument('data_file_csv', type=str)
@@ -57,7 +57,7 @@ class Command(BaseCommand):
                     processed_space['operational_status'] = "Planned"
                 elif activity_level == 'inactive':
                     processed_space['operational_status'] = "Closed"
-                
+
 
                 # Fields that share the name of where they are going
                 for field in Space._meta.get_fields():
