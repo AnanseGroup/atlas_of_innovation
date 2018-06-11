@@ -68,10 +68,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'atlas',
-        'USER': 'lyla',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
+        'USER': 'ubuntu',
+        'PASSWORD': 'ubuntu',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
