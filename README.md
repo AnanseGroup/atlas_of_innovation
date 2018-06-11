@@ -33,3 +33,13 @@ Prospective Collaborators:
 - https://github.com/codeisland/makermap
 
 To join us, please email our team at anansegroup@gmail.com
+
+Steps to get ready with the project
+- git clone <url>
+- install vagrant and virtualbox
+- on the project root run *vagrant up*
+- run *vagrant ssh*
+- run *workon atlas*
+- run migrate_atlas
+- run run_atlas
+- That's all, just check your http://localhost:8000 and you are ready.
