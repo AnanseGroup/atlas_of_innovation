@@ -3,7 +3,7 @@
 
 Vagrant.configure("2") do |config|
   config.vm.box = 'ubuntu/xenial64'
-  config.vm.define "prescript"
+  config.vm.define "atlas"
 
   # Port forwarding
   config.vm.network :forwarded_port, guest: 8000, host: 8000, host_ip: "127.0.0.1" # Django
@@ -19,7 +19,7 @@ Vagrant.configure("2") do |config|
 
   # Machine initial provision
   config.vm.provision "shell", privileged: false, run: "once",
-  path: "provision/box_setup.sh",
+  path: "bin/box_setup.sh",
   env: {
     "LC_ALL"   => "en_US.UTF-8",
     "LANG"     => "en_US.UTF-8",
