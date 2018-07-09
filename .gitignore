@@ -1,5 +1,7 @@
 *.pyc
 *__pycache__
+.vagrant
+*.box
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
