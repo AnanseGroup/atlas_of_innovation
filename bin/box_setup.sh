@@ -84,7 +84,8 @@ set_virtual_env(){
     echo "alias migrate_atlas='python manage.py migrate --settings=atlas_of_innovation.settings.development' " >> ~/.bashrc
   
     alias run_atlas='python3 manage.py runserver 0.0.0.0:8000 --settings=atlas_of_innovation.settings.development'
-    alias migrate_atlas='python manage.py migrate --settings=atlas_of_innovation.settings.development'
+    alias migrate_atlas='python3 manage.py migrate --settings=atlas_of_innovation.settings.development'
+    alias load_data='python3 manage.py loaddata initial_database --settings=atlas_of_innovation.settings.development'    
 
     echo "Done"  
  fi  
