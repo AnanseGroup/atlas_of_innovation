@@ -16,7 +16,7 @@ class Command(BaseCommand):
 
         reverse_country_list = {name:code for code, name in countries}
 
-        with open(data_filename) as csvfile:
+        with open(data_filename, encoding="utf-8") as csvfile:
             reader = csv.DictReader(csvfile)
             # replace empty strings with None
             complete_spaces = [{key: value if not value == '' else None \
