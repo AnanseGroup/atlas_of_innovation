@@ -41,5 +41,6 @@ To join us, please email our team at anansegroup@gmail.com
 - run 'vagrant ssh'
 - run 'workon atlas'
 - run 'migrate_atlas'
+- run 'load_data'
 - run 'run_atlas'
 - That's all, just check your http://localhost:8000 and you are ready.
