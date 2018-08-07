@@ -12,8 +12,8 @@ lang_conf(){
     echo -e "\n# Set locale configuration" >> ~/.bashrc
     echo "export LC_ALL=en_US.UTF-8" >> ~/.bashrc
     echo "export LANG=en_US.UTF-8" >> ~/.bashrc
-    echo -e "export LANGUAGE=en_US.UTF-8\n" >> ~/.bashrc    
-  fi      
+    echo -e "export LANGUAGE=en_US.UTF-8\n" >> ~/.bashrc
+  fi
 }
 
 # Postgres installation
@@ -38,35 +38,36 @@ postgres() {
 
     echo " Restarting Postgres server"
     sudo service postgresql restart
-  fi 
+  fi
 }
 
 python_deps() {
   echo "Installing Python dependencies"
   if ! command -v pip3; then
     sudo apt-get install -y python3-pip python3-dev nginx build-essential libffi-dev
-  fi    
+  fi
 }
 
 app_deps() {
   echo "Installing app pip dependencies"
   if ! command -v virtualenv; then
     sudo -H pip3 install -U pip
-    sudo -H pip3 install virtualenv virtualenvwrapper 
-  fi  
+    sudo -H pip3 install virtualenv virtualenvwrapper
+  fi
 }
 
 set_virtual_env(){
-  echo "Setting Virtual enviroment"  
+  echo "Setting Virtual enviroment"
   if [[ ! -d ~/Env ]]; then
     mkdir ~/Env
-  fi 
+  fi
 
   if ! grep -q "export WORKON_HOME=~/Env" ~/.bashrc; then
-    
+
     echo -e "\n# Set environment root directory" >> ~/.bashrc
     sudo echo "export WORKON_HOME=~/Env" >> ~/.bashrc
     sudo echo "export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3" >> ~/.bashrc
+    sudo echo "export DJANGO_SETTINGS_MODULE=atlas_of_innovation.settings.development" >> ~/.bashrc
     sudo echo "source /usr/local/bin/virtualenvwrapper.sh" >> ~/.bashrc
 
     echo "Set configuration for virtual environment variables"
@@ -78,18 +79,18 @@ set_virtual_env(){
     echo "Running project requirements"
     mkvirtualenv -a /vagrant -r /vagrant/requirements.txt atlas
     cd /vagrant
-    
+
     echo "Set alias to run atlas"
     echo "alias run_atlas='python3 manage.py runserver 0.0.0.0:8000 --settings=atlas_of_innovation.settings.development' " >> ~/.bashrc
     echo "alias migrate_atlas='python3 manage.py migrate --settings=atlas_of_innovation.settings.development' " >> ~/.bashrc
-    echo "load_data='python3 manage.py loaddata initial_database --settings=atlas_of_innovation.settings.development " >> ~/.bashrc
-  
+    echo "alias load_data='python3 manage.py loaddata initial_database --settings=atlas_of_innovation.settings.development " >> ~/.bashrc
+
     alias run_atlas='python3 manage.py runserver 0.0.0.0:8000 --settings=atlas_of_innovation.settings.development'
     alias migrate_atlas='python3 manage.py migrate --settings=atlas_of_innovation.settings.development'
-    alias load_data='python3 manage.py loaddata initial_database --settings=atlas_of_innovation.settings.development'    
+    alias load_data='python3 manage.py loaddata initial_database --settings=atlas_of_innovation.settings.development'
 
-    echo "Done"  
- fi  
+    echo "Done"
+ fi
 }
 
 cleanup() {
@@ -101,12 +102,12 @@ finalized(){
 }
 
 setup(){
-  update  
+  update
   lang_conf
   postgres
-  python_deps  
+  python_deps
   app_deps
-  set_virtual_env 
+  set_virtual_env
   finalized
   cleanup
 }

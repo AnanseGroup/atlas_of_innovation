@@ -27,7 +27,7 @@ INSTALLED_APPS = [
     'application.apps.ApplicationConfig',
     'django_countries',
     'rest_framework',
-    'captcha'
+    'captcha',
 ]
 
 MIDDLEWARE = [

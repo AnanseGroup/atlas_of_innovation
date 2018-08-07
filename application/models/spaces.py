@@ -4,7 +4,6 @@ from django.forms import ModelForm
 from django.urls import reverse
 from captcha.fields import ReCaptchaField
 from django_countries.fields import CountryField
-from multiselectfield import MultiSelectField
 from django import forms
 
 
@@ -44,7 +43,6 @@ class Space(models.Model):
     wheelchair_accessibility = models.NullBooleanField(null=True, blank=True)
     business_model = models.CharField(max_length=1000, null=True, blank=True)
     hours_of_operation = models.CharField(max_length=1000, null=True, blank=True)
-    
 
     IN_OPERATION = 'In Operation'
     PLANNED = 'Planned'
@@ -72,50 +70,50 @@ class Space(models.Model):
         null=True, blank=True,
     )
 
-    PRIVATE_SECTOR = "Private Sector"
-    NON_PROFIT = "Non-Profit"
-    EDU_PRIMARY = "Primary Education"
-    EDU_SECONDARY = "Secondary Education"
-    EDU_UNI = "University"
-    EDU_VOCATIONAL = "Vocational"
-    GOV_LOCAL = "Local Government"
-    GOV_PROV = "Provincial Government"
-    GOV_NATIONAL = "National Government"
-    UNINCORPORATED = "Unincorporated"
-    LIBRARY = "Library"
-    OWNERSHIP_OPTIONS = (
-        (PRIVATE_SECTOR, "Private Sector: a for-profit business, " + \
-            "corporation, or startup"),
-        (NON_PROFIT, "Non-Profit: a registered non-profit organization"),
-        (EDU_PRIMARY, "Educational: primary school"),
-        (EDU_SECONDARY, "Educational: secondary school"),
-        (EDU_UNI, "Educational: university"),
-        (EDU_VOCATIONAL, "Educational: vocational school"),
-        (GOV_LOCAL, "Government: Local or Municipal"),
-        (GOV_PROV, "Government: Provincial"),
-        (GOV_NATIONAL, "Government: National"),
-        (UNINCORPORATED, "Unincorporated"),
-        (LIBRARY, "Library"),
-    )
+    # PRIVATE_SECTOR = "Private Sector"
+    # NON_PROFIT = "Non-Profit"
+    # EDU_PRIMARY = "Primary Education"
+    # EDU_SECONDARY = "Secondary Education"
+    # EDU_UNI = "University"
+    # EDU_VOCATIONAL = "Vocational"
+    # GOV_LOCAL = "Local Government"
+    # GOV_PROV = "Provincial Government"
+    # GOV_NATIONAL = "National Government"
+    # UNINCORPORATED = "Unincorporated"
+    # LIBRARY = "Library"
+    # OWNERSHIP_OPTIONS = (
+    #     (PRIVATE_SECTOR, "Private Sector: a for-profit business, " + \
+    #         "corporation, or startup"),
+    #     (NON_PROFIT, "Non-Profit: a registered non-profit organization"),
+    #     (EDU_PRIMARY, "Educational: primary school"),
+    #     (EDU_SECONDARY, "Educational: secondary school"),
+    #     (EDU_UNI, "Educational: university"),
+    #     (EDU_VOCATIONAL, "Educational: vocational school"),
+    #     (GOV_LOCAL, "Government: Local or Municipal"),
+    #     (GOV_PROV, "Government: Provincial"),
+    #     (GOV_NATIONAL, "Government: National"),
+    #     (UNINCORPORATED, "Unincorporated"),
+    #     (LIBRARY, "Library"),
+    # )
 
-    ownership_type = MultiSelectField(choices=OWNERSHIP_OPTIONS, 
-                                        null=True, blank=True)
+    # ownership_type = MultiSelectField(choices=OWNERSHIP_OPTIONS,
+    #                                     null=True, blank=True)
 
 
-    COOPERATIVE = "Cooperative"
-    DEMOCRATIC = "Democratic"
-    COMPANY = "Company"
-    SATELLITE = "Satellite"
-    
-    GOVERNANCE_OPTIONS = (
-        (COOPERATIVE, "Cooperative: members make decisions collectively"),
-        (DEMOCRATIC, "Democratic: member-elected board makes decisions"),
-        (COMPANY, "Company: founders and/or hired staff make decisions"),
-        (SATELLITE, "Satellite: decisions are made by an external organization"),
-    )
+    # COOPERATIVE = "Cooperative"
+    # DEMOCRATIC = "Democratic"
+    # COMPANY = "Company"
+    # SATELLITE = "Satellite"
 
-    governance_type = MultiSelectField(choices=GOVERNANCE_OPTIONS, 
-                                        null=True, blank=True)
+    # GOVERNANCE_OPTIONS = (
+    #     (COOPERATIVE, "Cooperative: members make decisions collectively"),
+    #     (DEMOCRATIC, "Democratic: member-elected board makes decisions"),
+    #     (COMPANY, "Company: founders and/or hired staff make decisions"),
+    #     (SATELLITE, "Satellite: decisions are made by an external organization"),
+    # )
+
+    # governance_type = MultiSelectField(choices=GOVERNANCE_OPTIONS,
+    #                                     null=True, blank=True)
 
     other_data = JSONField(null=True, blank=True)
 
@@ -123,7 +121,7 @@ class Space(models.Model):
         return reverse('space_profile', kwargs={'id':self.id})
 
 class SpaceForm(ModelForm):
-    
+
     captcha = ReCaptchaField()
 
     class Meta:
