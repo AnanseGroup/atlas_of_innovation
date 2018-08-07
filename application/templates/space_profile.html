@@ -7,7 +7,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 </head>
     {% include "snippets/header.html" %}
- 
+
  <div class="wBlockHeader">
   <div class="w-top-navigation">
     <a href="{% url 'edit_space' space.id %}" >
@@ -44,22 +44,22 @@
   <div class="rowAlign">
     <div class="rowTextBlock">
       <p id="wBlockSubTitle">Contact Info</p>
-      <a href= "mailto:{{space.email}}">{{space.email | default_if_none:""}}</a> 
-      {{space.phone | default_if_none:""}} 
+      <a href= "mailto:{{space.email}}">{{space.email | default_if_none:""}}</a>
+      {{space.phone | default_if_none:""}}
       <br/>
-      <div id="w-address">  
-       <p><img src="/static/images/pin_map.png" alt="" style="width:8px;height: 10px;">{{space.address1 | default_if_none:""}}</p> 
+      <div id="w-address">
+       <p><img src="/static/images/pin_map.png" alt="" style="width:8px;height: 10px;">{{space.address1 | default_if_none:""}}</p>
        {{space.address2 | default_if_none:""}}
        {% if space.city %}
-          {{space.city}}, 
+          {{space.city}},
        {% endif %}
        {% if space.province %}
-          {{space.province}}, 
+          {{space.province}},
        {% endif %}
        {{space.country.name | default_if_none:""}}
        {{space.postal_code | default_if_none:""}}
        {{space.additional_directions | default_if_none:""}}
-     </div> 
+     </div>
    </div>
 
 <!-- No special display, but with some data cleaning, so it's not in the
@@ -131,13 +131,13 @@ generic dictionary datafield.  -->
         {% if space.ownership_type %}
          <div class="rowTextBlock">
           <p id="wBlockSubTitle">ownership_type</p>
-          <p id="textBlock">{{space.ownership_type}}</p>
+          <p id="textBlock">{% for type in space.ownership_type.all %} {{type}}, {% endfor %}</p>
         </div>
         {% endif %}
         {% if space.governance_type %}
          <div class="rowTextBlock">
           <p id="wBlockSubTitle">governance_type</p>
-          <p id="textBlock">{{space.governance_type}}</p>
+          <p id="textBlock">{% for type in space.governance_type.all %} {{type}}, {% endfor %}</p>
         </div>
         {% endif %}
         {% if space.hours_of_operation %}

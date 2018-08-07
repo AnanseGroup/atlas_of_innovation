@@ -81,13 +81,13 @@ set_virtual_env(){
     cd /vagrant
 
     echo "Set alias to run atlas"
-    echo "alias run_atlas='python3 manage.py runserver 0.0.0.0:8000 --settings=atlas_of_innovation.settings.development' " >> ~/.bashrc
-    echo "alias migrate_atlas='python3 manage.py migrate --settings=atlas_of_innovation.settings.development' " >> ~/.bashrc
-    echo "alias load_data='python3 manage.py loaddata initial_database --settings=atlas_of_innovation.settings.development " >> ~/.bashrc
+    echo "alias run_atlas='python3 manage.py runserver 0.0.0.0:8000' " >> ~/.bashrc
+    echo "alias migrate_atlas='python3 manage.py migrate'" >> ~/.bashrc
+    echo "alias load_data='python3 manage.py loaddata governance_options ownership_options initial_database'" >> ~/.bashrc
 
-    alias run_atlas='python3 manage.py runserver 0.0.0.0:8000 --settings=atlas_of_innovation.settings.development'
-    alias migrate_atlas='python3 manage.py migrate --settings=atlas_of_innovation.settings.development'
-    alias load_data='python3 manage.py loaddata initial_database --settings=atlas_of_innovation.settings.development'
+    alias run_atlas='python3 manage.py runserver 0.0.0.0:8000'
+    alias migrate_atlas='python3 manage.py migrate'
+    alias load_data='python3 manage.py loaddata governance_options ownership_options initial_database'
 
     echo "Done"
  fi
