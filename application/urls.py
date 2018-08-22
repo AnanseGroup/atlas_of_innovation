@@ -5,6 +5,7 @@ urlpatterns = [
     # None of these pages require access to the database
     path('', views.map, name='home'),
     path('map/', views.map, name='map'),
+    path('whitelabel_map/', views.whitelabel_map, name='whitelabel_map'),
     path('about/', views.about, name='about'),
     path('about/goals/', views.goals, name='goals'),
     path('docs/', views.userDocs, name='userDocs'),
