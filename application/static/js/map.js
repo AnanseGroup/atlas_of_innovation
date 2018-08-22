@@ -1,8 +1,8 @@
-
 var map = L.map('map', {
 	minZoom: 2,
 	worldCopyJump: true
-}).setView([20,0], 2);
+}).setView(atlas_of_innovation_config.map_center, atlas_of_innovation_config.map_zoom);
+// }).setView([20,0], 2);
 L.tileLayer('https://api.mapbox.com/styles/v1/albiebrown/civehqtub00022ikc7sgmp1n2/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYWxiaWVicm93biIsImEiOiJjaXZlaDh1a2MwMWl6MnlwZDJldzFvYjNxIn0.d04rCBRG42H2JkkiID2qpA', {
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
     maxZoom: 18,
@@ -47,7 +47,7 @@ $.get('/api/space/filter/?not_closed=True&fields=latitude,longitude,name,city,co
 
 function buildMarkers(allSpaces) {
 	$(".loader-text").text("Building Map . . .");
-	for (i=0; i<allSpaces.length; ++i) {	
+	for (i=0; i<allSpaces.length; ++i) {
 		var space = allSpaces[i];
 		if (space.latitude && space.longitude) {
 			try {
@@ -71,7 +71,7 @@ function buildMarkers(allSpaces) {
 }
 
 function createPopup(space) {
-	
+
 	var popupText = "<div class='popup-header'>";
 	popupText += "<h3>"+space.name+"</h3>";
 	popupText += "</div>";
@@ -90,20 +90,20 @@ function createPopup(space) {
 		popupText += "<a class='popup-website-link' \
 						target='_blank' \
 						href='http://"+space.website+"'>"
-						+ space.website + "</a>"; 
-	} 
+						+ space.website + "</a>";
+	}
 
 	if (space.short_description){
 		popupText += "<p>"+space.short_description+"</p>";
-	}			
+	}
 	popupText += "<a href='/space/"+space.id+"'><img src='/static/images/space_page.png' class='space-page-button'></a>";
 
 	return popupText;
  }
- 
+
 var appliedFilters = [];
 
-function runFilter() {	
+function runFilter() {
 	markerClusters.clearLayers();
 	for(var i = 0; i < allMarkers.length; i++) {
 		if(matchesFilter(allMarkers[i])) {
@@ -129,8 +129,8 @@ function matchesFilter(marker) {
 $(document).ready(function() {
 
 	// Button handlers
-	$("#filter-bar .filter-bar-button").click(function(e) {		
-		e.preventDefault();	
+	$("#filter-bar .filter-bar-button").click(function(e) {
+		e.preventDefault();
 		$("#filter-bar a.active").not(this).removeClass('active');
 		$(this).toggleClass('active');
 		var filterType = $(this).data('filter');
@@ -138,7 +138,7 @@ $(document).ready(function() {
 		$("#"+filterType+"-filter").toggleClass('active');
 	});
 
-	$(".filter-item").click(function(e) {		
+	$(".filter-item").click(function(e) {
 		e.preventDefault();
 		appliedFilters = [];
 		var filterType = $(this).data('filterGroup');

@@ -14,6 +14,18 @@ def map(request):
         context,
     )
 
+def whitelabel_map(request):
+    filter_terms = request.GET
+    context = {}
+    context['map_center'] = filter_terms.get('map_center', [20,0])
+    context['map_zoom'] = filter_terms.get('map_zoom', 2)
+    # context['filter_terms'] = filter_terms
+    return render(
+        request,
+        'whitelabel_map.html',
+        context,
+    )
+
 
 def about(request):
     return render(
