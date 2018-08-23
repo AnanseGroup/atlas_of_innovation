@@ -15,11 +15,11 @@ def map(request):
     )
 
 def whitelabel_map(request):
-    filter_terms = request.GET
+    filter_terms = request.GET.copy()
     context = {}
-    context['map_center'] = filter_terms.get('map_center', [20,0])
-    context['map_zoom'] = filter_terms.get('map_zoom', 2)
-    # context['filter_terms'] = filter_terms
+    context['map_center'] = filter_terms.pop('map_center', [20,0])
+    context['map_zoom'] = filter_terms.pop('map_zoom', 2)
+    context['filter_terms'] = filter_terms.urlencode()
     return render(
         request,
         'whitelabel_map.html',
