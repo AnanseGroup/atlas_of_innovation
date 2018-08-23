@@ -1,4 +1,4 @@
-# These views render the database as JSON 
+# These views render the database as JSON
 from django.shortcuts import render
 from django.core import serializers
 from application.serializers import SpaceSerializer
@@ -29,7 +29,8 @@ def filter_spaces(request):
                                Q(short_description__icontains=filter_terms['all_text']))
 
     if 'country' in filter_terms:
-        spaces = spaces.filter(country__iexact=filter_terms['country'])
+        countries = filter_terms['country'].split(",")
+        spaces = spaces.filter(country__in=countries)
 
     if 'operational_status' in filter_terms:
         if filter_terms['operational_status'] == "null":
