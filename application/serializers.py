@@ -8,7 +8,6 @@ class SpaceSerializer(CountryFieldMixin, serializers.ModelSerializer):
 
         super(SpaceSerializer, self).__init__(*args, **kwargs)
         # Drop any fields that are not specified in the `fields` argument.
-        print(fields)
         if fields:
             allowed = set(fields)
             existing = set(self.fields.keys())
