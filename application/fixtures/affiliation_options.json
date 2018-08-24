@@ -1,0 +1,44 @@
+[
+  {
+    "model": "application.AffiliationOption",
+    "fields": {
+      "name": "Nation of Makers",
+      "description": "Nation of Makers"
+    }
+  },
+  {
+    "model": "application.AffiliationOption",
+    "fields": {
+      "name": "Hackerspaces",
+      "description": "Hackerspaces"
+    }
+  },
+  {
+    "model": "application.AffiliationOption",
+    "fields": {
+      "name": "Fab Lab",
+      "description": "Fab Lab"
+    }
+  },
+  {
+    "model": "application.AffiliationOption",
+    "fields": {
+      "name": "Maker Faire",
+      "description": "Maker Faire"
+    }
+  },
+  {
+    "model": "application.AffiliationOption",
+    "fields": {
+      "name": "GIG",
+      "description": "Global Innovation Gathering"
+    }
+  },
+  {
+    "model": "application.AffiliationOption",
+    "fields": {
+      "name": "AfriLabs",
+      "description": "AfriLabs"
+    }
+  }
+]
