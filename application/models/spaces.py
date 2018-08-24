@@ -6,7 +6,7 @@ from captcha.fields import ReCaptchaField
 from django_countries.fields import CountryField
 from django import forms
 
-from .space_multiselectfields import GovernanceOption, OwnershipOption
+from .space_multiselectfields import GovernanceOption, OwnershipOption, AffiliationOption
 
 
 class Space(models.Model):
@@ -73,8 +73,8 @@ class Space(models.Model):
     )
 
     ownership_type = models.ManyToManyField(OwnershipOption, blank=True)
-
     governance_type = models.ManyToManyField(GovernanceOption, blank=True)
+    network_affiliation = models.ManyToManyField(AffiliationOption, blank=True)
 
     other_data = JSONField(null=True, blank=True)
 
@@ -85,9 +85,11 @@ class SpaceForm(ModelForm):
 
     captcha = ReCaptchaField()
     ownership_type =  forms.ModelMultipleChoiceField(
-        queryset=OwnershipOption.objects.all(), to_field_name="description")
+        queryset=OwnershipOption.objects.all(), to_field_name="description", required=False)
     governance_type =  forms.ModelMultipleChoiceField(
-        queryset=GovernanceOption.objects.all(), to_field_name="description")
+        queryset=GovernanceOption.objects.all(), to_field_name="description", required=False)
+    network_affiliation =  forms.ModelMultipleChoiceField(
+        queryset=AffiliationOption.objects.all(), to_field_name="description", required=False)
 
     class Meta:
         model = Space
