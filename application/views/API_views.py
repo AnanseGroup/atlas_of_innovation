@@ -42,6 +42,9 @@ def filter_spaces(request):
     if 'not_closed' in filter_terms:
         spaces = spaces.exclude(operational_status__iexact="Closed")
 
+    if 'network_affiliation' in filter_terms:
+        spaces = spaces.filter(network_affiliation__name=filter_terms['network_affiliation'])
+
 
     if 'fields' in filter_terms:
         fields = filter_terms['fields'].split(",")
