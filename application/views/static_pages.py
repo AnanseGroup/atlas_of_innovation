@@ -1,6 +1,8 @@
 import json
 from django.shortcuts import render
 from django_countries import countries
+from django.views.decorators.clickjacking import xframe_options_exempt
+
 
 
 def map(request):
@@ -14,6 +16,7 @@ def map(request):
         context,
     )
 
+@xframe_options_exempt
 def whitelabel_map(request):
     filter_terms = request.GET.copy()
     context = {}
