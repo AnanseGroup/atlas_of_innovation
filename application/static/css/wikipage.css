@@ -32,18 +32,19 @@ margin-right : 25px;
 #wTitle{
 font-size: 30pt ;
 margin-top: 20px;
-color:  #00d4d2; 
+color:  #00d4d2;
 text-align: center;
 }
 
 #wWebsite{
 text-align: center;
 display:block;
+color:  #00d4d2;
 }
 
 #wStatus{
 font-size: 16pt ;
-color:  #333333; 
+color:  #333333;
 margin-bottom: 30px;
 text-align: center;
 }
@@ -157,7 +158,7 @@ width: 100%;
 	background-size: 200px;
 	background-repeat: no-repeat;
 	background-position: 0 7px;
-	text-decoration: none;	
+	text-decoration: none;
 	background-color: transparent;
 }
 
@@ -171,7 +172,7 @@ width: 100%;
 	background-size: 200px;
 	background-repeat: no-repeat;
 	background-position: 0 7px;
-	text-decoration: none;	
+	text-decoration: none;
 	background-color: transparent;
 }
 
@@ -183,6 +184,14 @@ width: 100%;
 	display: inline-block;
 }
 
+#cardtitle {
+  font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', sans-serif;
+}
+
+#tealtext {
+  color:#00d4d2;
+}
+
 .w-social-link {
 text-decoration: none !important;
 }
@@ -191,5 +200,3 @@ text-decoration: none !important;
 width: 20px;
 height: 20px;
 }
-
-

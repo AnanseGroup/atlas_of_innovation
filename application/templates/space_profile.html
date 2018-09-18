@@ -4,15 +4,19 @@
   <link rel="stylesheet" type="text/css" href="/static/css/wikipage.css"/>
   <link rel="stylesheet" type="text/css" href="/static/css/stylesheet.css"/>
   <script type='text/javascript' src='/js/wiki.js'></script>
+  <link rel="stylesheet" type="text/css" href="/static/css/materialize/css/materialize.min.css"/>
+  <script src="/static/css/materialize/js/materialize.min.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 </head>
     {% include "snippets/header.html" %}
 
  <div class="wBlockHeader">
   <div class="w-top-navigation">
-    <a href="{% url 'edit_space' space.id %}" >
+    <!--<a href="{% url 'edit_space' space.id %}" >
     	<img src="/static/images/edit_button.png" id="w-top-navigation-bar-edit-button">
-    </a>
+    </a>-->
+
 <!--a href="/" >
     	<img src="/assets/flag_button.png" id="w-top-navigation-bar-flag-incorrect-button">
     </a-->
@@ -23,27 +27,230 @@
     <a href="/" id="wnavigation-bar-document-revision-button" class="navigation-bar-button">Revision</a>
 	</div>
 </div-->
- <div class="wBlockOne">
-  <!-- <img src="/static/images/Placeholder_logo.png" alt="#" style="height: 100px; display:block;margin-left: auto;margin-right: auto;"> -->
-  <p ></p>
-  <h2 id="wTitle">{{space.name}}</h2>
-  {% if space.website %}
-  <a id="wWebsite" href="{{space.website}}" target="_blank">{{space.website}}</a>
-  {% else %}
-  <a id="wWebsite" href="{%url 'space_profile' space.id %}" target="_blank">
-  Link to Atlas Profile</a>
-  {% endif %}
+<a id="cardtitle" class="waves-effect waves-light btn" href="{% url 'edit_space' space.id %}"><i class="material-icons right">edit</i>Edit</a>
 
-  <p id="w-space-short-description">
-  {{space.short_description| default_if_none:""}}</p>
-  <p id="w-space-description">{{space.description | default_if_none:""}}</p>
-  <hr />
+<div class="container">
+  <div class="row">
+    <div class="col m12">
+      <div class="wBlockOne">
+       <!-- <img src="/static/images/Placeholder_logo.png" alt="#" style="height: 100px; display:block;margin-left: auto;margin-right: auto;"> -->
+       <p ></p>
+       <h2 id="wTitle">{{space.name}}</h2>
+       {% if space.website %}
+       <a id="wWebsite" href="{{space.website}}" target="_blank">{{space.website}}</a>
+       {% else %}
+       <a id="wWebsite" href="{%url 'space_profile' space.id %}" target="_blank">
+       Link to Atlas Profile</a>
+       {% endif %}
+       <blockquote style="border-left: 5px solid #00d4d2;">
+       <p >
+       {{space.short_description| default_if_none:""}}</p>
+      </blockquote>
+       <p >{{space.description | default_if_none:""}}</p>
+       <!--<hr />-->
+     </div>
+    </div>
+  </div>
+
+    <div class="row">
+      <div class="col m6">
+        <div class="card hoverable">
+          <div class="card-content">
+            <span class="card-title center-align" id="cardtitle">Contact Info</span>
+            <!--<p >Contact Info</p>-->
+            <a href= "mailto:{{space.email}}" id="tealtext"><i class="material-icons tiny">mail</i> {{space.email | default_if_none:""}}</a><br>
+            <i class="material-icons tiny">phone</i> {{space.phone | default_if_none:""}}
+            <br/>
+            <div id="w-address">
+             <!--<p><img src="/static/images/pin_map.png" alt="" style="width:8px;height: 10px;">{{space.address1 | default_if_none:""}}</p>-->
+             <i class="material-icons tiny">location_on</i>
+             {{space.address2 | default_if_none:""}}
+             {% if space.city %}
+                {{space.city}},
+             {% endif %}
+             {% if space.province %}
+                {{space.province}},
+             {% endif %}
+             {{space.country.name | default_if_none:""}}
+             {{space.postal_code | default_if_none:""}} <br>
+             <small>{{space.additional_directions | default_if_none:""}}</small>
+           </div>
+          </div>
+        </div>
+      </div>
+      <div class="col m6">
+        <div class="col m6">
+          {% if space.date_opened %}
+          <h5>Date opened</h5>
+          <p >{{space.date_opened}}</p>
+          {% endif %}
+          {% if space.date_closed %}
+          <h5>Date closed</h5>
+          <p >{{space.date_closed}}</p>
+          {% endif %}
+        </div>
+        <div class="col m6">
+          {% if space.business_model %}
+          <h6>Access, Cost Structure, and/or Membership model (business_model)</h6>
+          <p >{{space.business_model}}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+    {% if space.users %}
+    <div class="col m4">
+      <div class="card hoverable">
+        <div class="card-content">
+          <span class="card-title text center-align" id="cardtitle">Users</span>
+          <div >
+           <h1 class="center-align" >{{space.users}}</h1>
+         </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    {% if space.size_in_sq_meters %}
+    <div class="col m4">
+      <div class="card hoverable">
+        <div class="card-content">
+          <span class="card-title text center-align" id="cardtitle">Sq Meters</span>
+          <div >
+           <h1 class="center-align" >{{space.size_in_sq_meters}}</h1>
+         </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    {% if space.hours_of_operation %}
+    <div class="col m4">
+      <div class="card hoverable">
+        <div class="card-content">
+          <span class="card-title text center-align" id="cardtitle">Hours of operation</span>
+          <div >
+           <h1 class="center-align" >{{space.hours_of_operation}}</h1>
+         </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="row">
+    <div class="col m12">
+      <div class="card hoverable">
+        <div class="card-content">
+          <span class="card-title text center-align" id="cardtitle">Space information</span>
+          <br>
+          <div class="row">
+            {% if space.data_credit %}
+            <div class="col m3">
+               <div >
+                <p  class="text center-align" id="cardtitle">Data credit</p>
+                <p  class="text center-align" id="tealtext">{{space.data_credit}}</p>
+              </div>
+            </div>
+            {% endif %}
+            {% if space.membership %}
+            <div class="col m3">
+               <div >
+                <p  class="text center-align" id="cardtitle">Membership</p>
+                <p  class="text center-align" id="tealtext">{{space.membership}}</p>
+              </div>
+            </div>
+            {% endif %}
+            {% if space.wheelchair_accessibility %}
+            <div class="col m3">
+               <div >
+                <p  class="text center-align" id="cardtitle">Wheelchair accessibility</p>
+                <p  class="text center-align" id="tealtext">{{space.wheelchair_accessibility}}</p>
+              </div>
+            </div>
+            {% endif %}
+            {% if space.operational_status %}
+            <div class="col m3">
+              <div >
+               <p  class="text center-align" id="cardtitle">Operational status</p>
+               <p  class="text center-align" id="tealtext">{{space.operational_status}}</p>
+             </div>
+            </div>
+            {% endif %}
+            {% if space.validation_status %}
+            <div class="col m3">
+              <div >
+               <p  class="text center-align" id="cardtitle">Validation status</p>
+               <p  class="text center-align" id="tealtext">{{space.validation_status}}</p>
+             </div>
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="row">
+            {% if space.ownership_type %}
+            <div class="col m4">
+              <div >
+               <p  class="text center-align" id="cardtitle">Ownership type</p>
+               <p  class="text center-align" id="tealtext">{% for type in space.ownership_type.all %} {{type}}, {% endfor %}</p>
+             </div>
+            </div>
+            {% endif %}
+            {% if space.network_affiliation %}
+            <div class="col m4">
+              <div >
+               <p  class="text center-align" id="cardtitle">Network affiliation</p>
+               <p  class="text center-align" id="tealtext">{% for type in space.network_affiliation.all %} {{type}}, {% endfor %}</p>
+             </div>
+            </div>
+            {% endif %}
+            {% if space.governance_type %}
+            <div class="col m4">
+              <div >
+               <p  class="text center-align" id="cardtitle">Governance type</p>
+               <p  class="text center-align" id="tealtext">{% for type in space.governance_type.all %} {{type}}, {% endfor %}</p>
+             </div>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col m12">
+      <div class="card hoverable">
+        <div class="card-content">
+          <span class="card-title text center-align" id="cardtitle">Additional information</span>
+          <!-- There is a generic datafield where people can put whatever data they
+          want. We display it here.   -->
+          <br>
+          <ul class="collection">
+             {% for field, value in space.other_data.items %}
+                {% if value %}
+                   <!--<div >
+                    <p >{{field}}</p>
+                    <p >{{value}}</p>
+                  </div>-->
+                  <li class="collection-item"><p><strong>{{field}}:</strong> {{value}}</p></li>
+                {% endif %}
+             {% endfor %}
+           </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row right">
+    <p><small>Last updated</small></p>
+    <p>{{space.last_updated}}</p>
+  </div>
 </div>
 
 <div class="wBlockFour">
   <div class="rowAlign">
-    <div class="rowTextBlock">
-      <p id="wBlockSubTitle">Contact Info</p>
+    <!--<div >
+      <p >Contact Info</p>
       <a href= "mailto:{{space.email}}">{{space.email | default_if_none:""}}</a>
       {{space.phone | default_if_none:""}}
       <br/>
@@ -60,106 +267,13 @@
        {{space.postal_code | default_if_none:""}}
        {{space.additional_directions | default_if_none:""}}
      </div>
-   </div>
+   </div>-->
 
 <!-- No special display, but with some data cleaning, so it's not in the
 generic dictionary datafield.  -->
 
-        {% if space.date_opened %}
-         <div class="rowTextBlock">
-          <p id="wBlockSubTitle">date_opened</p>
-          <p id="textBlock">{{space.date_founded}}</p>
-        </div>
-        {% endif %}
-        {% if space.date_closed %}
-         <div class="rowTextBlock">
-          <p id="wBlockSubTitle">date_closed</p>
-          <p id="textBlock">{{space.date_closed}}</p>
-        </div>
-        {% endif %}
 
-        {% if space.data_credit %}
-         <div class="rowTextBlock">
-          <p id="wBlockSubTitle">data_credit</p>
-          <p id="textBlock">{{space.data_credit}}</p>
-        </div>
-        {% endif %}
-
-        {% if space.users %}
-         <div class="rowTextBlock">
-          <p id="wBlockSubTitle">users</p>
-          <p id="textBlock">{{space.users}}</p>
-        </div>
-        {% endif %}
-        {% if space.membership %}
-         <div class="rowTextBlock">
-          <p id="wBlockSubTitle">membership</p>
-          <p id="textBlock">{{space.membership}}</p>
-        </div>
-        {% endif %}
-        {% if space.size_in_sq_meters %}
-         <div class="rowTextBlock">
-          <p id="wBlockSubTitle">size_in_sq_meters</p>
-          <p id="textBlock">{{space.size_in_sq_meters}}</p>
-        </div>
-        {% endif %}
-        {% if space.wheelchair_accessibility %}
-         <div class="rowTextBlock">
-          <p id="wBlockSubTitle">wheelchair_accessibility</p>
-          <p id="textBlock">{{space.wheelchair_accessibility}}</p>
-        </div>
-        {% endif %}
-        {% if space.business_model %}
-         <div class="rowTextBlock">
-          <p id="wBlockSubTitle">Access, Cost Structure, and/or Membership model (business_model)</p>
-          <p id="textBlock">{{space.business_model}}</p>
-        </div>
-        {% endif %}
-
-        {% if space.operational_status %}
-         <div class="rowTextBlock">
-          <p id="wBlockSubTitle">operational_status</p>
-          <p id="textBlock">{{space.operational_status}}</p>
-        </div>
-        {% endif %}
-        {% if space.validation_status %}
-         <div class="rowTextBlock">
-          <p id="wBlockSubTitle">validation_status</p>
-          <p id="textBlock">{{space.validation_status}}</p>
-        </div>
-        {% endif %}
-        {% if space.ownership_type %}
-         <div class="rowTextBlock">
-          <p id="wBlockSubTitle">ownership_type</p>
-          <p id="textBlock">{% for type in space.ownership_type.all %} {{type}}, {% endfor %}</p>
-        </div>
-        {% endif %}
-        {% if space.governance_type %}
-         <div class="rowTextBlock">
-          <p id="wBlockSubTitle">governance_type</p>
-          <p id="textBlock">{% for type in space.governance_type.all %} {{type}}, {% endfor %}</p>
-        </div>
-        {% endif %}
-        {% if space.hours_of_operation %}
-         <div class="rowTextBlock">
-          <p id="wBlockSubTitle">hours_of_operation</p>
-          <p id="textBlock">{{space.hours_of_operation}}</p>
-        </div>
-        {% endif %}
-
-<!-- There is a generic datafield where people can put whatever data they
-want. We display it here.   -->
-
-   {% for field, value in space.other_data.items %}
-      {% if value %}
-         <div class="rowTextBlock">
-          <p id="wBlockSubTitle">{{field}}</p>
-          <p id="textBlock">{{value}}</p>
-        </div>
-      {% endif %}
-   {% endfor %}
 </div>
 
-<p>{{space.last_updated}}</p>
 </body>
 </html>
