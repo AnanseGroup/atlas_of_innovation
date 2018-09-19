@@ -54,13 +54,19 @@
 
     <div class="row">
       <div class="col m6">
+        {% if space.email or space.phone or space.address1 %}
         <div class="card hoverable">
           <div class="card-content">
             <span class="card-title center-align" id="cardtitle">Contact Info</span>
             <!--<p >Contact Info</p>-->
+            {% if space.email %}
             <a href= "mailto:{{space.email}}" id="tealtext"><i class="material-icons tiny">mail</i> {{space.email | default_if_none:""}}</a><br>
+            {% endif %}
+            {% if space.phone %}
             <i class="material-icons tiny">phone</i> {{space.phone | default_if_none:""}}
             <br/>
+            {% endif %}
+            {% if space.address1 %}
             <div id="w-address">
              <!--<p><img src="/static/images/pin_map.png" alt="" style="width:8px;height: 10px;">{{space.address1 | default_if_none:""}}</p>-->
              <i class="material-icons tiny">location_on</i>
@@ -75,8 +81,10 @@
              {{space.postal_code | default_if_none:""}} <br>
              <small>{{space.additional_directions | default_if_none:""}}</small>
            </div>
+           {% endif %}
           </div>
         </div>
+        {% endif %}
       </div>
       <div class="col m6">
         <div class="col m6">
@@ -136,7 +144,7 @@
     </div>
     {% endif %}
   </div>
-
+  {% if space.data_credit or space.membership or space.wheelchair_accessibility or space.operational_status or space.validation_status or space.ownership_type|length > 0 or network_affiliation|length > 0 or space.governance_type|length > 0 %}
   <div class="row">
     <div class="col m12">
       <div class="card hoverable">
@@ -216,7 +224,9 @@
       </div>
     </div>
   </div>
+  {% endif %}
 
+  {% if space.other_data %}
   <div class="row">
     <div class="col m12">
       <div class="card hoverable">
@@ -240,6 +250,7 @@
       </div>
     </div>
   </div>
+  {% endif %}
 
   <div class="row right">
     <p><small>Last updated</small></p>
