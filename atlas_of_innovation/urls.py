@@ -18,7 +18,10 @@ from django.urls import path, include
 from django.views.generic import RedirectView
 from django.conf import settings
 from django.conf.urls.static import static
+from django.http import HttpResponse
 
 urlpatterns = [
+    # Robots.txt
+    path('robots.txt', lambda r: HttpResponse("User-agent: *\nDisallow: /", content_type="text/plain")),
     path('', include('application.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
