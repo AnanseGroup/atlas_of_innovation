@@ -6,16 +6,6 @@ from application.models import Space
 from django.http import HttpResponse,JsonResponse
 from django.db.models import Q
 
-def all_innovation_spaces(request):
-    spaces = Space.objects.all()
-    serializer = SpaceSerializer(spaces, many=True)
-    return JsonResponse(serializer.data, safe=False)
-
-def get_space(request, id):
-    space = Space.objects.get(id=id)
-    serializer = SpaceSerializer(space)
-    return JsonResponse(serializer.data)
-
 def filter_spaces(request):
     filter_terms = request.GET
     spaces = Space.objects.all()
@@ -45,11 +35,9 @@ def filter_spaces(request):
     if 'network_affiliation' in filter_terms:
         spaces = spaces.filter(network_affiliation__name=filter_terms['network_affiliation'])
 
-
+    fields = ['latitude','longitude','name','city','country','website','short_description','id']
     if 'fields' in filter_terms:
-        fields = filter_terms['fields'].split(",")
-    else:
-        fields = None
+         fields = set(fields) & set(filter_terms['fields'].split(","))
 
     serializer = SpaceSerializer(spaces, fields=fields, many=True)
 

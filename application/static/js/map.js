@@ -42,7 +42,7 @@ var allMarkers = [];
 var noLocation = [];
 
 $.get('/api/space/filter/?' + atlas_of_innovation_config.filter_terms
-	+ "&not_closed=True&fields=latitude,longitude,name,city,country,website,short_description,id",
+	+ "&not_closed=True",
 	{cache: true}, function(spaces) {
 	buildMarkers(spaces);
 });
