@@ -22,9 +22,5 @@ urlpatterns = [
     path('space/filter/', views.list_spaces, name='list_spaces'),
 
     # REST API
-    path('api/space/<int:id>/', views.get_space, name='get_space'),
     path('api/space/filter/', views.filter_spaces, name='filter_spaces'),
-
-    # Bulk actions
-    path('api/getAllSpaces/', views.all_innovation_spaces, name='all_innovation_spaces'),
 ]
