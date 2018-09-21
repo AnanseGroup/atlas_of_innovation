@@ -54,7 +54,7 @@
 
     <div class="row">
       <div class="col m6">
-        {% if space.email or space.phone or space.address1 %}
+        {% if space.email or space.phone or space.address1 or space.city or space.country or space.postal_code or space.additional_directions %}
         <div class="card hoverable">
           <div class="card-content">
             <span class="card-title center-align" id="cardtitle">Contact Info</span>
@@ -66,21 +66,25 @@
             <i class="material-icons tiny">phone</i> {{space.phone | default_if_none:""}}
             <br/>
             {% endif %}
-            {% if space.address1 %}
-            <div id="w-address">
-             <!--<p><img src="/static/images/pin_map.png" alt="" style="width:8px;height: 10px;">{{space.address1 | default_if_none:""}}</p>-->
-             <i class="material-icons tiny">location_on</i>
-             {{space.address2 | default_if_none:""}}
-             {% if space.city %}
-                {{space.city}},
-             {% endif %}
-             {% if space.province %}
-                {{space.province}},
-             {% endif %}
-             {{space.country.name | default_if_none:""}}
-             {{space.postal_code | default_if_none:""}} <br>
-             <small>{{space.additional_directions | default_if_none:""}}</small>
-           </div>
+            {% if space.address1 or space.city or space.country or space.postal_code or space.additional_directions %}
+              <div id="w-address">
+               <i class="material-icons tiny">location_on</i>
+               {% if space.address1 %}
+                  {{space.address1 | default_if_none:""}},
+               {% endif %}
+               {% if space.address2 %}
+                  {{space.address2 | default_if_none:""}},
+               {% endif %}
+               {% if space.city %}
+                  {{space.city}},
+               {% endif %}
+               {% if space.province %}
+                  {{space.province}},
+               {% endif %}
+               {{space.country.name | default_if_none:""}}
+               {{space.postal_code | default_if_none:""}} <br>
+               <small>{{space.additional_directions | default_if_none:""}}</small>
+              </div>
            {% endif %}
           </div>
         </div>
@@ -99,7 +103,7 @@
         </div>
         <div class="col m6">
           {% if space.business_model %}
-          <h6>Access, Cost Structure, and/or Membership model (business_model)</h6>
+          <h6>Access, Cost Structure, and/or Membership model</h6>
           <p >{{space.business_model}}</p>
           {% endif %}
         </div>
@@ -238,10 +242,6 @@
           <ul class="collection">
              {% for field, value in space.other_data.items %}
                 {% if value %}
-                   <!--<div >
-                    <p >{{field}}</p>
-                    <p >{{value}}</p>
-                  </div>-->
                   <li class="collection-item"><p><strong>{{field}}:</strong> {{value}}</p></li>
                 {% endif %}
              {% endfor %}
@@ -256,34 +256,6 @@
     <p><small>Last updated</small></p>
     <p>{{space.last_updated}}</p>
   </div>
-</div>
-
-<div class="wBlockFour">
-  <div class="rowAlign">
-    <!--<div >
-      <p >Contact Info</p>
-      <a href= "mailto:{{space.email}}">{{space.email | default_if_none:""}}</a>
-      {{space.phone | default_if_none:""}}
-      <br/>
-      <div id="w-address">
-       <p><img src="/static/images/pin_map.png" alt="" style="width:8px;height: 10px;">{{space.address1 | default_if_none:""}}</p>
-       {{space.address2 | default_if_none:""}}
-       {% if space.city %}
-          {{space.city}},
-       {% endif %}
-       {% if space.province %}
-          {{space.province}},
-       {% endif %}
-       {{space.country.name | default_if_none:""}}
-       {{space.postal_code | default_if_none:""}}
-       {{space.additional_directions | default_if_none:""}}
-     </div>
-   </div>-->
-
-<!-- No special display, but with some data cleaning, so it's not in the
-generic dictionary datafield.  -->
-
-
 </div>
 
 </body>
