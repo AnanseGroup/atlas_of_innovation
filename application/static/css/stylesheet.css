@@ -939,6 +939,16 @@ a img {
 	margin-left: 10px;
 }
 
+/* DELETE SPACE EMAIL */
+.email-us h5 {
+	text-align:right; 
+	font-size: 0.9rem;
+}
+
+.email-us h5 a{
+	font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', sans-serif;
+	color: #00d4d2;
+}
 /*PRIMARY SPACE TYPE COLORS*/
 .hub-color {
 	background-color: pink;
