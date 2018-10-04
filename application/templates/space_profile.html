@@ -10,7 +10,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 </head>
     {% include "snippets/header.html" %}
-
+    {% load app_filters %}
  <div class="wBlockHeader">
   <div class="w-top-navigation">
     <!--<a href="{% url 'edit_space' space.id %}" >
@@ -60,10 +60,10 @@
             <span class="card-title center-align" id="cardtitle">Contact Info</span>
             <!--<p >Contact Info</p>-->
             {% if space.email %}
-            <a href= "mailto:{{space.email}}" id="tealtext"><i class="material-icons tiny">mail</i> {{space.email | default_if_none:""}}</a><br>
+            <a href= "mailto:#" id="tealtext"><i class="material-icons tiny">mail</i> {{space.email | obfuscate_email | default_if_none:""}}</a><br>
             {% endif %}
             {% if space.phone %}
-            <i class="material-icons tiny">phone</i> {{space.phone | default_if_none:""}}
+            <i class="material-icons tiny">phone</i> {{space.phone | obfuscate_phone | default_if_none:""}}
             <br/>
             {% endif %}
             {% if space.address1 or space.city or space.country or space.postal_code or space.additional_directions %}
@@ -257,6 +257,6 @@
     <p>{{space.last_updated}}</p>
   </div>
 </div>
-
+{% include "snippets/delete-space.html" %}
 </body>
 </html>
