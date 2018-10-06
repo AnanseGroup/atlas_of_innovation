@@ -60,10 +60,10 @@
             <span class="card-title center-align" id="cardtitle">Contact Info</span>
             <!--<p >Contact Info</p>-->
             {% if space.email %}
-            <a href= "mailto:#" id="tealtext"><i class="material-icons tiny">mail</i> {{space.email | obfuscate_email | default_if_none:""}}</a><br>
+            <a id="tealtext"><i class="material-icons tiny">mail</i> {{space.email | hide_email | default_if_none:""}}</a><br>
             {% endif %}
             {% if space.phone %}
-            <i class="material-icons tiny">phone</i> {{space.phone | obfuscate_phone | default_if_none:""}}
+            <i class="material-icons tiny">phone</i> {{space.phone | hide_phone | default_if_none:""}}
             <br/>
             {% endif %}
             {% if space.address1 or space.city or space.country or space.postal_code or space.additional_directions %}

@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.core.exceptions import ValidationError
 from application.models import Space
+from application.models.space_multiselectfields import GovernanceOption, OwnershipOption, AffiliationOption
 from django_countries import countries
 import csv
 import datetime
@@ -57,25 +58,54 @@ class Command(BaseCommand):
                     processed_space['operational_status'] = "Planned"
                 elif activity_level == 'inactive':
                     processed_space['operational_status'] = "Closed"
+               
+                # Gets the affiliation ManyToMany option 
+                affiliation = space.pop('network_affiliation', None)
+                affiliation_obj = None
+                if affiliation:
+                    affiliation_obj = AffiliationOption.objects.filter(name=affiliation).first()
 
-
+                # Gets the governance ManyToMany option 
+                governance = space.pop('governance', None)
+                governance_obj = None
+                if governance:
+                    governance_obj = GovernanceOption.objects.filter(name=governance).first()
+                    
+                # Gets the ownership ManyToMany option 
+                ownership = space.pop('ownership', None)
+                ownership_obj = None
+                if ownership:
+                    ownership_obj = OwnershipOption.objects.filter(name=ownership).first()
+                
                 # Fields that share the name of where they are going
                 for field in Space._meta.get_fields():
                     if not field.name in processed_space:
-                        processed_space[field.name]=space.pop(field.name, None)
+                        # (PEDRO) To solve #85 remove the many to many fields
+                        if type(field).__name__ is not "ManyToManyField":
+                            processed_space[field.name]=space.pop(field.name, None)
                 space = {field:space[field] for field in space if space[field]}
                 processed_space['other_data'] = space
-                processed_spaces.append(processed_space)
-            spaces = [Space(**space) for space in processed_spaces]
-            for space in spaces:
+                #processed_spaces.append(processed_space)
+                
+                '''(Pedro) Removed the for loop, there may be a performance hit
+                    but I did it to add the ManyToMany relationships'''
+                new_space = Space(**processed_space)
                 try:
-                    space.clean_fields()
+                    new_space.clean_fields()
                 except ValidationError as v:
                     for field in v.error_dict:
-                        space.other_data[field] = space.__dict__[field]
-                        setattr(space, field, None)
+                        new_space.other_data[field] = new_space.__dict__[field]
+                        setattr(new_space, field, None)
                 try:
-                    space.save()
+                    new_space.save()
+                    # Added the many to many relationship
+                    if ownership_obj:
+                        new_space.ownership_type.add(ownership_obj)
+                    if affiliation_obj:
+                        new_space.network_affiliation.add(affiliation_obj)
+                    if governance_obj:
+                        new_space.governance_type.add(governance_obj)
+                    new_space.save()
                 except Exception as e:
                     print (space.__dict__)
                     raise e
