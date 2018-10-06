@@ -3,8 +3,6 @@ from django.shortcuts import render
 from django_countries import countries
 from django.views.decorators.clickjacking import xframe_options_exempt
 
-
-
 def map(request):
     type = ['All', 'Ecovillage', 'Event', 'Hub', 'Virtual', 'Workshop']
     theme = ['Agriculture', 'Appropriate Technology', 'Art and Culture', 'Biology', 'Design', 'Education', 'Food', 'Materials', 'Media', 'Politics', 'Science', 'Youth']
@@ -42,6 +40,13 @@ def goals(request):
     return render(
         request,
         'static/goals.html',
+    )
+
+
+def contributors(request):
+    return render(
+        request,
+        'static/contributors.html',
     )
 
 

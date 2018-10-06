@@ -8,6 +8,7 @@ urlpatterns = [
     path('whitelabel_map/', views.whitelabel_map, name='whitelabel_map'),
     path('about/', views.about, name='about'),
     path('about/goals/', views.goals, name='goals'),
+    path('about/contributors/', views.contributors, name='contributors'),
     path('docs/', views.userDocs, name='userDocs'),
     path('docs/developer/', views.devDocs, name='devDocs'),
     path('filter/', views.wiki, name='wiki'),
