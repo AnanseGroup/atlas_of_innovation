@@ -941,14 +941,50 @@ a img {
 
 /* DELETE SPACE EMAIL */
 .email-us h5 {
-	text-align:right; 
+	text-align:right;
 	font-size: 0.9rem;
+}
+
+/* CONTRIBUTORS */
+.img-grid div a img {
+	max-width: 75%;
+	width: auto;
+	border: none;
+	margin: 0 auto;
+}
+
+.img-grid {
+	display: flex;
+	justify-content: left;
+	align-items: center;
+}
+
+.center-list-25 {
+	margin: 0 25%;
+}
+
+.center-list-25 small i {
+	font-weight: bold;
+}
+
+.center-list-25 li p {
+	margin: 0.4rem 0;
+}
+
+.credit-divider {
+	margin-top: 5rem;
+	font-size: 1.5rem;
+}
+
+.center-list-25.map-moderators li {
+	margin-bottom: 2.5rem !important;
 }
 
 .email-us h5 a{
 	font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', sans-serif;
 	color: #00d4d2;
 }
+
 /*PRIMARY SPACE TYPE COLORS*/
 .hub-color {
 	background-color: pink;
