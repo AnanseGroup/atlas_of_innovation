@@ -91,6 +91,11 @@ class SpaceForm(ModelForm):
     network_affiliation =  forms.ModelMultipleChoiceField(
         queryset=AffiliationOption.objects.all(), to_field_name="description", required=False)
 
+    def __init__(self, *args, **kwargs):
+        super(SpaceForm, self).__init__(*args, **kwargs)
+        self.fields.pop('email')
+        self.fields.pop('phone')
+
     class Meta:
         model = Space
         fields = '__all__'
