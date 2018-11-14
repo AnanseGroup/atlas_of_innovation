@@ -5,9 +5,9 @@ from django.urls import reverse
 from captcha.fields import ReCaptchaField
 from django_countries.fields import CountryField
 from django import forms
+from datetime import datetime, timedelta
 
 from .space_multiselectfields import GovernanceOption, OwnershipOption, AffiliationOption
-
 
 class Space(models.Model):
     id = models.AutoField(primary_key=True)
@@ -54,7 +54,7 @@ class Space(models.Model):
         (PLANNED, 'Planned'),
         (CLOSED, 'Closed'),
     )
-    operational_status = models.CharField(
+    operational_status = models.CharField(  
         max_length=12,
         choices=STATUS_OPTIONS,
         null=True, blank=True,
@@ -80,6 +80,22 @@ class Space(models.Model):
 
     def get_absolute_url(self):
         return reverse('space_profile', kwargs={'id':self.id})
+
+    @property
+    def validated(self):
+        if self.validation_status == 'Verified':
+            return True
+        else:
+            return False
+
+    @property
+    def recently_updated(self):
+        d = datetime.utcnow() - timedelta(days=180)
+        l = self.last_updated.replace(tzinfo=None)
+        if ((l - d).days > 0):
+            return True
+        else:
+            return False
 
 class SpaceForm(ModelForm):
 
