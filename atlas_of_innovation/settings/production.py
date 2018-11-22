@@ -6,7 +6,7 @@ from .base import *
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
-# SECURITY_WARNING: don't use these keys in production 
+# SECURITY_WARNING: don't use these keys in production
 RECAPTCHA_PUBLIC_KEY = '6LdzuFAUAAAAAExNBiaezBVZMZQ-4FFh_tyLg1hR'
 RECAPTCHA_PRIVATE_KEY = os.environ['RECAPTCHA_PRIVATE_KEY']
 NOCAPTCHA = True
@@ -14,7 +14,8 @@ NOCAPTCHA = True
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["atlasenv.g3a3emn8g9.us-west-2.elasticbeanstalk.com", 
+ALLOWED_HOSTS = os.environ['ALLOWED_HOSTS'].split(",") or \
+                ["atlasenv.g3a3emn8g9.us-west-2.elasticbeanstalk.com",
 				 ".atlasofinnovation.com"]
 
 # Database

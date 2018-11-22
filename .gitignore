@@ -1,6 +1,8 @@
 *.pyc
 *__pycache__
-
+.vagrant
+*.box
+ubuntu-xenial-16.04-cloudimg-console.log
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml

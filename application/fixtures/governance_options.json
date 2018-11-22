@@ -1,0 +1,30 @@
+[
+  {
+    "model": "application.GovernanceOption",
+    "fields": {
+      "name": "Cooperative",
+      "description": "Cooperative: members make decisions collectively"
+    }
+  },
+  {
+    "model": "application.GovernanceOption",
+    "fields": {
+      "name": "Democratic",
+      "description": "Democratic: member-elected board makes decisions"
+    }
+  },
+    {
+    "model": "application.GovernanceOption",
+    "fields": {
+      "name": "Company",
+      "description": "Company: founders and/or hired staff make decisions"
+    }
+  },
+    {
+    "model": "application.GovernanceOption",
+    "fields": {
+      "name": "Satellite",
+      "description": "Satellite: decisions are made by an external organization"
+    }
+  }
+]

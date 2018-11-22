@@ -5,7 +5,7 @@
 <head>
 	<link href="https://fonts.googleapis.com/css?family=Libre+Baskerville|Source+Sans+Pro:200,300,300i,400,600" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="{% static 'css/leaflet.css' %}"/>
-    <link rel="stylesheet" type="text/css" href="{$ static 'css/MarkerCluster.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/MarkerCluster.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/MarkerCluster.Default.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/stylesheet.css' %}"/>
     <script src="{% static 'js/leaflet.js' %}"></script>
@@ -99,6 +99,16 @@
             </li>
         </ul>  -->
         </div>
+	
+	{% include "snippets/delete-space.html" %}
+    <script>
+        // map config
+        atlas_of_innovation_config = {
+            map_center : [20, 0],
+            map_zoom : 2,
+            filter_terms : "not_closed=True"
+        }
+    </script>
     <script src="{% static 'js/map.js' %}"></script>
 </body>
 </html>

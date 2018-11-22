@@ -1,0 +1,35 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<link href="https://fonts.googleapis.com/css?family=Libre+Baskerville|Source+Sans+Pro:200,300,300i,400,600" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/leaflet.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/MarkerCluster.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/MarkerCluster.Default.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/stylesheet.css' %}"/>
+    <script src="{% static 'js/leaflet.js' %}"></script>
+	<script src="{% static 'js/leaflet.markercluster.js' %}"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="{% static 'js/page.js' %}"></script>
+    <title>Ananse Innovation Map</title>
+</head>
+<body>
+    <div id="map-container">
+	    <div id="map"></div>
+        <div id="loading">
+            <div class="loader"></div>
+            <h3 class="loader-text">Finding Spaces...</h3>
+        </div>
+    </div>
+    <script>
+        // map config
+        atlas_of_innovation_config = {
+            map_center : {{ map_center }},
+            map_zoom : {{ map_zoom }},
+            filter_terms : "{{ filter_terms }}"
+        }
+    </script>
+    <script src="{% static 'js/map.js' %}"></script>
+</body>
+</html>

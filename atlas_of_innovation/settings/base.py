@@ -27,10 +27,11 @@ INSTALLED_APPS = [
     'application.apps.ApplicationConfig',
     'django_countries',
     'rest_framework',
-    'captcha'
+    'captcha',
 ]
 
 MIDDLEWARE = [
+    'application.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -68,10 +69,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'atlas',
-        'USER': 'lyla',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
+        'USER': 'ubuntu',
+        'PASSWORD': 'ubuntu',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 

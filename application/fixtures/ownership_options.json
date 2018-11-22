@@ -1,0 +1,79 @@
+[
+  {
+    "model": "application.OwnershipOption",
+    "fields": {
+      "name": "Private Sector",
+      "description": "Private Sector: a for-profit business, corporation, or startup"
+    }
+  },
+    {
+    "model": "application.OwnershipOption",
+    "fields": {
+      "name": "Non-Profit",
+      "description": "Non-Profit: a registered non-profit organization"
+    }
+  },
+    {
+    "model": "application.OwnershipOption",
+    "fields": {
+      "name": "Primary Education",
+      "description": "Educational: primary school"
+    }
+  },
+    {
+    "model": "application.OwnershipOption",
+    "fields": {
+      "name": "Secondary Education",
+      "description": "Educational: secondary school"
+    }
+  },
+    {
+    "model": "application.OwnershipOption",
+    "fields": {
+      "name": "University",
+      "description": "Educational: university"
+    }
+  },
+    {
+    "model": "application.OwnershipOption",
+    "fields": {
+      "name": "Vocational",
+      "description": "Educational: vocational school"
+    }
+  },
+    {
+    "model": "application.OwnershipOption",
+    "fields": {
+      "name": "Local Government",
+      "description": "Government: Local or Municipal"
+    }
+  },
+    {
+    "model": "application.OwnershipOption",
+    "fields": {
+      "name": "Provincial Government",
+      "description": "Government: Provincial"
+    }
+  },
+    {
+    "model": "application.OwnershipOption",
+    "fields": {
+      "name": "National Government",
+      "description": "Government: National"
+    }
+  },
+    {
+    "model": "application.OwnershipOption",
+    "fields": {
+      "name": "Unincorporated",
+      "description": "Unincorporated"
+    }
+  },
+    {
+    "model": "application.OwnershipOption",
+    "fields": {
+      "name": "Library",
+      "description": "Library"
+    }
+  }
+]

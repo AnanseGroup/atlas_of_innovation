@@ -6,6 +6,7 @@ from rest_framework.test import APITestCase
 import json
 
 class SpaceTestCase(TestCase):
+    # Tests are just extremely broken at the moment. This needs serious clean-up.
 
     fixtures = ['initial_database']
 
