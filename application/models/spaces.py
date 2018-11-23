@@ -93,9 +93,18 @@ class Space(models.Model):
         d = datetime.utcnow() - timedelta(days=180)
         l = self.last_updated.replace(tzinfo=None)
         if ((l - d).days > 0):
-            return True
+            return False
         else:
             return False
+
+class DataCreditLog(models.Model):
+    '''Logs the edit credits made to the spaces
+    '''
+    id = models.AutoField(primary_key=True)
+    space_id = models.IntegerField()
+    ip_address = models.GenericIPAddressField()
+    credit = models.CharField(max_length=100, null=True, blank=True)
+    date = models.DateTimeField(null=False, auto_now=True)
 
 class SpaceForm(ModelForm):
 

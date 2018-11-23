@@ -119,6 +119,13 @@ class Command(BaseCommand):
                     if governance_obj:
                         new_space.governance_type.add(governance_obj)
                     new_space.save()
+                    data_credit = {
+                               'ip_address': '127.0.0.1',
+                               'space_id': new_space.id,
+                               'credit': 'CSV / '+new_space.data_credit
+                              }
+                    new_data_credit = DataCreditLog(**data_credit)
+                    new_data_credit.save()
                     
                 except Exception as e:
                     print (space.__dict__)

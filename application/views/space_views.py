@@ -42,6 +42,22 @@ class SpaceEdit(UpdateView):
             raise Http404
         return context
 
+    def form_valid(self, form): 
+        self.object = form.save()
+        redirect_url = super(SpaceEdit, self).form_valid(form)
+
+        ''' (Pedro) Related to #92 Add new anonymous credit to the credit log
+        '''
+        data_credit = {
+                       'ip_address': self.request.META['REMOTE_ADDR'],
+                       'space_id': self.object.id,
+                       'credit': 'Anonymous'
+                      }
+        new_data_credit = DataCreditLog(**data_credit)
+        new_data_credit.save()
+
+        return redirect_url
+
 edit_space = SpaceEdit.as_view()
 
 class ListSpaces(TemplateView):
