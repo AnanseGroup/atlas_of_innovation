@@ -14,9 +14,7 @@ NOCAPTCHA = True
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = os.environ['ALLOWED_HOSTS'].split(",") or \
-                ["atlasenv.g3a3emn8g9.us-west-2.elasticbeanstalk.com",
-				 ".atlasofinnovation.com"]
+ALLOWED_HOSTS = os.environ['ALLOWED_HOSTS'].split(", ")
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
