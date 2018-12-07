@@ -46,6 +46,13 @@ install_postgres() {
 }
 
 ###
+# Create database for the application
+create_database() {
+  echo "Creating application database **************************************** "
+  sudo -u postgres bash -c "psql -c \"CREATE DATABASE atlas;\""
+}
+
+###
 # Install Python dependencies
 install_python_deps() {
   echo "Installing Python dependencies *************************************** "
@@ -105,12 +112,23 @@ install_direnv() {
 }
 
 ###
+# Fetch basic environment values
+fetch_env_files() {
+  echo 'Fetching basic environment values ************************************ '
+  curl -sSL curl -sSL https://gist.githubusercontent.com/MakerNetwork/e97b2019bc11224441a98bc9e9424ad4/raw/e1404ee40e67f393dbd450d8e46b857908aa8b81/.envrc > ~/.envrc
+  sudo mv ~/.envrc /vagrant/.envrc
+}
+
+###
 # Include some alias to work with Atlas
 add_command_alias() {
   echo "Include alias to manage Atlas **************************************** "
-  echo "alias atlas_start='python /vagrant/manage.py runserver 0.0.0.0:8000' " >> ~/.profile
-  echo "alias atlas_migrate='python /vagrant/manage.py migrate'" >> ~/.profile
-  echo "alias atlas_load_data='python /vagrant/manage.py loaddata governance_options ownership_options initial_database'" >> ~/.profile
+  echo -e "\n# Commands to help with Atlas management"
+  echo "alias atlas_run='python /vagrant/manage.py runserver 0.0.0.0:8000' " >> ~/.profile
+  echo "alias atlas_db_migrate='python /vagrant/manage.py migrate'" >> ~/.profile
+  echo "alias atlas_db_load='python /vagrant/manage.py loaddata governance_options ownership_options initial_database'" >> ~/.profile
+  echo "alias atlas_db_prepare='/vagrant/bin/db_prepare.sh'" >> ~/.profile
+  echo "alias atlas_db_reset='/vagrant/bin/db_reset.sh'" >> ~/.profile
 }
 
 ###
@@ -125,6 +143,7 @@ setup(){
   system_update
   set_user_conf
   install_postgres
+  create_database
   install_python_deps
   set_virtual_env
   install_app_deps
@@ -135,3 +154,4 @@ setup(){
 }
 
 setup "$@"
+echo "The virtual environment has been provisioned. Run 'vagrant reload'."
