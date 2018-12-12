@@ -27,9 +27,14 @@
     <a href="/" id="wnavigation-bar-document-revision-button" class="navigation-bar-button">Revision</a>
 	</div>
 </div-->
+<div class="row">
 {% if not space.validated %}
 <a id="cardtitle" class="waves-effect waves-light btn" href="{% url 'edit_space' space.id %}"><i class="material-icons right">edit</i>Edit</a>
 {% endif %}
+ 
+          
+        <a id="cardtitle" class="waves-effect waves-light btn" href="{%url 'show_data_credit' space.id %}"><i class="material-icons right">history</i>View History</a>
+          </div>
 
 <div class="container">
 	<div class="row">
@@ -116,6 +121,7 @@
           <p >{{space.date_closed}}</p>
           {% endif %}
         </div>
+       
         <div class="col m6">
           {% if space.business_model %}
           <h6>Access, Cost Structure, and/or Membership model</h6>

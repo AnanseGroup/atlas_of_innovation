@@ -20,6 +20,7 @@ urlpatterns = [
     path('space/add/', views.add_space, name='create_space'),
 
     path('space/filter/', views.list_spaces, name='list_spaces'),
+    path('space/<int:id>/history/', views.show_data_credit, name='show_data_credit'),
 
     # REST API
     path('api/space/filter/', views.filter_spaces, name='filter_spaces'),

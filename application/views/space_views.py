@@ -10,6 +10,7 @@ from django.http import Http404
 
 from application.models import Space
 from application.models.spaces import SpaceForm
+from application.models.spaces import DataCreditLog
 import datetime
 
 def space_profile(request, id):
@@ -63,3 +64,19 @@ edit_space = SpaceEdit.as_view()
 class ListSpaces(TemplateView):
     template_name = "list.html"
 list_spaces = ListSpaces.as_view()
+
+# class DataCredit(TemplateView):
+#      model = DataCreditLog
+#      template_name ="history.html"
+#      print("fffffffff")
+#      def  data_credit_detail(request, id):
+#         data_credit_log = DataCreditLog.objects.get(space_id=id)
+#         print("basura"+data_credit_log)
+# show_data_credit= DataCredit.as_view()
+
+def show_data_credit(request, id):
+        data_credit_log = (Space.objects.get(id=id))
+        return render(
+        request,
+        'show_data_credit.html'        
+    )
