@@ -37,7 +37,7 @@
        <p ></p>
        <h2 id="wTitle">{{space.name}}</h2>
        {% if space.website %}
-       <a id="wWebsite" href="{{space.website}}" target="_blank">{{space.website}}</a>
+       <a id="wWebsite" href="{{space.website | http_in_url}}" target="_blank">{{ space.website }}</a>
        {% else %}
        <a id="wWebsite" href="{%url 'space_profile' space.id %}" target="_blank">
        Link to Atlas Profile</a>
