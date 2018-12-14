@@ -75,8 +75,10 @@ list_spaces = ListSpaces.as_view()
 # show_data_credit= DataCredit.as_view()
 
 def show_data_credit(request, id):
-        data_credit_log = (Space.objects.get(id=id))
+        data = DataCreditLog.objects.get(space_id=id)
+        print(data)
         return render(
         request,
-        'show_data_credit.html'        
+        'show_data_credit.html',
+        {"id": id, "data":data}     
     )

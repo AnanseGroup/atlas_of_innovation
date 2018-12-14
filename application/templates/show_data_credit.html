@@ -14,20 +14,33 @@
 
 <div class="container">
     <div class="row">
-      <div class="col m6">
+      <div class="col-offset-2 m6">
         <div class="card hoverable">
           <div class="card-content">
             <span class="card-title center-align" id="cardtitle">Credit details</span>
-                {% for credit, date in data_credit_log %}
-          <div >{{data_credit_log.credit}}    {{data_credit_log.date}}</div> 
-          {% endfor %}
-                          
-
-             
           </div>
         </div>
       </div>
     </div>
 </div>
+
+<div class="container">
+    <div class="row">
+      <div class="col-offset-2 m6">
+        <div class="card hoverable">
+          <div class="card-content">
+           <div class="col offset-col-2">
+              {{data.credit}}
+            </div>
+            <div class=" col">
+              {{data.date}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+            
+
 </body>
 </html>
