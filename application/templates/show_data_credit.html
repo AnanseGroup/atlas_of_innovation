@@ -23,23 +23,29 @@
       </div>
     </div>
 </div>
-
-<div class="container">
-    <div class="row">
-      <div class="col-offset-2 m6">
-        <div class="card hoverable">
-          <div class="card-content">
-           <div class="col offset-col-2">
-              {{data.credit}}
-            </div>
-            <div class=" col">
-              {{data.date}}
+{% for credit in data %}
+  <div class="container">
+      <div class="row">
+        <div class="col-offset-2 m6">
+          <div class="card hoverable">
+            <div class="card-content  center-align">
+            
+                <div >
+                  <strong>ID:   </strong> {{credit.id}}
+                </div>
+               <div >
+                  <strong> CREDIT:   </strong> {{credit.credit}}
+                </div>
+                <div >
+                 <strong>DATE:   </strong>{{credit.date}}
+                </div>
+             
             </div>
           </div>
         </div>
       </div>
-    </div>
-</div>
+  </div>
+{% endfor %}
             
 
 </body>
