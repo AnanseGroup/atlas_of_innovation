@@ -1,0 +1,735 @@
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville|Source+Sans+Pro:200,300,300i,400,600|Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="/static/css/stylesheet.css"/>
+  <link rel="stylesheet" type="text/css" href="/static/css/wikipage.css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/static/css/materialize/css/materialize.min.css"/>
+  <script src="/static/css/materialize/js/materialize.min.js"></script>
+</head>
+    {% include "snippets/header.html" %}
+<br><br><br>
+<div class="row" style="font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', sans-serif;">
+	<div class="col s12">
+		<ul class="tabs">
+			<li class="tab col s2"><a id="approved-tag" href="#approved">New Spaces ({{ approved | length }})</a></li>
+			<li class="tab col s2"><a id="excluded-tag" href="#dataerr">Data errors ({{ excluded | length }})</a></li>
+			<li class="tab col s2"><a id="problem-tag" href="#problem">Match Problem ({{ problem | length }})</a></li>
+			<li class="tab col s2"><a id="discarded-tag" href="#discarded">Discarded ({{ discarded | length }})</a></li>
+			<li class="tab col s2"><a id="processed-tag" href="#processed">Processed ({{ processed | length }})</a></li>
+		</ul>
+	</div>
+	<div id="approved" class="col s12">
+		<div class="card hoverable">
+			<div class="card-content">
+			<span class="card-title" id="wTitle">New Spaces</span>
+			<p><a class="waves-effect waves-light btn" href="#!" id="process-all">Process All Spaces</a></p>
+				<ul class="collection" id="approved-collection">
+					{% for space in approved %}
+					<li class="collection-item avatar scale-transition" id="lispace-{{space.id}}">
+						<p> Name: {{space.name}} <br/>
+							Address: {{space.address1}} <br/>
+							City: {{space.city}}<br/>
+							Province: {{space.province}}<br/>
+							Postal Code: {{space.postal_code}}<br/>
+							Fhash: {{space.fhash}}<br/>
+						</p>
+						<a class="secondary-content modal-trigger approved-space" id="pspace-{{space.id}}" href="#modal1"><i class="material-icons">edit</i></a>
+						<a class="secondary-content process-space " style="margin-top:40px" id="dspace-{{space.id}}" href="#!"><i class="material-icons green-text text-darken-2">check_circle</i></a>
+						<a class="secondary-content discard-space" style="margin-top:100px" id="dspace-{{space.0.id}}" href="#!"><i class="material-icons red-text text-darken-2">remove_circle</i></a>
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div id="dataerr" class="col s12 ">
+		<div class="card hoverable">
+			<a class="modal-trigger" style="display: block;margin: 20px auto;width: 97%;" href="#hashnote">Note About Hashes</a>
+			<div class="card-content">
+			<span class="card-title" id="wTitle">Data Errors</span>
+				<ul class="collection"  id="excluded-collection">
+					{% for space in excluded %}
+					<li class="collection-item avatar scale-transition" id="lispace-{{space.0.id}}">
+						<p> Name: {{space.0.name}} <br/>
+							Address: {{space.0.address1}} <br/>
+							City: {{space.0.city}}<br/>
+							Province: {{space.0.province}}<br/>
+							Postal Code: {{space.0.postal_code}}<br/>
+							Problems: <br/>
+							{% for problem in space.1 %}
+								<span style="margin-left:20px">{{problem.desc}}</span><br/>
+							{% endfor %}
+						</p>
+						<a class="secondary-content modal-trigger approved-space" id="pspace-{{space.0.id}}" href="#modal1"><i class="material-icons">edit</i></a>
+						<a class="secondary-content process-space" style="margin-top:40px" id="dspace-{{space.0.id}}" href="#!"><i class="material-icons green-text text-darken-2">check_circle</i></a>
+						<a class="secondary-content discard-space" style="margin-top:100px" id="dspace-{{space.0.id}}" href="#!"><i class="material-icons red-text text-darken-2">remove_circle</i></a>
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div id="problem" class="col s12 ">
+		<div class="card hoverable">
+			<div class="card-content">
+			<span class="card-title" id="wTitle">Match problems</span>
+				<ul class="collection" id="problem-collection">
+					{% for space in problem %}
+					<li class="collection-item avatar scale-transition" id="lispace-{{space.1.id}}--{{space.0.id}}">
+						<p>
+							<table class="centered highlight" style="width:96%">
+								<thead>
+								<tr>
+									<th> </th>
+									<th>Provisional Space</th>
+									<th>Space in DB</th>
+								</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Name</td>
+										<td>{{space.1.name}}</td>
+										<td>{{space.0.name}}</td>
+									</tr>
+									<tr>
+										<td>Address</td>
+										<td>{{space.1.address1}}</td>
+										<td>{{space.0.address1}}</td>
+									</tr>
+									<tr>
+										<td>Province</td>
+										<td>{{space.1.province}}</td>
+										<td>{{space.0.province}}</td>
+									</tr>
+									<tr>
+										<td>Postal Code</td>
+										<td>{{space.1.postal_code}}</td>
+										<td>{{space.0.postal_code}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</p>
+						<a class="secondary-content modal-trigger merge-space" id="mspace-{{space.0.id}}-{{space.1.id}}" href="#modal2"><i class="material-icons">edit</i></a>
+						<a class="secondary-content process-space " style="margin-top:40px" id="dspace-{{space.1.id}}" href="#!"><i class="material-icons green-text text-darken-2">check_circle</i></a>
+						<a class="secondary-content discard-space" style="margin-top:100px" id="dspace-{{space.1.id}}" href="#!"><i class="material-icons red-text text-darken-2">remove_circle</i></a>
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div id="discarded" class="col s12">
+		<div class="card hoverable">
+			<div class="card-content">
+			<span class="card-title" id="wTitle">Discarded</span>
+			<p>
+				<a class="waves-effect waves-light btn undo-all" href="#!" id="undo-discard">Undo All Spaces</a>
+				<a style="float:right" class="waves-effect waves-light btn modal-trigger red  accent-2" href="#delete-forever">DELETE FOREVER</a>
+			</p>
+				<ul class="collection" id="discard-collection">
+					{% for space in discarded %}
+					<li class="collection-item avatar" id="lispace-{{space.id}}">
+						<p> Name: {{space.name}} <br/>
+							Address: {{space.address1}} <br/>
+							City: {{space.city}}<br/>
+							Province: {{space.province}}<br/>
+							Postal Code: {{space.postal_code}}<br/>
+							Fhash: {{space.fhash}}<br/>
+						</p>
+						<a class="secondary-content reset-space" id="pspace-{{space.id}}" href="#!"><i class="material-icons">undo</i></a>
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div id="processed" class="col s12">
+		<div class="card hoverable">
+			<div class="card-content">
+			<span class="card-title" id="wTit	le">Processed</span>
+			<p>
+				<a class="waves-effect waves-light btn undo-all" href="#!" id="undo-processed">Undo All Spaces</a>
+				<a style="float:right" class="waves-effect waves-light btn modal-trigger red accent-2" href="#commit-forever">COMMIT SPACES</a>
+			</p>
+				<ul class="collection" id="processed-collection">
+					{% for space in processed %}
+					<li class="collection-item avatar" id="lispace-{{space.id}}">
+						<p> Name: {{space.name}} <br/>
+							Address: {{space.address1}} <br/>
+							City: {{space.city}}<br/>
+							Province: {{space.province}}<br/>
+							Postal Code: {{space.postal_code}}<br/>
+							Fhash: {{space.fhash}}<br/>
+						</p>
+						<a class="secondary-content reset-space" id="pspace-{{space.id}}" href="#!"><i class="material-icons">undo</i></a>
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+	<!-- Note about hashes -->
+	<div id="hashnote" class="modal modal-d">
+		<div class="modal-content">
+			<p> Every space has a fingerprint (or hash) that identifies the
+			data in that space, we use this hash to compare the data in this space
+			to the data in other spaces, if a threshold is met, we assume the spaces
+			are the same and that's how we create the Match Problem table.</p>
+			<p>But we need a minimum amount of data to create a hash (50 bytes or so)
+			try to fill all the fields in this space so we can generate a hash for that space</p>
+			<p> Is possible that even with all the fields completed the hash won't generate because the data is not enough to fill 50 bytes you	can add this space to the DB with the "process space" option but be aware that the data may be repeated :( </p>
+		</div>
+		<div class="modal-footer">
+			<a href="#!" class="modal-close waves-effect waves-green btn-flat">Got it!</a>
+		</div>
+	</div>
+
+	<!-- Provisional Space Modal -->
+	<div id="modal1" class="modal modal-d">
+		<div class="modal-content">
+			<input type="hidden" class="mspace1 nrmodal" id="espace-id" value=""/>
+			<input type="text" id="espace-name" class="mspace1 nrmodal" placeholder="Name" value=""/>
+			<input type="text" id="espace-address1" class="mspace1 nrmodal" placeholder="Address" value="" />
+			<input type="text" id="espace-province" class="mspace1 nrmodal" placeholder="Province" value="" />
+			<input type="text" id="espace-postal_code" class="mspace1 nrmodal" placeholder="Postal Code" value="" />
+			<input type="text" id="espace-latitude" class="mspace1 nrmodal" placeholder="Latitude" value="" />
+			<input type="text" id="espace-longitude" class="mspace1 nrmodal" placeholder="Longitude" value="" />
+			<input type="text" id="espace-website" class="mspace1 nrmodal" placeholder="Website" value="" />
+			<input type="text" id="espace-email" class="mspace1 nrmodal" placeholder="E-Mail" value="" />
+		</div>
+		<div class="modal-footer">
+			<a class="waves-effect waves-light btn save-pspace" id="nrmodal">Save Space</a>
+		</div>
+	</div>
+
+	<!-- Match Problem Modal -->
+	<div id="modal2" class="modal modal-d modal-fixed-footer">
+		<div class="modal-content">
+			<div  class="row">
+				<div class="col s5"><h3>Provisional Space</h3></div>
+				<div class="col s2"></div>
+				<div class="col s5"><h3>Space in DB</h3></div>
+			</div>
+			<div class="row">
+				<div class="col s5">
+					<input type="hidden" class="mspace1 prmodal" id="mspace1-id" value=""/>
+					<input type="text" class="mspace1 prmodal" id="mspace1-name" value=""/>
+					<input type="text" class="mspace1 prmodal" id="mspace1-address1" value="" />
+					<input type="text" class="mspace1 prmodal" id="mspace1-province" value="" />
+					<input type="text" class="mspace1 prmodal" id="mspace1-postal_code" value="" />
+					<input type="text" class="mspace1 prmodal" id="mspace1-latitude" value="" />
+					<input type="text" class="mspace1 prmodal" id="mspace1-longitude" value="" />
+					<input type="text" class="mspace1 prmodal" id="mspace1-website" value="" />
+					<input type="text" class="mspace1 prmodal" id="mspace1-email" value="" />
+				</div>
+				<div class="col s2">
+					<!-- Merger buttons -->
+					<div class="row mrow">
+						<a class="waves-effect waves-teal btn-flat leftm-arr mergerbtn" id="sendl-name"><i class="material-icons">arrow_back</i></a>
+						<a class="waves-effect waves-teal btn-flat rightm-arr mergerbtn" id="sendr-name"><i class="material-icons">arrow_forward</i></a>
+					</div>
+					<div class="row mrow">
+						<a class="waves-effect waves-teal btn-flat leftm-arr mergerbtn" id="sendl-address1"><i class="material-icons">arrow_back</i></a>
+						<a class="waves-effect waves-teal btn-flat rightm-arr mergerbtn"  id="sendr-address1"><i class="material-icons">arrow_forward</i></a>
+					</div>
+					<div class="row mrow">
+						<a class="waves-effect waves-teal btn-flat leftm-arr mergerbtn" id="sendl-province"><i class="material-icons">arrow_back</i></a>
+						<a class="waves-effect waves-teal btn-flat rightm-arr mergerbtn" id="sendr-province"><i class="material-icons">arrow_forward</i></a>
+					</div>
+					<div class="row mrow">
+						<a class="waves-effect waves-teal btn-flat leftm-arr mergerbtn" id="sendl-latitude"><i class="material-icons">arrow_back</i></a>
+						<a class="waves-effect waves-teal btn-flat rightm-arr mergerbtn" id="sendr-latitude"><i class="material-icons">arrow_forward</i></a>
+					</div>
+					<div class="row mrow">
+						<a class="waves-effect waves-teal btn-flat leftm-arr mergerbtn" id="sendl-longitude"><i class="material-icons">arrow_back</i></a>
+						<a class="waves-effect waves-teal btn-flat rightm-arr mergerbtn" id="sendr-longitude"><i class="material-icons">arrow_forward</i></a>
+					</div>
+					<div class="row mrow">
+						<a class="waves-effect waves-teal btn-flat leftm-arr mergerbtn" id="sendl-website"><i class="material-icons">arrow_back</i></a>
+						<a class="waves-effect waves-teal btn-flat rightm-arr mergerbtn" id="sendr-website"><i class="material-icons">arrow_forward</i></a>
+					</div>
+					<div class="row mrow">
+						<a class="waves-effect waves-teal btn-flat leftm-arr mergerbtn" id="sendl-email"><i class="material-icons">arrow_back</i></a>
+						<a class="waves-effect waves-teal btn-flat rightm-arr mergerbtn" id="sendr-email"><i class="material-icons">arrow_forward</i></a>
+					</div>
+				</div>
+				<div class="col s5">
+					<input type="hidden" class="mspace2" id="mspace2-id" value=""/>
+					<input type="text" class="mspace2" id="mspace2-name" value=""/>
+					<input type="text" class="mspace2" id="mspace2-address1" value="" />
+					<input type="text" class="mspace2" id="mspace2-province" value="" />
+					<input type="text" class="mspace2" id="mspace2-postal_code" value="" />
+					<input type="text" class="mspace2" id="mspace2-latitude" value="" />
+					<input type="text" class="mspace2" id="mspace2-longitude" value="" />
+					<input type="text" class="mspace2" id="mspace2-website" value="" />
+					<input type="text" class="mspace2" id="mspace2-email" value="" />
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<div class="row">
+				<div class="col s4">
+					<a class="waves-effect waves-light modal-close red lighten-2 btn" style="float:left">Cancel</a>
+				</div>
+				<div class="col s4">
+					<a class="waves-effect waves-light btn save-pspace" id="prmodal">Save Provisional Space</a>
+				</div>
+				<div class="col s4">
+					<a class="waves-effect waves-light btn save-dbspace">Save DB Space</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="loading" class="modal-h modal" style="width:300;height:250px">
+		<div class="modal-content" style="margin-top:15%">
+			<h5>Running analysis, please wait...</h5>
+			<div class="progress">
+				<div class="indeterminate"></div>
+			</div>
+		</div>
+	</div>
+
+	<div id="delete-forever" class="modal-h modal" style="width:480px">
+		<div class="modal-content">
+			<h4>Delete Forever</h4>
+			<p>This will delete this provisional spaces forever, this data can't be recovered, think carefully before accepting</p>
+			<div class="modal-footer">
+				<div class="col s4">
+					<a class="waves-effect waves-light modal-close red lighten-2 btn" style="float:left">Cancel</a>
+				</div>
+				<div class="col s4">
+					<a class="waves-effect waves-light btn" id="delete-discarded" href="#">YES! Delete them all</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="commit-forever" class="modal-h modal" style="width:480px">
+		<div class="modal-content">
+			<h4>Commit Spaces</h4>
+			<p>This will add the processed spaces to the database and will delete this commited spaces from the provisioning data</p>
+			<div class="modal-footer">
+				<div class="col s4">
+					<a class="waves-effect waves-light modal-close red lighten-2 btn" style="float:left">Cancel</a>
+				</div>
+				<div class="col s4">
+					<a class="waves-effect waves-light btn" id="commit-spaces" href="#">YES! Commit them </a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% include "snippets/delete-space.html" %}
+
+<script>
+	$(document).ready(function(){
+
+		/*	This script is needed so we dont get CSRF errors when making ajax
+			requests to the django methods */
+		function getCookie(name) {
+			var cookieValue = null;
+			if (document.cookie && document.cookie !== '') {
+				var cookies = document.cookie.split(';');
+				for (var i = 0; i < cookies.length; i++) {
+					var cookie = jQuery.trim(cookies[i]);
+					// Does this cookie string begin with the name we want?
+					if (cookie.substring(0, name.length + 1) === (name + '=')) {
+						cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+						break;
+					}
+				}
+			}
+			return cookieValue;
+		}
+		var csrftoken = getCookie('csrftoken');
+		function csrfSafeMethod(method) {
+			// these HTTP methods do not require CSRF protection
+			return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+		}
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type)) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+		/* CSRF stuff ends */
+
+		$('.tabs').tabs();
+		$('.modal-h').modal();
+		$('.modal-d').modal({
+			onOpenStart: function(modal, trigger) {
+
+				var id = trigger.id.split("-");
+				/*  We get the data from the provisional space if the
+					provisonal space modal is called
+				*/
+				if(id[0] == 'pspace'){
+					$.ajax({
+						type: 'GET',
+						dataType: "json",
+						url: '/provisional_space/',
+						data: {id:id[1]},
+						success: function (data){
+								for(var k in data){
+									$("#espace-"+k).val(data[k]);
+								}
+						}
+					})
+				/*  If the match problem modal is called we get the
+					database space and the provisional space
+				*/
+				}else if(id[0]== 'mspace'){
+					$.ajax({
+						type: 'GET',
+						dataType: "json",
+						url: '/provisional_space/',
+						data: {id:id[2]},
+						success: function (data){
+								for(var k in data){
+									$("#mspace1-"+k).val(data[k]);
+								}
+						}
+					});
+					$.ajax({
+						type: 'GET',
+						dataType: "json",
+						url: '/space_csv/',
+						data: {id:id[1]},
+						success: function (data){
+								for(var k in data){
+									$("#mspace2-"+k).val(data[k]);
+								}
+						}
+					})
+				}
+			},
+		});
+
+		/* Saves the database space */
+		$('.save-dbspace').click(function(){
+			data = {};
+			$( ".mspace2" ).each(function( index ) {
+				var key = $(this).attr('id').split('-')[1];
+				data[key] = $( this ).val();
+			});
+			$.ajax({
+				type: 'POST',
+				dataType: "json",
+				url: '/space_csv/',
+				data: data,
+				success: function (data){
+					M.toast({html: 'Space saved successfully'})
+					rerun_analysis();
+				}
+			});
+		});
+
+		/* Saves the provisional space */
+		$('.save-pspace').click(function(){
+			modal_src = $(this).attr('id');
+			data = {};
+			$( ".mspace1."+modal_src ).each(function( index ) {
+				var key = $(this).attr('id').split('-')[1];
+				data[key] = $( this ).val();
+			});
+			$.ajax({
+				type: 'POST',
+				dataType: "json",
+				url: '/provisional_space/',
+				data: data,
+				success: function (data){ 
+					$('.modal-d').modal('close');
+					M.toast({html: 'Provisional space saved successfully'}) 
+					rerun_analysis();
+				}
+			});
+		});
+
+		/* Deletes all the discarded provisional spaces */
+		$('#delete-discarded').click( function(){
+			$.ajax({
+				type: 'DELETE',
+				dataType: "json",
+				url: '/provisional_space/',
+				success: function (data) {
+					$('.modal-h').modal('close');
+					$("#discard-collection").html("");
+					recount_spaces();
+					M.toast({html: 'Provisional spaces deleted successfully'})
+				}
+			});
+		});
+
+		/* Adds and deletes all the processed provisional spaces */
+		$('#commit-spaces').click(function(){
+			$.ajax({
+				type: 'PATCH',
+				dataType: "json",
+				url: '/provisional_space/',
+				success: function (data) {
+					$('.modal-h').modal('close');
+					$("#processed-collection").html("");
+					recount_spaces();
+					M.toast({html: 'Provisional spaces commited successfully'})
+				}
+			});
+		});
+
+		/* Handles the merger buttons */
+		$('.mergerbtn').click(function(){
+			var id = $(this).attr('id').split("-");
+			var target = "";
+			var source = "";
+			if(id[0] == 'sendr'){
+				source = "#mspace1-" + id[1];
+				target = "#mspace2-" + id[1];
+			}else{
+				source = "#mspace2-" + id[1];
+				target = "#mspace1-" + id[1];
+			}
+			$(target).val($(source).val());
+		});
+
+		/* Handles processing all spaces */
+		$("#process-all").click(function() {
+			var ids = [];
+			$('#approved-collection li').each(function(i){
+				ids.push($(this).attr("id").split('-')[1])
+			});
+			$.ajax({
+				type: 'PUT',
+				dataType: "json",
+				url: '/provisional_space/',
+				data: JSON.stringify({override_analysis:'1', id:ids}),
+				success: function (data){
+					for (var i = 0; i < data.length; i++){
+						new_elem = $('<li class="collection-item avatar" id="lispace-'+data[i].id+'"><p>'+
+						'Name: '+data[i].name+' <br/> \
+						Address: '+data[i].address1+' <br/> \
+						City: '+data[i].city+'<br/>  \
+						Province: '+data[i].province+'<br/> \
+						Postal Code: '+data[i].postal_code+'<br/> \
+						Fhash: '+data[i].fhash+'<br/>'+
+						'</p>'+'<a class="secondary-content reset-space" href="#!" id="undosp-'+data[i].id+'"><i class="material-icons">undo</i></a>' )
+						new_elem.appendTo("#processed-collection");
+					}
+					$("#approved-collection").html("");
+					M.toast({html: 'All provisional spaces processed'});
+					recount_spaces();
+				}
+			});
+		});
+
+		/* Handles processing all spaces */
+		$(".undo-all").click(function(){
+			var ids = [];
+			type = $(this).attr("id").split('-')[1];
+			$('#'+type+'-collection li').each(function(i){
+				ids.push($(this).attr("id").split('-')[1])
+			})
+			$.ajax({
+				type: 'PUT',
+				dataType: "json",
+				url: '/provisional_space/',
+				data: JSON.stringify({reset_flags:'1', id:ids}),
+				success: function (data){ 
+					$("#"+type+"-collection").html("");
+					M.toast({html: 'All provisional spaces undo'})
+					rerun_analysis();
+				}
+			});
+		});
+
+		/* Handles the discard space event */
+		$('.collection').on('click', '.discard-space',
+			function() {
+				$(this).parent().addClass("scale-out").delay(400).queue(function(next){
+					var id = $(this).attr('id').split("-")[1];
+					$(this).remove();
+					next();
+					$.ajax({
+						type: 'PUT',
+						dataType: "json",
+						url: '/provisional_space/',
+						data: JSON.stringify({discarded:'1', id:[id]}),
+						success: function (data){
+							M.toast({html: 'Provisional space discarded'})
+							new_elem = $('<li class="collection-item avatar" id="lispace-'+data[0].id+'"><p>'+
+							'Name: '+data[0].name+' <br/> \
+							Address: '+data[0].address1+' <br/> \
+							City: '+data[0].city+'<br/>  \
+							Province: '+data[0].province+'<br/> \
+							Postal Code: '+data[0].postal_code+'<br/> \
+							Fhash: '+data[0].fhash+'<br/>'+
+							'</p>'+'<a class="secondary-content reset-space" href="#!" id="undosp-'+data[0].id+'"><i class="material-icons">undo</i></a>' )
+							new_elem.appendTo("#discard-collection");
+							recount_spaces();
+						}
+					});
+				});
+			}
+		);
+
+		/* Handles the processed space event */
+		$('.collection').on('click', '.process-space',
+			function() {
+				$(this).parent().addClass("scale-out").delay(400).queue(function(next){
+					var id = $(this).attr('id').split("-")[1];
+					$(this).remove();
+					next();
+					$.ajax({
+						type: 'PUT',
+						dataType: "json",
+						url: '/provisional_space/',
+						data: JSON.stringify({override_analysis:'1', id:[id]}),
+						success: function (data){
+							M.toast({html: 'Provisional space processed'})
+							new_elem = $('<li class="collection-item avatar" id="lispace-'+data[0].id+'"><p>'+
+							'Name: '+data[0].name+' <br/> \
+							Address: '+data[0].address1+' <br/> \
+							City: '+data[0].city+'<br/>  \
+							Province: '+data[0].province+'<br/> \
+							Postal Code: '+data[0].postal_code+'<br/> \
+							Fhash: '+data[0].fhash+'<br/>'+
+							'</p>'+'<a class="secondary-content reset-space" href="#!" id="undosp-'+data[0].id+'"><i class="material-icons">undo</i></a>' )
+							new_elem.appendTo("#processed-collection");
+							recount_spaces();
+						}
+					});
+				});
+			}
+		);
+
+		/* Resets the space, runs the analysis again */
+		$('.collection').on('click', '.reset-space',
+			function(){
+				$(this).parent().addClass("scale-out").delay(400).queue(function(next){
+					var id = $(this).attr('id').split("-")[1];
+					$(this).remove();
+					next();
+					$.ajax({
+						type: 'PUT',
+						dataType: "json",
+						url: '/provisional_space/',
+						data: JSON.stringify({reset_flags:'1', id:[id]}),
+						success: function (data){
+							M.toast({html: 'Provisional space undo'});
+							rerun_analysis();
+						}
+					});
+				});
+			}
+		);
+
+		/* Runs the analysis again asyncronously */
+		function rerun_analysis(){
+			$('#loading').modal('open');
+			$.ajax({
+				type: 'GET',
+				dataType: "json",
+				url: '/analyze/provisional_spaces/',
+				data: {json_list:'1'},
+				success: function (space){
+					$('#approved-collection').html('');
+					$('#excluded-collection').html('');
+					$('#problem-collection').html('');
+					for(var i = 0; i < space.approved.length; i++) {
+						data = space.approved[i];
+						new_elem = $('<li class="collection-item avatar scale-transition" id="lispace-'+data.id+'"><p>'+
+						'Name: '+data.name+' <br/> \
+						Address: '+data.address1+' <br/> \
+						City: '+data.city+'<br/>  \
+						Province: '+data.province+'<br/> \
+						Postal Code: '+data.postal_code+'<br/> \
+						Fhash: '+data.fhash+'<br/>'+
+						'</p>'+'<a class="secondary-content modal-trigger approved-space" id="pspace-'+data.id+'" href="#modal1"><i class="material-icons">edit</i></a><a class="secondary-content process-space " style="margin-top:40px" id="dspace-'+data.id+'" href="#!"><i class="material-icons green-text text-darken-2">check_circle</i></a><a class="secondary-content discard-space" style="margin-top:100px" id="dspace-'+data.id+'" href="#!"><i class="material-icons red-text text-darken-2">remove_circle</i></a>');
+						new_elem.appendTo("#approved-collection");
+					}
+					for(var i = 0; i < space.excluded.length; i++) {
+						data = space.excluded[i];
+						problems = '';
+						for(var j = 0; j < data[1].length; j++){
+							problems += '<span style="margin-left:20px">'+data[1][j].desc+'</span><br/>'
+						}
+						new_elem = $('<li class="collection-item avatar scale-transition" id="lispace-'+data.id+'"><p>'+
+						'Name: '+data[0].name+' <br/> \
+						Address: '+data[0].address1+' <br/> \
+						City: '+data[0].city+'<br/>  \
+						Province: '+data[0].province+'<br/> \
+						Postal Code: '+data[0].postal_code+'<br/> \
+						Fhash: '+data[0].fhash+'<br/> \
+						Problems: <br/> '+ problems +
+						'</p>'+'<a class="secondary-content modal-trigger approved-space" id="pspace-'+data[0].id+'" href="#modal1"><i class="material-icons">edit</i></a><a class="secondary-content process-space " style="margin-top:40px" id="dspace-'+data[0].id+'" href="#!"><i class="material-icons green-text text-darken-2">check_circle</i></a><a class="secondary-content discard-space" style="margin-top:100px" id="dspace-'+data[0].id+'" href="#!"><i class="material-icons red-text text-darken-2">remove_circle</i></a>')
+						new_elem.appendTo("#excluded-collection");
+					}
+					for(var i = 0; i < space.problem.length; i++) {
+						data = space.problem[i]
+						new_elem = $('<li class="collection-item avatar scale-transition" id="lispace-'+data[1].id+'-'+data[0].id+'"> \
+							<p> \
+							<table class="centered highlight" style="width:96%"> \
+								<thead> \
+								<tr> \
+									<th> </th> \
+									<th>Provisional Space</th> \
+									<th>Space in DB</th> \
+								</tr> \
+								</thead> \
+								<tbody> \
+									<tr> \
+										<td>Name</td> \
+										<td>'+data[1].name+'</td> \
+										<td>'+data[0].name+'</td> \
+									</tr> \
+									<tr>\
+										<td>Address</td> \
+										<td>'+data[1].address1+'</td> \
+										<td>'+data[0].address1+'</td> \
+									</tr> \
+									<tr>\
+										<td>Province</td>\
+										<td>'+data[1].province+'</td>\
+										<td>'+data[0].province+'</td>\
+									</tr> \
+									<tr>\
+										<td>Postal Code</td>\
+										<td>'+data[1].postal_code+'</td>\
+										<td>'+data[0].postal_code+'</td>\
+									</tr>\
+								</tbody>\
+							</table>\
+						</p><a class="secondary-content modal-trigger merge-space" id="mspace-'+data[0].id+'-'+data[1].id+'" href="#modal2"><i class="material-icons">edit</i></a><a class="secondary-content process-space " style="margin-top:40px" id="dspace-'+data[1].id+'" href="#!"><i class="material-icons green-text text-darken-2">check_circle</i></a><a class="secondary-content discard-space" style="margin-top:100px" id="dspace-'+data[1].id+'" href="#!"><i class="material-icons red-text text-darken-2">remove_circle</i></a>');
+						new_elem.appendTo("#problem-collection");
+						recount_spaces();
+					}
+					$('#loading').modal('close');
+				}
+			});
+		}
+
+		/* Counts the number of spaces in the collections */
+		function recount_spaces() {
+			var len =$("#approved-collection li").length;
+			var dislen = "New Spaces ("+len+")";
+			$("#approved-tag").html(dislen);
+			var len =$("#excluded-collection li").length;
+			var dislen = "Data Errors ("+len+")";
+			$("#excluded-tag").html(dislen);
+			var len =$("#problem-collection li").length;
+			var dislen = "Match Problem ("+len+")";
+			$("#problem-tag").html(dislen);
+			var len =$("#discard-collection li").length;
+			var dislen = "Discarded ("+len+")";
+			$("#discarded-tag").html(dislen);
+			var len =$("#processed-collection li").length;
+			var dislen = "Processed ("+len+")";
+			$("#processed-tag").html(dislen);
+		}
+
+	});
+
+</script>
