@@ -8,6 +8,7 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.conf import settings
 from django.contrib import messages
+
 from django.http import Http404, HttpResponseRedirect
 from django import forms
 
@@ -24,6 +25,7 @@ import datetime
 import csv
 import tlsh
 import itertools
+
 from django.db.models import Count
 from application.serializers import SpaceSerializer
 from django.http import HttpResponse, JsonResponse

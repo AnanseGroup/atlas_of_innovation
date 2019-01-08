@@ -199,7 +199,7 @@ class ProvisionalSpace(models.Model):
             return False
         else:
             return False
-
+ 
 class DataCreditLog(models.Model):
     '''Logs the edit credits made to the spaces
     '''
