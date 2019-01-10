@@ -76,36 +76,13 @@
 	{% load my_templatetag %}
     <div id="content" class="{% block coltype %}colM{% endblock %}">
         {% block pretitle %}{% endblock %}
-        {% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
+        {% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %} 
         {% block content %}
         {% block object-tools %}{% endblock %}
         {{ content }}
         {% endblock %}
         {% block sidebar %}{% endblock %}
         <br class="clear">
-		
-		{% get_provisional_sum as result %}
-		{% if result > 0 %}
-			<h3> You have <strong style="font-size:15px">{% get_provisional_sum %}</strong> provisional spaces in queue, please <a href="/analyze/provisional_spaces/"> try to sort them</a> before adding more. </h3>
-		{% else %}
-			<h3> You have no provisional spaces, enjoy your day or <a href="/csv/upload/">add some more</a></h3>
-		{% endif %}
-		<div class="app-auth module">
-			<table style="width:100%">
-				<caption>
-					<a href="/admin" class="section" title="CSV Interactive Importer">CSV Interactive Upload</a>
-				</caption>
-				<tbody>
-					<tr class="model-group">
-						<th scope="row"><a href="/csv/upload/">Upload New Provisional Spaces</a></th>
-					</tr>
-					<tr class="model-group">
-						<th scope="row"><a href="/analyze/provisional_spaces/">Analyze Current Provisional Spaces</a></th>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		<h2></h2>
     </div>
     <!-- END Content -->
 
