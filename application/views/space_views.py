@@ -30,6 +30,8 @@ from django.db.models import Count
 from application.serializers import SpaceSerializer
 from django.http import HttpResponse, JsonResponse
 
+from django.contrib.admin.views.decorators import staff_member_required
+
 def space_profile(request, id):
     space = Space.objects.get(id=id)
     return render(
@@ -84,7 +86,8 @@ list_spaces = ListSpaces.as_view()
 
 class UploadFileForm(forms.Form):
     file = forms.FileField()
-    
+
+@staff_member_required
 @ensure_csrf_cookie
 def analyze_spaces(request):
 
@@ -227,6 +230,7 @@ def analyze_spaces(request):
                                                    'processed': processed_spaces
                                                    })
 
+@staff_member_required
 def upload_file(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
@@ -378,6 +382,7 @@ def calculate_fhash(new_space):
     space_string = ' '.join(space_stuff.split()).encode("raw_unicode_escape")
     return tlsh.forcehash(space_string)
 
+@staff_member_required
 def provisional_space(request):
     fields = ['latitude','longitude','name','city','country','website', 'postal_code','email', 'province', 'address1', 'id']
     if request.method == 'GET':
@@ -432,7 +437,8 @@ def provisional_space(request):
             new_space.save()
             space.delete()
         return JsonResponse({'success':1}, safe=False)
-        
+
+@staff_member_required
 def space_csv(request):
 
     fields = ['latitude','longitude','name','city','country','website', 'postal_code','email', 'province', 'address1', 'id']

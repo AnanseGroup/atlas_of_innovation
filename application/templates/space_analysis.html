@@ -147,7 +147,7 @@
 	<div id="processed" class="col s12">
 		<div class="card hoverable">
 			<div class="card-content">
-			<span class="card-title" id="wTit	le">Processed</span>
+			<span class="card-title" id="wTitle">Processed</span>
 			<p>
 				<a class="waves-effect waves-light btn undo-all" href="#!" id="undo-processed">Undo All Spaces</a>
 				<a style="float:right" class="waves-effect waves-light btn modal-trigger red accent-2" href="#commit-forever">COMMIT SPACES</a>
@@ -216,14 +216,14 @@
 			<div class="row">
 				<div class="col s5">
 					<input type="hidden" class="mspace1 prmodal" id="mspace1-id" value=""/>
-					<input type="text" class="mspace1 prmodal" id="mspace1-name" value=""/>
-					<input type="text" class="mspace1 prmodal" id="mspace1-address1" value="" />
-					<input type="text" class="mspace1 prmodal" id="mspace1-province" value="" />
-					<input type="text" class="mspace1 prmodal" id="mspace1-postal_code" value="" />
-					<input type="text" class="mspace1 prmodal" id="mspace1-latitude" value="" />
-					<input type="text" class="mspace1 prmodal" id="mspace1-longitude" value="" />
-					<input type="text" class="mspace1 prmodal" id="mspace1-website" value="" />
-					<input type="text" class="mspace1 prmodal" id="mspace1-email" value="" />
+					<input type="text" class="mspace1 prmodal" placeholder="Name" id="mspace1-name" value=""/>
+					<input type="text" class="mspace1 prmodal" placeholder="Address" id="mspace1-address1" value="" />
+					<input type="text" class="mspace1 prmodal" placeholder="Province" id="mspace1-province" value="" />
+					<input type="text" class="mspace1 prmodal" placeholder="Postal code" id="mspace1-postal_code" value="" />
+					<input type="text" class="mspace1 prmodal" placeholder="Latitude" id="mspace1-latitude" value="" />
+					<input type="text" class="mspace1 prmodal" placeholder="Longitude" id="mspace1-longitude" value="" />
+					<input type="text" class="mspace1 prmodal" placeholder="Website" id="mspace1-website" value="" />
+					<input type="text" class="mspace1 prmodal" placeholder="E-Mail" id="mspace1-email" value="" />
 				</div>
 				<div class="col s2">
 					<!-- Merger buttons -->
@@ -238,6 +238,10 @@
 					<div class="row mrow">
 						<a class="waves-effect waves-teal btn-flat leftm-arr mergerbtn" id="sendl-province"><i class="material-icons">arrow_back</i></a>
 						<a class="waves-effect waves-teal btn-flat rightm-arr mergerbtn" id="sendr-province"><i class="material-icons">arrow_forward</i></a>
+					</div>
+					<div class="row mrow">
+						<a class="waves-effect waves-teal btn-flat leftm-arr mergerbtn" id="sendl-postal_code"><i class="material-icons">arrow_back</i></a>
+						<a class="waves-effect waves-teal btn-flat rightm-arr mergerbtn" id="sendr-postal_code"><i class="material-icons">arrow_forward</i></a>
 					</div>
 					<div class="row mrow">
 						<a class="waves-effect waves-teal btn-flat leftm-arr mergerbtn" id="sendl-latitude"><i class="material-icons">arrow_back</i></a>
@@ -258,14 +262,14 @@
 				</div>
 				<div class="col s5">
 					<input type="hidden" class="mspace2" id="mspace2-id" value=""/>
-					<input type="text" class="mspace2" id="mspace2-name" value=""/>
-					<input type="text" class="mspace2" id="mspace2-address1" value="" />
-					<input type="text" class="mspace2" id="mspace2-province" value="" />
-					<input type="text" class="mspace2" id="mspace2-postal_code" value="" />
-					<input type="text" class="mspace2" id="mspace2-latitude" value="" />
-					<input type="text" class="mspace2" id="mspace2-longitude" value="" />
-					<input type="text" class="mspace2" id="mspace2-website" value="" />
-					<input type="text" class="mspace2" id="mspace2-email" value="" />
+					<input type="text" class="mspace2" placeholder="Name" id="mspace2-name" value=""/>
+					<input type="text" class="mspace2" placeholder="Address" id="mspace2-address1" value="" />
+					<input type="text" class="mspace2" placeholder="Province" id="mspace2-province" value="" />
+					<input type="text" class="mspace2" placeholder="Postal code" id="mspace2-postal_code" value="" />
+					<input type="text" class="mspace2" placeholder="Latitude" id="mspace2-latitude" value="" />
+					<input type="text" class="mspace2" placeholder="Longitude" id="mspace2-longitude" value="" />
+					<input type="text" class="mspace2" placeholder="Website" id="mspace2-website" value="" />
+					<input type="text" class="mspace2" placeholder="E-Mail" id="mspace2-email" value="" />
 				</div>
 			</div>
 		</div>
