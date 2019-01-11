@@ -77,16 +77,19 @@ a img {
 	margin-top: 10px;
 }
 
+
 #sponsor-giz {
 	left: 20px;
 	top: 15px;
-	height: 75px;
-	position: absolute;
+	min-height: 75px;
+	position: relative;
+}
+#sponsor-giz img {
+	
+max-height:80px;
+ max-width:10vw; 
 }
 
-#sponsor-giz img {
-	height: 100%;
-}
 
 #sponsor-fab-foundation {
 	left: 42px;
@@ -97,9 +100,13 @@ a img {
 
 #filter-bar {
 	position: relative;
-	height: 60px;
-	width: 100%;
+	max-height: 15vw;
+	max-width: 100%;
+	
 	/*text-align: center;*/
+}
+.container-bar{
+	vertical-align: middle;
 }
 
 .filter-buttons {
@@ -218,11 +225,18 @@ a img {
 	color: black;
 	text-decoration: none;
 }
-
+.padding-t{
+	 padding-top: 3vw !important;
+}
 #info-bar {
+	font-weight: bold;
 	position: relative;
 	text-align: center;
 	/*background-color: rgba(0,0,0,0.03);*/
+}
+.header{
+	font-weight: bold;
+	text-align: center;
 }
 
 #info-bar .header {
@@ -299,8 +313,24 @@ a img {
     border-bottom-right-radius: 100px !important;
 }
 
-#navigation-bar-container {
-	height: 95px;
+	.button-collapse {
+    display: block;
+
+}
+.button-collapse-container{
+		padding-top: 47px;
+}
+
+
+
+.side-nav li>a{
+	font-family: 'Source Sans Pro', sans-serif;
+	font-weight: 300;
+	font-size: 1.7em;
+	text-decoration: none !important;
+}
+.navigation-bar-container {
+	min-height: 92px;
 	width: 100%;
 	display: inline-flex;
 	box-shadow: -2px 2px 2.8px rgba(0,0,0,.1);
@@ -314,10 +344,19 @@ a img {
 
 .navigation-bar-logo {
 	float: left;
-	height: 74px;
+	
+	float: left;
+    max-height: 80px;
+    
 	margin-left: 42px;
 	margin-top: 10px;
 	margin-right: 78px;
+
+}
+.navigation-bar-logo img{
+	padding-left:10px;
+	height: 70px; 
+	position: absolute;top:1.3vw;
 }
 
 .navigation-bar {
@@ -337,6 +376,7 @@ a img {
 	margin-top: 38px;
 	margin-right: 42px;
 	text-decoration: none;
+	 vertical-align: middle;
 }
 
 .selected-navigation-bar-button {
@@ -438,6 +478,8 @@ a img {
 	background-size: contain;
 	background-repeat: no-repeat;
 	background-position: right;
+	background-color:#FFFF;
+
 }
 
 .container {
@@ -474,10 +516,10 @@ a img {
 }
 
 .page-intro-section {
-	width: 650px;
+	width: 70vw;
 	margin: 75px auto;
 	text-align: center;
-	font-size: 14px;
+	
 	line-height: 1.5;	
 }
 
@@ -494,6 +536,10 @@ a img {
 
 .page-content a {
 	color: #00d4d2;
+}
+.discs li{
+		margin-left: 40px;
+	    list-style-type: disc !important;
 }
 .page-content .section-header {
 	text-align: center;
@@ -596,7 +642,7 @@ a img {
 
 #map-container {
 	position: relative;
-	height: 90%;
+	max-height: 75vW;
 	height: -moz-calc(100% - 305px);
 	height: -webkit-calc(100% - 305px);
 	height: calc(100% - 305px);	
@@ -623,6 +669,7 @@ a img {
 	left: 50%;
 	margin-left: -84px;
   margin-top: 75px;
+  font-size: 1.17em;
 }
 
 .loader,
@@ -747,12 +794,25 @@ a img {
 	height: 60px;
 	font-weight: 300;
 }
-.wiki-content .column-content .column-header h3 {
+.wiki-content .column-content  {
 	font-weight: 300;	
 	float: left;
 	margin-top: 0;
 }
-
+.column-header h3 {
+	font-size:  1.5rem;	
+	float: left;
+	margin-top: 0;
+}
+.page-content h3{
+	    display: block;
+    font-size: 1.17em;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+}
 .wiki-content .column-header .see-all {
 	display: block;
 	float: left;
@@ -905,11 +965,12 @@ a img {
 .wiki-content .columns div:last-of-type .column-content {
 	border: none;
 }
+
 .wiki-content .column-content .column-header {
 	height: 60px;
 	font-weight: 300;
 }
-.wiki-content .column-content .column-header h3 {
+.wiki-content .column-content  {
 	font-weight: 300;	
 	float: left;
 	margin-top: 0;
@@ -940,9 +1001,12 @@ a img {
 }
 
 /* DELETE SPACE EMAIL */
+
 .email-us h5 {
 	text-align:right;
-	font-size: 0.9rem;
+	
+	
+	
 }
 
 /* CONTRIBUTORS */
@@ -979,10 +1043,112 @@ a img {
 .center-list-25.map-moderators li {
 	margin-bottom: 2.5rem !important;
 }
+////////media query
+@media only screen and (max-width: 768px){
+	
+#map-page-title {
+	
+	font-size: 2.5em;
+	
+   }
+   #sponsor-giz img {
+   	max-height:100vw;
+ 	max-width:20vw; 
+	
+	padding-top: 2vw;
+    }
+	h5{
+		font-size: 24px;
+	}
+		.email-us h5 {
+	
+	font-size: 1.2rem;
+	font-weight: bold;
+}
+.page-intro-section {
+	font-size: 1.5em;
+   }
+   .page-menu  ul li {
+   	font-size: 2em;
+   }
+   }
+@media only screen and (max-device-width: 1024px){
+	
+#map-page-title {
+	
+	font-size: 2.5em;
+	
+   }
+  
+   #sponsor-giz img {
+   	max-height:100vw;
+ 	max-width:17vw; 
+	
+	padding-top: 2vw;
+    }
+	h5{
+		font-size: 24px;
+	}
+		.email-us h5 {
+	
+	
+	font-size: 1.2rem;
+	font-weight: bold;
+}
+.page-intro-section {
+	font-size: 2em;
+   }
+   .page-menu  ul li {
+   	font-size: 2.5em;
+   }
+   .page-content {
+	font-size: 1.5em
+}
+.wiki-list {
+	font-size: 2em;
+	}
+	.page-intro-section .intro-header {
+	font-size: 2.5em;}
+	.navigation-bar-container {
+	min-height: 15vw;}
+	.navigation-bar-logo img{
+	
+	height: 12vw; 
+	position: absolute;top:1.3vw;
+	}
+	#map-container {
+	position: relative;
+	max-height: 85vw;
+	height: -moz-calc(100% - 105px);
+	height: -webkit-calc(100% - 105px);
+	height: calc(100% - 105px);	
+	}
+	body{
+		min-height: 100%;
+	}
+	}
+
+
+@media only screen and (min-width: 992px){
+	.button-collapse {
+    display: none;
+   }
+    h5{
+    	font-size: .89em;
+    }
+
+
+  
+}
+
+
 
 .email-us h5 a{
 	font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', sans-serif;
 	color: #00d4d2;
+	font-size: 1rem;
+	font-weight: bold;
+	 text-decoration: underline;
 }
 
 /*PRIMARY SPACE TYPE COLORS*/
