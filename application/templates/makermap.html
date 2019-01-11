@@ -1,21 +1,21 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html>
+<!-- <html>
 <head>
-	<link href="https://fonts.googleapis.com/css?family=Libre+Baskerville|Source+Sans+Pro:200,300,300i,400,600" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="{% static 'css/leaflet.css' %}"/>
+    <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville|Source+Sans+Pro:200,300,300i,400,600" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/leaflet.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/MarkerCluster.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/MarkerCluster.Default.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/stylesheet.css' %}"/>
     <script src="{% static 'js/leaflet.js' %}"></script>
-	<script src="{% static 'js/leaflet.markercluster.js' %}"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="{% static 'js/leaflet.markercluster.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="{% static 'js/page.js' %}"></script>
     <title>Ananse Innovation Map</title>
 </head>
-<body>
-
+<body> -->
+    {% include "snippets/head.html" %}
     {% include "snippets/header.html" %}
 
     <div id="map-page-title-container">
@@ -28,13 +28,14 @@
             <h3 class="loader-text">Finding Spaces...</h3>
         </div>
     </div>
-    <div id="filter-bar">
+    <div class="row container-bar">
+    <div id="filter-bar" class="col s5 m2 l1  ">
         <a id="sponsor-giz" href="http://www.bmz.de/en/index.html" target="_blank">
 			<img src="{% static 'images/giz-logo.png' %}"/>
         </a>
 
 	</div>
-    <div id="info-bar">
+    <div id="info-bar "class=" col offset-m1 m9 offset-l2 l9 padding-t container">
        <h5 class="header">We sourced information from different databases and likely have many mistakes– please make corrections! Thanks to the <a href="http://www.bmz.de/en/index.html" target="_blank">German Ministry for Economic Cooperation and Development (BMZ)</a>, as well as our other sponsors and mapping partners.</h5>
         <!-- <ul class="sponsors">
             <li class="large">
@@ -99,7 +100,7 @@
             </li>
         </ul>  -->
         </div>
-	
+	 </div>
 	{% include "snippets/delete-space.html" %}
     <script>
         // map config
