@@ -50,11 +50,14 @@
     <p>{% trans "You don't have permission to view or edit anything." %}</p>
 {% endif %}
 	{% load my_templatetag %}
+	{% load app_filters %}
+	{% if user|check_permission:'analyse_provisional_spaces' %}
 	{% get_provisional_sum as result %}
 	{% if result > 0 %}
 		<h3> You have <strong style="font-size:15px">{% get_provisional_sum %}</strong> provisional spaces in queue, please <a href="/analyze/provisional_spaces/"> try to sort them</a> before adding more. </h3>
 	{% else %}
 		<h3> You have no provisional spaces, enjoy your day or <a href="/csv/upload/">add some more</a></h3>
+	{% endif %}
 	{% endif %}
 	<div class="app-auth module">
 		<table style="width:100%">
@@ -62,12 +65,16 @@
 				<a href="/admin" class="section" title="CSV Interactive Importer">CSV Interactive Upload</a>
 			</caption>
 			<tbody>
+				{% if user|check_permission:'upload_provisonal_spaces' %}
 				<tr class="model-group">
 					<th scope="row"><a href="/csv/upload/">Upload New Provisional Spaces</a></th>
 				</tr>
+				{% endif %}
+				{% if user|check_permission:'analyse_provisional_spaces' %}
 				<tr class="model-group">
 					<th scope="row"><a href="/analyze/provisional_spaces/">Analyze Current Provisional Spaces</a></th>
 				</tr>
+				{% endif %}
 			</tbody>
 		</table>
 	</div>

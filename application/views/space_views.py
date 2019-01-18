@@ -12,7 +12,7 @@ from django.contrib import messages
 from django.http import Http404, HttpResponseRedirect
 from django import forms
 
-from application.models import Space
+from application.models import Space, DataCreditLog
 from application.models.spaces import SpaceForm
 from django.forms.models import model_to_dict
 
@@ -29,6 +29,7 @@ import itertools
 from django.db.models import Count
 from application.serializers import SpaceSerializer
 from django.http import HttpResponse, JsonResponse
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.contrib.admin.views.decorators import staff_member_required
 
@@ -40,17 +41,20 @@ def space_profile(request, id):
         {"id": id, "space":space}
     )
 
-class SpaceCreate(CreateView):
+ 
+class SpaceCreate(LoginRequiredMixin, CreateView):
     form_class = SpaceForm
     model = Space
     template_name = 'space_edit.html'
+    login_url = '/admin/'
 
 add_space = SpaceCreate.as_view()
-
-class SpaceEdit(UpdateView):
+ 
+class SpaceEdit(LoginRequiredMixin, UpdateView):
     form_class = SpaceForm
     model = Space
     template_name = 'space_edit.html'
+    login_url = '/admin/'
     
     def get_context_data(self, **kwargs):
         context = super(SpaceEdit, self).get_context_data(**kwargs)
@@ -62,7 +66,7 @@ class SpaceEdit(UpdateView):
             raise Http404
         return context
 
-    def form_valid(self, form): 
+    def form_valid(self, form):
         self.object = form.save()
         redirect_url = super(SpaceEdit, self).form_valid(form)
 
