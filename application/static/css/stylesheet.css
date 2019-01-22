@@ -1290,4 +1290,20 @@ span.badge {
 
 span.badge.red {
 	background-color: #ef5350
+} 
+
+/* CSS IMPORTER */
+.leftm-arr, .rightm-arr {
+	padding: 0 !important; 
 }
+.mrow{
+	margin-bottom: 18px !important;
+}
+
+.leftm-arr {
+	margin-left: 38%;
+}
+
+.rightm-arr {
+	margin-left: -10px;
+} 
