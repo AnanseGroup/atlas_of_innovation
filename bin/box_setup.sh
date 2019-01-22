@@ -47,6 +47,19 @@ python_deps() {
     sudo apt-get install -y python3-pip python3-dev nginx build-essential libffi-dev
   fi
 }
+tlsh_install() {
+  cd /vagrant
+   echo "Installing TLSH"
+  sudo apt-get install -y cmake
+  git clone https://github.com/trendmicro/tlsh.git
+  cd tlsh
+  git checkout master
+  ./make.sh
+  cd py_ext/
+  sudo python3 ./setup.py build
+  sudo python3 ./setup.py install
+  
+}
 
 app_deps() {
   echo "Installing app pip dependencies"
@@ -106,6 +119,7 @@ setup(){
   lang_conf
   postgres
   python_deps
+  tlsh_install
   app_deps
   set_virtual_env
   finalized
