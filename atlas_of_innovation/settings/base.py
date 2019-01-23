@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'django_countries',
     'rest_framework',
     'captcha',
+    'post_office',
 ]
 
 MIDDLEWARE = [
@@ -120,3 +121,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+#Set post_office.EmailBackend as your EMAIL_BACKEND
+EMAIL_BACKEND = 'post_office.EmailBackend'

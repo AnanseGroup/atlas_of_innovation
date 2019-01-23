@@ -32,6 +32,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.contrib.admin.views.decorators import staff_member_required
+from post_office import mail
 
 def space_profile(request, id):
     space = Space.objects.get(id=id)
@@ -79,6 +80,13 @@ class SpaceEdit(LoginRequiredMixin, UpdateView):
                       }
         new_data_credit = DataCreditLog(**data_credit)
         new_data_credit.save()
+        mail.send(
+                'orlandosalvadorcamarillomoreno@gmail.com', # List of email addresses also accepted
+                'noreply@atlasofinnovation.com',
+                subject='My email',
+                message='Hi there!',
+                html_message='Hi <strong>there</strong>!',
+                )
 
         return redirect_url
 
