@@ -353,7 +353,7 @@ max-height:80px;
 	margin-right: 78px;
 
 }
-.navigation-bar-logo img>a{
+.navigation-bar-logo a>img{
 	padding-left:10px;
 	height: 70px; 
 	position: absolute;top:1.3vw;
