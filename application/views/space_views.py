@@ -33,7 +33,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.contrib.admin.views.decorators import staff_member_required
 from post_office import mail
-
+from application.views import mails
 def space_profile(request, id):
     space = Space.objects.get(id=id)
     return render(
@@ -50,12 +50,14 @@ class SpaceCreate(LoginRequiredMixin, CreateView):
     login_url = '/admin/'
 
 add_space = SpaceCreate.as_view()
+
  
 class SpaceEdit(LoginRequiredMixin, UpdateView):
     form_class = SpaceForm
     model = Space
     template_name = 'space_edit.html'
     login_url = '/admin/'
+   
     
     def get_context_data(self, **kwargs):
         context = super(SpaceEdit, self).get_context_data(**kwargs)
@@ -68,6 +70,7 @@ class SpaceEdit(LoginRequiredMixin, UpdateView):
         return context
 
     def form_valid(self, form):
+
         self.object = form.save()
         redirect_url = super(SpaceEdit, self).form_valid(form)
 
@@ -80,15 +83,10 @@ class SpaceEdit(LoginRequiredMixin, UpdateView):
                       }
         new_data_credit = DataCreditLog(**data_credit)
         new_data_credit.save()
-        mail.send(
-                'orlandosalvadorcamarillomoreno@gmail.com', # List of email addresses also accepted
-                'noreply@atlasofinnovation.com',
-                subject='My email',
-                message='Hi there!',
-                html_message='Hi <strong>there</strong>!',
-                )
-
+        mails.to_moderator(new_data_credit)
         return redirect_url
+
+            
 
 edit_space = SpaceEdit.as_view()
 
@@ -415,6 +413,7 @@ def provisional_space(request):
                 setattr(space,key,value)
             space.fhash = calculate_fhash(space)
             space.save()
+
         return JsonResponse({'success':1})
     if request.method == "PUT":
         data = json.loads(request.body)
@@ -473,4 +472,3 @@ def space_csv(request):
             space.fhash = calculate_fhash(space) 
             space.save()
         return JsonResponse({'success':1})
-        

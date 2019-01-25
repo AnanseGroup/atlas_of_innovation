@@ -123,3 +123,12 @@ USE_TZ = True
 STATIC_URL = '/static/'
 #Set post_office.EmailBackend as your EMAIL_BACKEND
 EMAIL_BACKEND = 'post_office.EmailBackend'
+#use gmailserver
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'atlasofinnovation@gmail.com'
+EMAIL_HOST_PASSWORD = '4tl4sofinnovation'
+EMAIL_PORT = 587
+POST_OFFICE = {
+    'DEFAULT_PRIORITY': 'now'
+}
