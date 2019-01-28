@@ -314,7 +314,7 @@ max-height:80px;
 }
 
 	.button-collapse {
-    display: block;
+    display: none;
 
 }
 .button-collapse-container{
@@ -1046,99 +1046,90 @@ max-height:80px;
 ////////media query
 @media only screen and (max-width: 768px){
 	
-#map-page-title {
+  #map-page-title {
 	
 	font-size: 2.5em;
 	
    }
-   #sponsor-giz img {
+ .button-collapse {
+    display: block;
+   }
+    h5{
+    	font-size: .89em;
+    }
+ #sponsor-giz img {
    	max-height:100vw;
  	max-width:20vw; 
 	
 	padding-top: 2vw;
     }
-	h5{
-		font-size: 24px;
-	}
-		.email-us h5 {
+	
+ .email-us h5 {
 	
 	font-size: 1.2rem;
 	font-weight: bold;
 }
-.page-intro-section {
+ .page-intro-section {
 	font-size: 1.5em;
    }
-   .page-menu  ul li {
+ .page-menu  ul li {
    	font-size: 2em;
    }
    }
 @media only screen and (max-device-width: 1024px){
 	
-#map-page-title {
+  #map-page-title {
 	
 	font-size: 2.5em;
 	
    }
   
-   #sponsor-giz img {
+  #sponsor-giz img {
    	max-height:100vw;
  	max-width:17vw; 
 	
 	padding-top: 2vw;
     }
-	h5{
+  h5{
 		font-size: 24px;
 	}
-		.email-us h5 {
+  .email-us h5 {
 	
 	
 	font-size: 1.2rem;
 	font-weight: bold;
-}
-.page-intro-section {
+    }
+  .page-intro-section {
 	font-size: 2em;
-   }
-   .page-menu  ul li {
+    }
+  .page-menu  ul li {
    	font-size: 2.5em;
-   }
-   .page-content {
+    }
+  .page-content {
 	font-size: 1.5em
-}
-.wiki-list {
+    }
+  .wiki-list {
 	font-size: 2em;
 	}
-	.page-intro-section .intro-header {
+  .page-intro-section .intro-header {
 	font-size: 2.5em;}
-	.navigation-bar-container {
+  .navigation-bar-container {
 	min-height: 15vw;}
-	.navigation-bar-logo img{
+  .navigation-bar-logo img{
 	
 	height: 12vw; 
 	position: absolute;top:1.3vw;
 	}
-	#map-container {
+  #map-container {
 	position: relative;
 	max-height: 85vw;
 	height: -moz-calc(100% - 105px);
 	height: -webkit-calc(100% - 105px);
 	height: calc(100% - 105px);	
 	}
-	body{
+ body{
 		min-height: 100%;
 	}
-	}
-
-
-@media only screen and (min-width: 992px){
-	.button-collapse {
-    display: none;
-   }
-    h5{
-    	font-size: .89em;
-    }
-
-
-  
 }
 
 
