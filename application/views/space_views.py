@@ -34,6 +34,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.admin.views.decorators import staff_member_required
 from post_office import mail
 from application.views import mails
+from application.models.user import Moderator
 def space_profile(request, id):
     space = Space.objects.get(id=id)
     return render(
@@ -70,7 +71,9 @@ class SpaceEdit(LoginRequiredMixin, UpdateView):
         return context
 
     def form_valid(self, form):
-
+        space = self.object
+        moderator=Moderator.objects.filter(country=space.country)
+        
         self.object = form.save()
         redirect_url = super(SpaceEdit, self).form_valid(form)
 
@@ -83,7 +86,8 @@ class SpaceEdit(LoginRequiredMixin, UpdateView):
                       }
         new_data_credit = DataCreditLog(**data_credit)
         new_data_credit.save()
-        mails.to_moderator(new_data_credit)
+
+        mails.to_moderator(new_data_credit, moderator)
         return redirect_url
 
             
