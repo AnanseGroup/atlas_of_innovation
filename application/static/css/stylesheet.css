@@ -1073,7 +1073,9 @@ select{
    }
 }
 @media only screen and (max-device-width: 1024px){
-	
+  .button-collapse {
+    display: block;
+   }
   #map-page-title {
 	
 	font-size: 2.5em;
