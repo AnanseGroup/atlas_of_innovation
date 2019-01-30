@@ -5,3 +5,4 @@ $(document).ready(function() {
 		$("#contribute-bar-container").toggleClass('closed');
 	});
 });
+

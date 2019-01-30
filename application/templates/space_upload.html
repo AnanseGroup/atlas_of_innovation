@@ -1,12 +1,12 @@
-{% include "snippets/head.html" %}
-{% include "snippets/header.html" %}
+{% include "snippets/head.html"%}
+    {% include "snippets/header.html" %}
 <br><br><br>
 <div class="row" style="font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', sans-serif;">
   <div class="col s12 m6 offset-m3">
     <div class="card hoverable">
       <div class="card-content">
-        <span class="card-title" id="wTitle">Space information</span>
-        <form action="" method="post">{% csrf_token %}
+        <span class="card-title" id="wTitle">Space upload</span>
+        <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
             {{ form.as_p }}
             <!--<input type="submit" value="Send message" />-->
             <button type="submit" class="btn btn-primary btn-lg">Submit</button>
