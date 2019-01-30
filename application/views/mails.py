@@ -2,12 +2,12 @@
 from post_office.models import EmailTemplate
 from post_office import mail
 from django.contrib.auth.models import User
-
+from django.conf import settings as djangoSettings
 
 	
 def on_change(DataCreditLog,moderators):
    
-	url = "http://localhost:8000/space/"+str(DataCreditLog.space_id)
+	url = djangoSettings.URL+"space/"+str(DataCreditLog.space_id)
 	user=User.username
 	print(moderators)
 	if not moderators :

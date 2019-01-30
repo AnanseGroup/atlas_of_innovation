@@ -12,6 +12,7 @@ from post_office.models import EmailTemplate
 from post_office import mail
 from .space_multiselectfields import GovernanceOption, OwnershipOption, AffiliationOption
 from application.models.user import Moderator
+from django.conf import settings
 class Space(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=140)
@@ -105,7 +106,7 @@ class Space(models.Model):
     
 def keep_track_save(sender, instance, created, **kwargs):
         if created:
-            url = "http://localhost:8000/space/"+str(instance.id)
+            url = djangoSettings.URL+"space/"+str(instance.id)
             moderators=Moderator.objects.filter(country=instance.country)
             print(moderators)
             if not moderators :

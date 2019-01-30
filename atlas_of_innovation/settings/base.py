@@ -132,3 +132,5 @@ EMAIL_PORT = 587
 POST_OFFICE = {
     'DEFAULT_PRIORITY': 'now'
 }
+#URL="http://localhost:8000/"
+URL="http://52.37.166.83/"
