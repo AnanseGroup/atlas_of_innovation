@@ -312,8 +312,7 @@ max-height:80px;
 	border-bottom-left-radius: 100px !important;
     border-bottom-right-radius: 100px !important;
 }
-
-	.button-collapse {
+.button-collapse {
     display: none;
 
 }
@@ -807,12 +806,8 @@ select{
 	margin-top: 0;
 }
 .page-content h3{
-	    display: block;
+	display: block;
     font-size: 1.17em;
-    margin-block-start: 1em;
-    margin-block-end: 1em;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
     font-weight: bold;
 }
 .wiki-content .column-header .see-all {
@@ -1045,7 +1040,6 @@ select{
 .center-list-25.map-moderators li {
 	margin-bottom: 2.5rem !important;
 }
-////////media query
 @media only screen and (max-width: 768px){
 	
   #map-page-title {
@@ -1070,14 +1064,14 @@ select{
 	
 	font-size: 1.2rem;
 	font-weight: bold;
-}
+    }
  .page-intro-section {
 	font-size: 1.5em;
    }
  .page-menu  ul li {
    	font-size: 2em;
    }
-   }
+}
 @media only screen and (max-device-width: 1024px){
 	
   #map-page-title {
