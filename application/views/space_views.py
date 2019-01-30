@@ -72,7 +72,7 @@ class SpaceEdit(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         space = self.object
-        moderator=Moderator.objects.filter(country=space.country)
+        moderators=Moderator.objects.filter(country=space.country)
         
         self.object = form.save()
         redirect_url = super(SpaceEdit, self).form_valid(form)
@@ -87,7 +87,7 @@ class SpaceEdit(LoginRequiredMixin, UpdateView):
         new_data_credit = DataCreditLog(**data_credit)
         new_data_credit.save()
 
-        mails.to_moderator(new_data_credit, moderator)
+        mails.on_change(new_data_credit, moderators)
         return redirect_url
 
             
@@ -420,9 +420,9 @@ def provisional_space(request):
 
         return JsonResponse({'success':1})
     if request.method == "PUT":
-        data = json.loads(request.body)
+        data = json.loads(request.body.decode('utf-8'))
+        spaces_list = []
         if data and data['id']:
-            spaces_list = []
             spaces = ProvisionalSpace.objects.filter(id__in=data['id']).all()
             for space in spaces:
                 if space and data.get('override_analysis'):

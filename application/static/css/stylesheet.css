@@ -382,7 +382,9 @@ max-height:80px;
 .selected-navigation-bar-button {
 	text-decoration: underline;
 }
-
+select{
+	display: block;
+}
 .navigation-bar-contact-container {
 	position: fixed;
 	right: 42px;

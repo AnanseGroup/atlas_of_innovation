@@ -6,9 +6,12 @@ from captcha.fields import ReCaptchaField
 from django_countries.fields import CountryField
 from django import forms
 from datetime import datetime, timedelta
-
+from django.db.models.signals import post_save
+#from application.views.mails import mails
+from post_office.models import EmailTemplate
+from post_office import mail
 from .space_multiselectfields import GovernanceOption, OwnershipOption, AffiliationOption
-
+from application.models.user import Moderator
 class Space(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=140)
@@ -99,7 +102,31 @@ class Space(models.Model):
             return False
         else:
             return False
+    
+def keep_track_save(sender, instance, created, **kwargs):
+        if created:
+            url = "http://localhost:8000/space/"+str(instance.id)
+            moderators=Moderator.objects.filter(country=instance.country)
+            print(moderators)
+            if not moderators :
+                mail.send(
+                       ['orlandosalvadorcamarillomoreno@gmail.com'],#'ana@parthenontech.com'], #List of email addresses also accepted  
+                        'noreply@atlasofinnovation.com',
+                       template= 'oncreate_notification',
+                       context={'url':url,'name':'Ana'},)
+            else:
+                for moderator  in moderators:
 
+                    name= moderator.user.first_name
+                    email=moderator.user.email
+                    print (email)
+                    mail.send(
+                      [email], #List of email addresses also accepted  
+                        'noreply@atlasofinnovation.com',
+                       template= 'oncreate_notification',
+                       context={'url':url,'name':name},)
+
+post_save.connect(keep_track_save, sender=Space)
 class ProvisionalSpace(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=140)
