@@ -314,10 +314,11 @@ max-height:80px;
 }
 .button-collapse {
     display: none;
-
+    position:absolute;
+		padding-top: 47px;
 }
 .button-collapse-container{
-		padding-top: 47px;
+
 }
 
 
@@ -1071,8 +1072,9 @@ select{
  .page-menu  ul li {
    	font-size: 2em;
    }
+
 }
-@media only screen and (max-device-width: 1024px){
+@media only screen and (max-device-width: 996px){
   .button-collapse {
     display: block;
    }
@@ -1128,6 +1130,10 @@ select{
  body{
 		min-height: 100%;
 	}
+	   .logout{
+	
+    top: 55px;
+}
 }
 
 
@@ -1296,3 +1302,7 @@ span.badge.red {
 .rightm-arr {
 	margin-left: -10px;
 } 
+.logout{
+	position: absolute;
+    right:  70px;
+}

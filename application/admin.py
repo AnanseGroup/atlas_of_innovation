@@ -1,8 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
-
-from application.models.user import Moderator
+from django.contrib.auth.mixins import LoginRequiredMixin
+from application.models.user import Moderator, UserForm, BasicUser
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.base import TemplateView
 
 # Define an inline admin descriptor for Employee model
 # which acts a bit like a singleton
@@ -10,6 +12,8 @@ class ModeratorInline(admin.StackedInline):
     model = Moderator
     can_delete = False
     verbose_name_plural = 'moderators'
+
+
 
 # Define a new User admin
 class UserAdmin(BaseUserAdmin):

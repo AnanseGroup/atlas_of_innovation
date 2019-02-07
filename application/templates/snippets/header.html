@@ -3,7 +3,7 @@
         <div class="col l2 m12 s12 ">
             <div class="row">
                 <div class="col m4 s4 container button-collapse-container" >
-                 <a href="#" data-activates="mobile-demo" class="button-collapse " " ><i class="material-icons">menu</i></a>
+                 <a href="#" data-activates="mobile-demo" class="button-collapse hide-on-large-only " " ><i class="material-icons">menu</i></a>
                 </div>
              
                 <a  class="navigation-bar-logo col l12" href="/"><img  class="navigation-bar-img" ;" src="{% static 'images/logo_atlas_of_innovation.png' %}"/></a>
@@ -20,6 +20,7 @@
            <li> <a href="{% url 'wiki' %}" id="navigation-bar-wiki-button" class="navigation-bar-button">LIST</a></li>
            <li> <a href="{% url 'contribute' %}" id="navigation-bar-contribute-button" class="navigation-bar-button">CONTRIBUTE</a></li>
             <li><a href="mailto:anansegroup@gmail.com" id="navigation-bar-contact-button" class="no-underline navigation-right dark-blue">Contact Us</a></li>
+             
         </ul>
        
     </div>
@@ -30,5 +31,21 @@
     <li><a href="{% url 'wiki' %}" class="selected-navigation-bar-button">LIST</a></li>
     <li><a href="{% url 'contribute' %}" class="selected-navigation-bar-button">CONTRIBUTE</a></li>
     <li><a href="mailto:anansegroup@gmail.com" class="no-underline navigation-right dark-blue">CONTACT US</a></li>
+    
 </ul>
 
+<br><br><br>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% if user.is_authenticated %}
+    <div class="row">
+        <div class="col s2 offset-s10">
+        <a href="{%url 'logout'%}" class=" dark-blue logout" >LOGOUT</a>
+    </div>
+    </div>
+    {% endif%}
