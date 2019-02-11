@@ -16,6 +16,7 @@ class Moderator(models.Model):
 class BasicUser(models.Model):
       user = models.OneToOneField(User, on_delete=models.CASCADE)
       email_confirmed = models.BooleanField(default=False)
+
 @receiver(post_save, sender=User)
 def update_user_profile(sender, instance, created, **kwargs):
     if created:
@@ -23,7 +24,7 @@ def update_user_profile(sender, instance, created, **kwargs):
     instance.basicuser.save()
 class UserForm(UserCreationForm):
     email=forms.EmailField(label='Your email', max_length=100)
-    country=CountryField(blank_label='(select country)').formfield()
+    #country=CountryField(blank_label='(select country)').formfield()
     captcha = ReCaptchaField()
 class Meta:
         model = User

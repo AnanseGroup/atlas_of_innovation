@@ -34,7 +34,7 @@
     
 </ul>
 
-<br><br><br>
+
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}
@@ -43,9 +43,21 @@
 </ul>
 {% endif %}
 {% if user.is_authenticated %}
+
     <div class="row">
+        {% if user.is_staff %}
+        <div class="col s2">
+            <a href="/admin" class=" dark-blue " >ADMIN MENU</a>
+        </div>
+         <div class="col s2 ">
+            <a href="{%url 'logout'%}" class=" dark-blue logout" >LOGOUT</a>
+        </div>
+        {% else %}
+        
         <div class="col s2 offset-s10">
-        <a href="{%url 'logout'%}" class=" dark-blue logout" >LOGOUT</a>
+         <a href="{%url 'logout'%}" class=" dark-blue logout" >LOGOUT</a>
+        </div>
+         {% endif %}
     </div>
-    </div>
+       
     {% endif%}
