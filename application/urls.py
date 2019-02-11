@@ -1,8 +1,8 @@
 from django.urls import path
 from . import views
-
+from django.conf.urls import url
 from django.contrib import admin
-
+from django.contrib.auth import views as auth_views
 urlpatterns = [
     # None of these pages require access to the database
     path('', views.map, name='home'),
@@ -32,6 +32,16 @@ urlpatterns = [
 
     # REST API
     path('api/space/filter/', views.filter_spaces, name='filter_spaces'),
-
+    #Users
     path(r'admin/', admin.site.urls),
+    
+    path('signup', views.signup, name='signup'),
+    path(r'login/', auth_views.login, name='login'),
+    path(r'logout/', auth_views.logout,{'next_page': '/'}, name='logout'),
+
+    #activation email
+    path(r'account_activation_sent/', views.account_activation_sent, name='account_activation_sent'),
+    url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        views.activate, name='activate'),
+
 ]

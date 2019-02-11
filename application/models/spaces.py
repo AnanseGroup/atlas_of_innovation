@@ -13,6 +13,7 @@ from post_office import mail
 from .space_multiselectfields import GovernanceOption, OwnershipOption, AffiliationOption
 from application.models.user import Moderator
 from django.conf import settings
+from django.contrib.auth.models import User
 class Space(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=140)

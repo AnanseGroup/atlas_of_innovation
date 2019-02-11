@@ -26,7 +26,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'captcha',
     'post_office',
+    'django.contrib.sites',
 ]
+
+SITE_ID = 1
+
 
 MIDDLEWARE = [
     'application.middleware.CorsMiddleware',
