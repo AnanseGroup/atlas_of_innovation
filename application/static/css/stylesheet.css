@@ -83,6 +83,7 @@ a img {
 	top: 15px;
 	min-height: 75px;
 	position: relative;
+
 }
 #sponsor-giz img {
 	
@@ -237,12 +238,15 @@ max-height:80px;
 .header{
 	font-weight: bold;
 	text-align: center;
+	margin: auto;
+	font-size: 0.9em;
 }
 
 #info-bar .header {
 	text-align: center;
 	max-width: 800px;
 	margin: auto;
+	font-size: 0.9em;
 }
 
 #info-bar .sponsors {
@@ -1130,10 +1134,7 @@ select{
  body{
 		min-height: 100%;
 	}
-	   .logout{
-	
-    top: 55px;
-}
+
 }
 
 
