@@ -13,16 +13,13 @@ class ModeratorInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'moderators'
 
-class BasicUserInline(admin.StackedInline):
-	model = BasicUser
-	can_delete=False
-	verbose_name_plural= 'basicusers'
+
 		
 
 # Define a new User admin
 class UserAdmin(BaseUserAdmin):
-    inlines = (ModeratorInline,)
-    inlines = (BasicUserInline,)
+    inlines = (ModeratorInline,ModeratorInline,)
+    
 # Re-register UserAdmin
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)

@@ -51,6 +51,7 @@ from django.utils.http import urlsafe_base64_decode
 
 def space_profile(request, id):
     space = Space.objects.get(id=id)
+
     return render(
         request,
         'space_profile.html',
@@ -86,8 +87,11 @@ class SpaceEdit(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         space = self.object
-        moderators=Moderator.objects.filter(country=space.country)
-        user=User.username
+        try:
+            moderators=Moderator.objects.filter(province=space.province)
+        except Exception :
+            moderators=Moderator.objects.filter(country=space.country)
+        user=self.request.user.username
         self.object = form.save()
         redirect_url = super(SpaceEdit, self).form_valid(form)
 
@@ -101,7 +105,7 @@ class SpaceEdit(LoginRequiredMixin, UpdateView):
                       }
         new_data_credit = DataCreditLog(**data_credit)
         new_data_credit.save()
-
+        messages.success(self.request, 'The space changes success', extra_tags='alert')
         mails.on_change(new_data_credit, moderators)
         return redirect_url
 
@@ -113,22 +117,24 @@ class ListSpaces(TemplateView):
     template_name = "list.html"
 list_spaces = ListSpaces.as_view()
 
-# class DataCredit(TemplateView):
-#      model = DataCreditLog
-#      template_name ="history.html"
-#      print("fffffffff")
-#      def  data_credit_detail(request, id):
-#         data_credit_log = DataCreditLog.objects.get(space_id=id)
-#         print("basura"+data_credit_log)
-# show_data_credit= DataCredit.as_view()
+
 
 def show_data_credit(request, id):
-        data = DataCreditLog.objects.filter(space_id=id)
+        data = DataCreditLog.objects.filter(space_id=id).order_by('-date')
+        usernames = []
+        for creditlog in data:
+            try:
+               name=User.objects.get(username=creditlog.credit).id
+            except User.DoesNotExist:
+                 name = None
+            usernames.append(name)
         return render(
         request,
         'show_data_credit.html',
-        {"data":data}     
+        {"data":data,"usernames":usernames,}     
     )
+def get_userid(self,i):
+        return self[i]
 
 class UploadFileForm(forms.Form):
     file = forms.FileField()
@@ -549,6 +555,7 @@ def activate(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.basicuser.email_confirmed = True
+       
         user.save()
         login(request, user)
         return redirect('home')
