@@ -53,22 +53,22 @@ def on_change(DataCreditLog,moderators):
 
 
 
-@run_once
-def createTemplates():
-	EmailTemplate.objects.create(
-	    name='onchange_notification',#
-	    subject='Space changed, {{ name|capfirst }}',
+# @run_once
+# def createTemplates():
+# 	EmailTemplate.objects.create(
+# 	    name='onchange_notification',#
+# 	    subject='Space changed, {{ name|capfirst }}',
 	    
-	    html_content='Hi <strong>{{ name }}</strong> some changes has made in a space by {{credit}}, click <a href={{url}}>here</a>to go to space'
-	)
+# 	    html_content='Hi <strong>{{ name }}</strong> some changes has made in a space by {{credit}}, click <a href={{url}}>here</a>to go to space'
+# 	)
 
-	EmailTemplate.objects.create(
-	    name='oncreate_notification',#
-	    subject='Space created, {{ name|capfirst }}',
+# 	EmailTemplate.objects.create(
+# 	    name='oncreate_notification',#
+# 	    subject='Space created, {{ name|capfirst }}',
 	    
-	    html_content='Hi <strong>{{ name }}</strong>  a new space was created , click <a href={{url}}>here</a>to go to space'
-	)
+# 	    html_content='Hi <strong>{{ name }}</strong>  a new space was created , click <a href={{url}}>here</a>to go to space'
+# 	)
 
 
 
-createTemplates()
+# createTemplates()
