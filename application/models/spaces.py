@@ -105,30 +105,30 @@ class Space(models.Model):
         else:
             return False
     
-def keep_track_save(sender, instance, created, **kwargs):
-        if created:
-            url = settings.URL+"space/"+str(instance.id)
-            moderators=Moderator.objects.filter(country=instance.country)
-            print(moderators)
-            if not moderators :
-                mail.send(
-                       ['orlandosalvadorcamarillomoreno@gmail.com'],#'ana@parthenontech.com'], #List of email addresses also accepted  
-                        'noreply@atlasofinnovation.com',
-                       template= 'oncreate_notification',
-                       context={'url':url,'name':'Ana',},)
-            else:
-                for moderator  in moderators:
+# def keep_track_save(sender, instance, created, **kwargs):
+#         if created:
+#             url = settings.URL+"space/"+str(instance.id)
+#             moderators=Moderator.objects.filter(country=instance.country)
+#             print(moderators)
+#             if not moderators :
+#                 mail.send(
+#                        ['orlandosalvadorcamarillomoreno@gmail.com'],#'ana@parthenontech.com'], #List of email addresses also accepted  
+#                         'noreply@atlasofinnovation.com',
+#                        template= 'oncreate_notification',
+#                        context={'url':url,'name':'Ana',},)
+#             else:
+#                 for moderator  in moderators:
 
-                    name= moderator.user.first_name
-                    email=moderator.user.email
-                    print (email)
-                    mail.send(
-                      [email], #List of email addresses also accepted  
-                        'noreply@atlasofinnovation.com',
-                       template= 'oncreate_notification',
-                       context={'url':url,'name':name,},)
+#                     name= moderator.user.first_name
+#                     email=moderator.user.email
+#                     print (email)
+#                     mail.send(
+#                       [email], #List of email addresses also accepted  
+#                         'noreply@atlasofinnovation.com',
+#                        template= 'oncreate_notification',
+#                        context={'url':url,'name':name,},)
 
-post_save.connect(keep_track_save, sender=Space)
+# post_save.connect(keep_track_save, sender=Space)
 class ProvisionalSpace(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=140)

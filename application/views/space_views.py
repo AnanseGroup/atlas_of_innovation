@@ -64,6 +64,32 @@ class SpaceCreate(LoginRequiredMixin, CreateView):
     model = Space
     template_name = 'space_edit.html'
     login_url = '/admin/'
+    def form_valid(self, form):
+        '''* **if form data is valid create the new data credit whit username Save the space and credit log entry and finally if user isnt moderator or admin send mail to correspondent moderator**'''
+        space = self.object
+        
+        user=self.request.user.username
+        self.object = form.save()
+        redirect_url = super(SpaceCreate, self).form_valid(form)
+
+        ''' (Pedro) Related to #92 Add new anonymous credit to the credit log
+        '''
+        data_credit = {
+                       'ip_address': self.request.META['REMOTE_ADDR'],
+                       'space_id': self.object.id,
+                       'credit': user
+
+                      }
+        new_data_credit = DataCreditLog(**data_credit)
+        new_data_credit.save()
+        messages.success(self.request, 'The space create success', extra_tags='alert')
+        if not self.request.user.is_staff:
+            try:
+                moderators=Moderator.objects.filter(province=form.fields['province'])
+            except Exception :
+                moderators=Moderator.objects.filter(country=form.fields['country'])
+            mails.on_create(new_data_credit, moderators)
+        return redirect_url
 add_space = SpaceCreate.as_view()
 
 

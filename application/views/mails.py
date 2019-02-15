@@ -16,21 +16,21 @@ def run_once(f):
 
 #mail sender, on space change 
 
-# def on_create(DataCreditLog,moderators):
-# 	url = djangoSettings.URL+"space"+str(DataCreditLog.space_id)
-# 	if not moderators:
-# 		mail.send(['orlandosalvadorcamarillomoreno@gmail.com'],template='oncreate_notification',context={'url':url,'name':Ana,})
-# 	else:
-# 		for moderator in moderators:
-# 			name=moderator.user.first_name
-# 			email=moderator.user.email
-# 			print(email)
-# 			mail.send([email],template='oncreate_notification',context={'url':url,'name':name,},)
+def on_create(DataCreditLog,moderators):
+	url = djangoSettings.URL+"space"+str(DataCreditLog.space_id)
+	credit=str(DataCreditLog.credit)
+	if not moderators:
+		mail.send(['orlandosalvadorcamarillomoreno@gmail.com'],template='oncreate_notification',context={'url':url,'name':Ana,})
+	else:
+		for moderator in moderators:
+			name=moderator.user.first_name
+			email=moderator.user.email
+			print(email)
+			mail.send([email],template='oncreate_notification',context={'url':url,'name':name,},)
 
 
 def on_change(DataCreditLog,moderators):  
 	url = djangoSettings.URL+"space/"+str(DataCreditLog.space_id)
-	user=User.username
 	credit=str(DataCreditLog.credit)
 	print(moderators)
 	if not moderators :
