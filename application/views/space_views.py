@@ -58,17 +58,55 @@ def space_profile(request, id):
         {"id": id, "space":space}
     )
 
- 
-class SpaceCreate(LoginRequiredMixin, CreateView):
+
+class SpaceCreate(LoginRequiredMixin, CreateView): 
     form_class = SpaceForm
     model = Space
     template_name = 'space_edit.html'
     login_url = '/admin/'
-
 add_space = SpaceCreate.as_view()
 
+
+# class provisionalSpaceCreate(LoginRequiredMixin, CreateView): 
+#     '''* **create a permanently space**'''
+#     form_class = SpaceForm
+#     model = provisionalSpace
+#     template_name = 'space_edit.html'
+#     login_url = '/admin/'
+#     def form_valid(self, form):
+#         '''* **if form data is valid create the new data credit whit username Save the space and credit log entry and finally if user isnt moderator or admin send mail to correspondent moderator**'''
+#         space = self.object
+        
+#         user=self.request.user.username
+#         self.object = form.save()
+#         redirect_url = super(SpaceCreate, self).form_valid(form)
+
+#         ''' (Pedro) Related to #92 Add new anonymous credit to the credit log
+#         '''
+#         data_credit = {
+#                        'ip_address': self.request.META['REMOTE_ADDR'],
+#                        'space_id': self.object.id,
+#                        'credit': user
+
+#                       }
+#         new_data_credit = DataCreditLog(**data_credit)
+#         space.fhash = calculate_fhash(space)
+#         space.save()
+#         new_data_credit.save()
+#         messages.success(self.request, 'The space create success', extra_tags='alert')
+#         if not self.request.user.is_staff:
+#             try:
+#                 moderators=Moderator.objects.filter(province=space.province)
+#             except Exception :
+#                 moderators=Moderator.objects.filter(country=space.country)
+#             mails.on_create(new_data_credit, moderators)
+#         return redirect_url
+
+#     add_provisionalspace = provisionalSpaceCreate.as_view()
+    
  
 class SpaceEdit(LoginRequiredMixin, UpdateView):
+    '''* **Edit a permanently space**'''
     form_class = SpaceForm
     model = Space
     template_name = 'space_edit.html'
@@ -76,21 +114,18 @@ class SpaceEdit(LoginRequiredMixin, UpdateView):
    
     
     def get_context_data(self, **kwargs):
+        '''* **(Pedro) Part of #93 If space is validated we disallow accessing he edit form I think a 404 error would suffice**'''
         context = super(SpaceEdit, self).get_context_data(**kwargs)
         space = self.object
-        ''' (Pedro) Part of #93 If space is validated we disallow accessing 
-            the edit form I think a 404 error would suffice
-        '''
+        
         if space.validated:
             raise Http404
         return context
 
     def form_valid(self, form):
+        '''* **if form data is valid create the new data credit whit username Save the space and credit log entry and finally if user isnt moderator or admin send mail to correspondent moderator**'''
         space = self.object
-        try:
-            moderators=Moderator.objects.filter(province=space.province)
-        except Exception :
-            moderators=Moderator.objects.filter(country=space.country)
+        
         user=self.request.user.username
         self.object = form.save()
         redirect_url = super(SpaceEdit, self).form_valid(form)
@@ -106,7 +141,12 @@ class SpaceEdit(LoginRequiredMixin, UpdateView):
         new_data_credit = DataCreditLog(**data_credit)
         new_data_credit.save()
         messages.success(self.request, 'The space changes success', extra_tags='alert')
-        mails.on_change(new_data_credit, moderators)
+        if not self.request.user.is_staff:
+            try:
+                moderators=Moderator.objects.filter(province=space.province)
+            except Exception :
+                moderators=Moderator.objects.filter(country=space.country)
+            mails.on_change(new_data_credit, moderators)
         return redirect_url
 
             
@@ -114,12 +154,15 @@ class SpaceEdit(LoginRequiredMixin, UpdateView):
 edit_space = SpaceEdit.as_view()
 
 class ListSpaces(TemplateView):
+    '''* **list the spaces in the seleted country**'''
     template_name = "list.html"
 list_spaces = ListSpaces.as_view()
 
 
 
 def show_data_credit(request, id):
+        '''* **shows the historical changes credit for the selected space
+        order by date in reverse order**'''
         data = DataCreditLog.objects.filter(space_id=id).order_by('-date')
         usernames = []
         for creditlog in data:
@@ -137,43 +180,43 @@ def get_userid(self,i):
         return self[i]
 
 class UploadFileForm(forms.Form):
+    '''**form to upload file**'''
     file = forms.FileField()
 
 @staff_member_required
 @ensure_csrf_cookie
 def analyze_spaces(request):
-
-    ''' To simplify the process we just compare the provisional spaces with 
-    their respective countries, so first we get all the countries available in
-    our provisional list'''
+    '''**first checks if exist the basic fields in the space if all exist then analize the spaces looking for coincidences,
+     using the hashes, To simplify the process we just compare the provisional spaces with     
+     their respective countries, so first we get all the countries available in our provisional list**'''
     gspaces = ProvisionalSpace.objects.values('country').annotate(
                                                         dcount=Count('country')
                                         ).order_by('country')
     country_list = []
     for gspace in gspaces:
-        # Don't know why but the query adds a None element to the dict
+        '''Don't know why but the query adds a None element to the dict'''
         if gspace['country'] is not None:
             country_list.append(gspace["country"])
 
     fields = ['latitude','longitude','name','city','website','email', 'fhash', 
               'postal_code', 'province', 'address1', 'id']
             
-    # To convert None to an empty string
+    '''To convert None to an empty string'''
     xstr = lambda s: '' if s is None else str(s)
     
-    # Spaces with no apparent problems
+    '''Spaces with no apparent problems'''
     approved_spaces = []
     
-    # Spaces without the required data to be analyzed
+    '''Spaces without the required data to be analyzed'''
     excluded_spaces = []
     
-    # Spaces that match other spaces
+    '''Spaces that match other spaces'''
     problem_spaces = []
     
-    # Discarded spaces
+    ''' Discarded spaces'''
     discarded_spaces = []
     
-    # Processed spaces
+    ''' Processed spaces'''
     processed_spaces = []
     
     for country in country_list:
@@ -284,6 +327,7 @@ def analyze_spaces(request):
 
 @staff_member_required
 def upload_file(request):
+    '''* **check if the fileselected for upload  is valid**'''
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
@@ -294,7 +338,9 @@ def upload_file(request):
     return render(request, 'space_upload.html', {'form': form})
 
 def handle_csv(file):
-
+        '''**process the spaces in the file uploaded,
+        applying the nesesary changes to ensure the new spaces have the correct format and can be 
+        saved as provisional spaces to analize it**'''
         data_filename = file
 
         reverse_country_list = {name:code for code, name in countries}
@@ -405,7 +451,7 @@ def handle_csv(file):
                 try:
                     new_space.fhash = calculate_fhash(new_space)
                     new_space.save()
-                    # Added the many to many relationship
+                    ''' Added the many to many relationship'''
                     if ownership_obj:
                         new_space.ownership_type.add(ownership_obj)
                     if affiliation_obj:
@@ -415,10 +461,12 @@ def handle_csv(file):
                     new_space.save() 
                     
                 except Exception as e:
-                    #print (space.__dict__)
+                    
                     raise e
                     
 def calculate_fhash(new_space):
+    '''**concatenate the name , address city province country and postal code if they exist,
+    then calculate the tlsh hash  and return it**'''
     space_info = [new_space.name]
     if new_space.address1:
         space_info.append(new_space.address1)
@@ -436,6 +484,7 @@ def calculate_fhash(new_space):
 
 @staff_member_required
 def provisional_space(request):
+    '''* **provides the  way to show and  modify the provisional spaces stored in the db**'''
     fields = ['latitude','longitude','name','city','country','website', 'postal_code','email', 'province', 'address1', 'id']
     if request.method == 'GET':
         if request.GET["id"]:
@@ -493,6 +542,7 @@ def provisional_space(request):
 
 @staff_member_required
 def space_csv(request):
+    '''* ***Used to show analize the spaces in the database(not provisional spaces) and calculate the hash if it doesn exist**'''
 
     fields = ['latitude','longitude','name','city','country','website', 'postal_code','email', 'province', 'address1', 'id']
     if request.method == 'GET':
@@ -517,20 +567,21 @@ def space_csv(request):
 
 
 def signup(request):
+    '''**allow to create an acount as basic user , the new account must be verified by email 
+    when it perform any change  o create a new space a email is send to correspondent moderator to validate the changes**'''
     if request.method == 'POST':
         form = UserForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
             user.is_active = False
             user.save()
-            current_site = get_current_site(request)
             mail.send(
                     [form.cleaned_data.get('email')], # List of email addresses also accepted
                     'from@example.com',
                     subject='Activate Your Atlas Account',
                     message=render_to_string('account_activation_email.html', {
                         'user': user,
-                        'domain': current_site.domain,
+                        'domain': djangoSettings.URL,
                         'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode(),
                         'token': account_activation_token.make_token(user),
                     }),
@@ -541,11 +592,9 @@ def signup(request):
     else:
         form = UserForm()
     return render(request, 'signup.html', {'form': form})
-def account_activation_sent(request):
-    template_name = 'space_edit.html'
-    return  render(request, "account_activation_sent.html")
 
 def activate(request, uidb64, token):
+    '''* **Activate the account when the user acces to link provide in the mail**'''
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)

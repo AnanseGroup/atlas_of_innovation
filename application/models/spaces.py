@@ -107,7 +107,7 @@ class Space(models.Model):
     
 def keep_track_save(sender, instance, created, **kwargs):
         if created:
-            url = djangoSettings.URL+"space/"+str(instance.id)
+            url = settings.URL+"space/"+str(instance.id)
             moderators=Moderator.objects.filter(country=instance.country)
             print(moderators)
             if not moderators :
@@ -115,7 +115,7 @@ def keep_track_save(sender, instance, created, **kwargs):
                        ['orlandosalvadorcamarillomoreno@gmail.com'],#'ana@parthenontech.com'], #List of email addresses also accepted  
                         'noreply@atlasofinnovation.com',
                        template= 'oncreate_notification',
-                       context={'url':url,'name':'Ana'},)
+                       context={'url':url,'name':'Ana',},)
             else:
                 for moderator  in moderators:
 
@@ -126,7 +126,7 @@ def keep_track_save(sender, instance, created, **kwargs):
                       [email], #List of email addresses also accepted  
                         'noreply@atlasofinnovation.com',
                        template= 'oncreate_notification',
-                       context={'url':url,'name':name},)
+                       context={'url':url,'name':name,},)
 
 post_save.connect(keep_track_save, sender=Space)
 class ProvisionalSpace(models.Model):
