@@ -20,7 +20,7 @@ def on_create(DataCreditLog,moderators):
 	url = djangoSettings.URL+"space"+str(DataCreditLog.space_id)
 	credit=str(DataCreditLog.credit)
 	if not moderators:
-		mail.send(['orlandosalvadorcamarillomoreno@gmail.com'],template='oncreate_notification',context={'url':url,'name':Ana,})
+		mail.send(['orlandosalvadorcamarillomoreno@gmail.com'],template='oncreate_notification',context={'url':url,'name':'Ana',})
 	else:
 		for moderator in moderators:
 			name=moderator.user.first_name
