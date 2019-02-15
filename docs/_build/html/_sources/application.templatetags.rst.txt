@@ -1,0 +1,22 @@
+application.templatetags package
+================================
+
+Submodules
+----------
+
+application.templatetags.app\_filters module
+--------------------------------------------
+
+.. automodule:: application.templatetags.app_filters
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: application.templatetags
+    :members:
+    :undoc-members:
+    :show-inheritance:

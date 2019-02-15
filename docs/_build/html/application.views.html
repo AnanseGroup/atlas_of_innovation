@@ -1,0 +1,418 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>application.views package &#8212; Atlas of innovation development documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="application-views-package">
+<h1>application.views package<a class="headerlink" href="#application-views-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-application.views.API_views">
+<span id="application-views-api-views-module"></span><h2>application.views.API_views module<a class="headerlink" href="#module-application.views.API_views" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="application.views.API_views.filter_spaces">
+<code class="descclassname">application.views.API_views.</code><code class="descname">filter_spaces</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.API_views.filter_spaces" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>These views render the database as JSON</strong></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-application.views.mails">
+<span id="application-views-mails-module"></span><h2>application.views.mails module<a class="headerlink" href="#module-application.views.mails" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="application.views.mails.createTemplates">
+<code class="descclassname">application.views.mails.</code><code class="descname">createTemplates</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.mails.createTemplates" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="application.views.mails.on_change">
+<code class="descclassname">application.views.mails.</code><code class="descname">on_change</code><span class="sig-paren">(</span><em>DataCreditLog</em>, <em>moderators</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.mails.on_change" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="application.views.mails.run_once">
+<code class="descclassname">application.views.mails.</code><code class="descname">run_once</code><span class="sig-paren">(</span><em>f</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.mails.run_once" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-application.views.space_views">
+<span id="application-views-space-views-module"></span><h2>application.views.space_views module<a class="headerlink" href="#module-application.views.space_views" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="application.views.space_views.ListSpaces">
+<em class="property">class </em><code class="descclassname">application.views.space_views.</code><code class="descname">ListSpaces</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.space_views.ListSpaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.views.generic.base.TemplateView</span></code></p>
+<ul class="simple">
+<li><strong>list the spaces in the seleted country</strong></li>
+</ul>
+<dl class="attribute">
+<dt id="application.views.space_views.ListSpaces.template_name">
+<code class="descname">template_name</code><em class="property"> = 'list.html'</em><a class="headerlink" href="#application.views.space_views.ListSpaces.template_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="application.views.space_views.SpaceCreate">
+<em class="property">class </em><code class="descclassname">application.views.space_views.</code><code class="descname">SpaceCreate</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.space_views.SpaceCreate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.auth.mixins.LoginRequiredMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">django.views.generic.edit.CreateView</span></code></p>
+<ul class="simple">
+<li><strong>create a permanently space</strong></li>
+</ul>
+<dl class="attribute">
+<dt id="application.views.space_views.SpaceCreate.form_class">
+<code class="descname">form_class</code><a class="headerlink" href="#application.views.space_views.SpaceCreate.form_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="application.models.html#application.models.spaces.SpaceForm" title="application.models.spaces.SpaceForm"><code class="xref py py-class docutils literal notranslate"><span class="pre">application.models.spaces.SpaceForm</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="application.views.space_views.SpaceCreate.login_url">
+<code class="descname">login_url</code><em class="property"> = '/admin/'</em><a class="headerlink" href="#application.views.space_views.SpaceCreate.login_url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="application.views.space_views.SpaceCreate.model">
+<code class="descname">model</code><a class="headerlink" href="#application.views.space_views.SpaceCreate.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="application.models.html#application.models.spaces.Space" title="application.models.spaces.Space"><code class="xref py py-class docutils literal notranslate"><span class="pre">application.models.spaces.Space</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="application.views.space_views.SpaceCreate.template_name">
+<code class="descname">template_name</code><em class="property"> = 'space_edit.html'</em><a class="headerlink" href="#application.views.space_views.SpaceCreate.template_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="application.views.space_views.SpaceEdit">
+<em class="property">class </em><code class="descclassname">application.views.space_views.</code><code class="descname">SpaceEdit</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.space_views.SpaceEdit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.auth.mixins.LoginRequiredMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">django.views.generic.edit.UpdateView</span></code></p>
+<ul class="simple">
+<li><strong>Edit a permanently space</strong></li>
+</ul>
+<dl class="attribute">
+<dt id="application.views.space_views.SpaceEdit.form_class">
+<code class="descname">form_class</code><a class="headerlink" href="#application.views.space_views.SpaceEdit.form_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="application.models.html#application.models.spaces.SpaceForm" title="application.models.spaces.SpaceForm"><code class="xref py py-class docutils literal notranslate"><span class="pre">application.models.spaces.SpaceForm</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="application.views.space_views.SpaceEdit.form_valid">
+<code class="descname">form_valid</code><span class="sig-paren">(</span><em>form</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.space_views.SpaceEdit.form_valid" title="Permalink to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><strong>if form data is valid create the new data credit whit username Save the space and credit log entry and finally if user isnt moderator or admin send mail to correspondent moderator</strong></li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="application.views.space_views.SpaceEdit.get_context_data">
+<code class="descname">get_context_data</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.space_views.SpaceEdit.get_context_data" title="Permalink to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><strong>(Pedro) Part of #93 If space is validated we disallow accessing he edit form I think a 404 error would suffice</strong></li>
+</ul>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="application.views.space_views.SpaceEdit.login_url">
+<code class="descname">login_url</code><em class="property"> = '/admin/'</em><a class="headerlink" href="#application.views.space_views.SpaceEdit.login_url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="application.views.space_views.SpaceEdit.model">
+<code class="descname">model</code><a class="headerlink" href="#application.views.space_views.SpaceEdit.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="application.models.html#application.models.spaces.Space" title="application.models.spaces.Space"><code class="xref py py-class docutils literal notranslate"><span class="pre">application.models.spaces.Space</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="application.views.space_views.SpaceEdit.template_name">
+<code class="descname">template_name</code><em class="property"> = 'space_edit.html'</em><a class="headerlink" href="#application.views.space_views.SpaceEdit.template_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="application.views.space_views.UploadFileForm">
+<em class="property">class </em><code class="descclassname">application.views.space_views.</code><code class="descname">UploadFileForm</code><span class="sig-paren">(</span><em>data=None</em>, <em>files=None</em>, <em>auto_id='id_%s'</em>, <em>prefix=None</em>, <em>initial=None</em>, <em>error_class=&lt;class 'django.forms.utils.ErrorList'&gt;</em>, <em>label_suffix=None</em>, <em>empty_permitted=False</em>, <em>field_order=None</em>, <em>use_required_attribute=None</em>, <em>renderer=None</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.space_views.UploadFileForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.forms.forms.Form</span></code></p>
+<p><strong>form to upload file</strong></p>
+<dl class="attribute">
+<dt id="application.views.space_views.UploadFileForm.base_fields">
+<code class="descname">base_fields</code><em class="property"> = {'file': &lt;django.forms.fields.FileField object&gt;}</em><a class="headerlink" href="#application.views.space_views.UploadFileForm.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="application.views.space_views.UploadFileForm.declared_fields">
+<code class="descname">declared_fields</code><em class="property"> = {'file': &lt;django.forms.fields.FileField object&gt;}</em><a class="headerlink" href="#application.views.space_views.UploadFileForm.declared_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="application.views.space_views.UploadFileForm.media">
+<code class="descname">media</code><a class="headerlink" href="#application.views.space_views.UploadFileForm.media" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="application.views.space_views.activate">
+<code class="descclassname">application.views.space_views.</code><code class="descname">activate</code><span class="sig-paren">(</span><em>request</em>, <em>uidb64</em>, <em>token</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.space_views.activate" title="Permalink to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><strong>Activate the account when the user acces to link provide in the mail</strong></li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.views.space_views.add_space">
+<code class="descclassname">application.views.space_views.</code><code class="descname">add_space</code><span class="sig-paren">(</span><em>self</em>, <em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.space_views.add_space" title="Permalink to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><strong>create a permanently space</strong></li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.views.space_views.analyze_spaces">
+<code class="descclassname">application.views.space_views.</code><code class="descname">analyze_spaces</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.space_views.analyze_spaces" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>first checks if exist the basic fields in the space if all exist then analize the spaces looking for coincidences,
+using the hashes, To simplify the process we just compare the provisional spaces with     
+their respective countries, so first we get all the countries available in our provisional list</strong></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.views.space_views.calculate_fhash">
+<code class="descclassname">application.views.space_views.</code><code class="descname">calculate_fhash</code><span class="sig-paren">(</span><em>new_space</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.space_views.calculate_fhash" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>concatenate the name , address city province country and postal code if they exist,
+then calculate the tlsh hash  and return it</strong></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.views.space_views.edit_space">
+<code class="descclassname">application.views.space_views.</code><code class="descname">edit_space</code><span class="sig-paren">(</span><em>self</em>, <em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.space_views.edit_space" title="Permalink to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><strong>Edit a permanently space</strong></li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.views.space_views.get_userid">
+<code class="descclassname">application.views.space_views.</code><code class="descname">get_userid</code><span class="sig-paren">(</span><em>self</em>, <em>i</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.space_views.get_userid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="application.views.space_views.handle_csv">
+<code class="descclassname">application.views.space_views.</code><code class="descname">handle_csv</code><span class="sig-paren">(</span><em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.space_views.handle_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>process the spaces in the file uploaded,
+applying the nesesary changes to ensure the new spaces have the correct format and can be 
+saved as provisional spaces to analize it</strong></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.views.space_views.list_spaces">
+<code class="descclassname">application.views.space_views.</code><code class="descname">list_spaces</code><span class="sig-paren">(</span><em>self</em>, <em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.space_views.list_spaces" title="Permalink to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><strong>list the spaces in the seleted country</strong></li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.views.space_views.provisional_space">
+<code class="descclassname">application.views.space_views.</code><code class="descname">provisional_space</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.space_views.provisional_space" title="Permalink to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><strong>provides the  way to show and  modify the provisional spaces stored in the db</strong></li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.views.space_views.show_data_credit">
+<code class="descclassname">application.views.space_views.</code><code class="descname">show_data_credit</code><span class="sig-paren">(</span><em>request</em>, <em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.space_views.show_data_credit" title="Permalink to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><a href="#id1"><span class="problematic" id="id2">**</span></a>shows the historical changes credit for the selected space</li>
+</ul>
+<p>order by date in reverse order**</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.views.space_views.signup">
+<code class="descclassname">application.views.space_views.</code><code class="descname">signup</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.space_views.signup" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>allow to create an acount as basic user , the new account must be verified by email 
+when it perform any change  o create a new space a email is send to correspondent moderator to validate the changes</strong></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.views.space_views.space_csv">
+<code class="descclassname">application.views.space_views.</code><code class="descname">space_csv</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.space_views.space_csv" title="Permalink to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><strong>*Used to show analize the spaces in the database(not provisional spaces) and calculate the hash if it doesn exist</strong></li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.views.space_views.space_profile">
+<code class="descclassname">application.views.space_views.</code><code class="descname">space_profile</code><span class="sig-paren">(</span><em>request</em>, <em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.space_views.space_profile" title="Permalink to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><strong>shows the selected space profile</strong></li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.views.space_views.upload_file">
+<code class="descclassname">application.views.space_views.</code><code class="descname">upload_file</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.space_views.upload_file" title="Permalink to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><strong>check if the fileselected for upload  is valid</strong></li>
+</ul>
+</dd></dl>
+
+</div>
+<div class="section" id="module-application.views.static_pages">
+<span id="application-views-static-pages-module"></span><h2>application.views.static_pages module<a class="headerlink" href="#module-application.views.static_pages" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="application.views.static_pages.about">
+<code class="descclassname">application.views.static_pages.</code><code class="descname">about</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.static_pages.about" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>about section</strong></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.views.static_pages.contribute">
+<code class="descclassname">application.views.static_pages.</code><code class="descname">contribute</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.static_pages.contribute" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>contribute section</strong></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.views.static_pages.contributors">
+<code class="descclassname">application.views.static_pages.</code><code class="descname">contributors</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.static_pages.contributors" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>contributors</strong></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.views.static_pages.devDocs">
+<code class="descclassname">application.views.static_pages.</code><code class="descname">devDocs</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.static_pages.devDocs" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>developer-documentation</strong></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.views.static_pages.goals">
+<code class="descclassname">application.views.static_pages.</code><code class="descname">goals</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.static_pages.goals" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>goals section</strong></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.views.static_pages.map">
+<code class="descclassname">application.views.static_pages.</code><code class="descname">map</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.static_pages.map" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Control the map</strong></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.views.static_pages.userDocs">
+<code class="descclassname">application.views.static_pages.</code><code class="descname">userDocs</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.static_pages.userDocs" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>user-documentation</strong></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="application.views.static_pages.whitelabel_map">
+<code class="descclassname">application.views.static_pages.</code><code class="descname">whitelabel_map</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.static_pages.whitelabel_map" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="application.views.static_pages.wiki">
+<code class="descclassname">application.views.static_pages.</code><code class="descname">wiki</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#application.views.static_pages.wiki" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>list of countries</strong></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-application.views">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-application.views" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Atlas of innovation</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Orlando Camarillo.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/application.views.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

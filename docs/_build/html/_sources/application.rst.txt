@@ -1,0 +1,40 @@
+application package
+===================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    application.models
+    application.views
+
+Submodules
+----------
+
+application.admin module
+------------------------
+
+.. automodule:: application.admin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+
+application.urls module
+-----------------------
+
+.. automodule:: application.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: application
+    :members:
+    :undoc-members:
+    :show-inheritance:
