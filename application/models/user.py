@@ -27,7 +27,7 @@ class UserForm(UserCreationForm):
     email=forms.EmailField(label='Your email', max_length=100)
     country=CountryField(blank_label='(select country)').formfield()
     captcha = ReCaptchaField()
-class Meta:
+    class Meta:
         model = User
         fields = ('username', 'email', 'password1', 'password2', )
 

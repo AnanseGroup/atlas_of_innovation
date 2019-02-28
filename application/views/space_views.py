@@ -636,3 +636,7 @@ def activate(request, uidb64, token):
         return redirect('home')
     else:
         return render(request, 'account_activation_invalid.html')
+def login_user(request, template_name='registration/login.html', extra_context=None):
+     response = auth_views.login(request, template_name)
+     if request.POST.has_key('remember_me'):
+        request.session.set_expiry(1209600) # 2 weeks
