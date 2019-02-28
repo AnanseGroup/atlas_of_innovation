@@ -7,9 +7,10 @@ from .base import *
 SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 # SECURITY_WARNING: don't use these keys in production
+NOCAPTCHA = True
 RECAPTCHA_PUBLIC_KEY = '6LdzuFAUAAAAAExNBiaezBVZMZQ-4FFh_tyLg1hR'
 RECAPTCHA_PRIVATE_KEY = os.environ['RECAPTCHA_PRIVATE_KEY']
-NOCAPTCHA = True
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
