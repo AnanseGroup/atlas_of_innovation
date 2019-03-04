@@ -45,7 +45,7 @@
 {% endif %}
 {% if user.is_authenticated %}
 
-    <div class="row">
+    <div class="row" style="padding-top: 10px;">
         {% if user.is_staff %}
         <div class="col s2">
             <a href="/admin" class=" dark-blue " >ADMIN MENU</a>
@@ -61,7 +61,7 @@
          {% endif %}
         </div>
  {% else %}
-      <div class="row">
+      <div class="row" style="padding-top: 10px;">
         <div class="col s2 offset-s10" style="padding-left: 60px;">
          <a href="{% url 'login'%}?next=/contribute/">login</a> / <a href="{% url 'signup' %}">signup</a>
         </div>

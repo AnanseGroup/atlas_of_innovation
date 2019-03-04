@@ -93,6 +93,7 @@ class SpaceCreate(LoginRequiredMixin, CreateView):
 add_space = SpaceCreate.as_view()
 
 
+
 # class provisionalSpaceCreate(LoginRequiredMixin, CreateView): 
 #     '''* **create a permanently space**'''
 #     form_class = SpaceForm
@@ -149,30 +150,50 @@ class SpaceEdit(LoginRequiredMixin, UpdateView):
         return context
 
     def form_valid(self, form):
-        '''* **if form data is valid create the new data credit whit username Save the space and credit log entry and finally if user isnt moderator or admin send mail to correspondent moderator**'''
-        space = self.object
-        
-        user=self.request.user.username
-        self.object = form.save()
-        redirect_url = super(SpaceEdit, self).form_valid(form)
+        if form.has_changed():   
+            '''* **if form data is valid create the new data credit whit username Save the space and credit log entry and finally if user isnt moderator or admin send mail to correspondent moderator**'''
+            if  self.request.user.is_staff:
+                #if is a administrator made changes
+                space = self.object
+                
+                user=self.request.user.username
+                self.object = form.save()
+                redirect_url = super(SpaceEdit, self).form_valid(form)
 
-        ''' (Pedro) Related to #92 Add new anonymous credit to the credit log
-        '''
-        data_credit = {
-                       'ip_address': self.request.META['REMOTE_ADDR'],
-                       'space_id': self.object.id,
-                       'credit': user
+                ''' (Pedro) Related to #92 Add new anonymous credit to the credit log
+                '''
+                data_credit = {
+                               'ip_address': self.request.META['REMOTE_ADDR'],
+                               'space_id': self.object.id,
+                               'credit': user
 
-                      }
-        new_data_credit = DataCreditLog(**data_credit)
-        new_data_credit.save()
-        messages.success(self.request, 'The space changes success', extra_tags='alert')
-        if not self.request.user.is_staff:
-            try:
-                moderators=Moderator.objects.filter(province=space.province)
-            except Exception :
-                moderators=Moderator.objects.filter(country=space.country)
-            mails.on_change(new_data_credit, moderators)
+                              }
+                new_data_credit = DataCreditLog(**data_credit)
+                new_data_credit.save()
+                messages.success(self.request, 'The space changes success', extra_tags='alert')
+                if not self.request.user.is_staff:
+                    try:
+                        moderators=Moderator.objects.filter(province=space.province)
+                    except Exception :
+                        moderators=Moderator.objects.filter(country=space.country)
+                    mails.on_change(new_data_credit, moderators)
+            else:#if is not an administrator then is just a suggestion
+                suggestion ={
+                            'space' : self.space,
+                            'user' :self.request.user
+                             }
+                new_suggestion= Suggestion(**suggestion)
+                new_suggestion.save()
+                print("The following fields changed: %s" % ", ".join(f.changed_data))
+                # for field in saved_fields
+                #     if get_data(field) != get_data(form.field)
+                #         field_suggest{
+                #                         'field' :field,
+                #                         'suggest':getdata(field),
+                #                         'suggestion':new_suggestion
+                #                             }
+        else:
+            messages.error(self.request,'The form has not change',extra_tags='alert')
         return redirect_url
 
             

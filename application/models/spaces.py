@@ -262,3 +262,10 @@ class SpaceForm(ModelForm):
     class Meta:
         model = Space
         fields = '__all__'
+class Suggestion(models.Model):
+    '''Model for sugested changes entry'''
+    id= models.AutoField(primary_key=True)
+    space = models.ForeignKey(
+        Space, on_delete=models.CASCADE)
+    models.ForeignKey(
+        User, on_delete=models.CASCADE)
