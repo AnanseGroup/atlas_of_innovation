@@ -48,7 +48,8 @@ from django.shortcuts import render, redirect
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
 
-
+from django.forms.models import model_to_dict
+from application.models.spaces import Suggestion
 def space_profile(request, id):
     space = Space.objects.get(id=id)
 
@@ -63,32 +64,85 @@ class SpaceCreate(LoginRequiredMixin, CreateView):
     form_class = SpaceForm
     model = Space
     template_name = 'space_edit.html'
-    login_url = '/admin/'
+    login_url = '/login/'
     def form_valid(self, form):
-        '''* **if form data is valid create the new data credit whit username Save the space and credit log entry and finally if user isnt moderator or admin send mail to correspondent moderator**'''
-        space = self.object
+       
         
         user=self.request.user.username
-        self.object = form.save()
-        redirect_url = super(SpaceCreate, self).form_valid(form)
+        if self.request.user.is_staff:
+            redirect_url = super(SpaceCreate, self).form_valid(form)
+            '''* **if form data is valid create the new data credit whit username Save the space and credit log entry and finally if user isnt moderator or admin send mail to correspondent moderator**'''
+            print("is staff")
+            space = self.object
+            self.object = form.save()
+            ''' (Pedro) Related to #92 Add new anonymous credit to the credit log
+            '''
+            data_credit = {
+                           'ip_address': self.request.META['REMOTE_ADDR'],
+                           'space_id': self.object.id,
+                           'credit': user
 
-        ''' (Pedro) Related to #92 Add new anonymous credit to the credit log
-        '''
-        data_credit = {
-                       'ip_address': self.request.META['REMOTE_ADDR'],
-                       'space_id': self.object.id,
-                       'credit': user
+                          }
+            new_data_credit = DataCreditLog(**data_credit)
+            new_data_credit.save()
+            messages.success(self.request, 'The space create success', extra_tags='alert')
+            moderators=None
+               
+        else:
+                print('not staff')
+                redirect_url = redirect('contribute')
+                affiliation_obj=None
+                governance_obj=None
+                ownership_obj=None
+                if form.cleaned_data['network_affiliation']:
+                    affiliation_obj = AffiliationOption.objects.filter(name=form.cleaned_data['network_affiliation']).first()
 
-                      }
-        new_data_credit = DataCreditLog(**data_credit)
-        new_data_credit.save()
-        messages.success(self.request, 'The space create success', extra_tags='alert')
-        if not self.request.user.is_staff:
-            try:
-                moderators=Moderator.objects.filter(province=form.fields['province'])
-            except Exception :
-                moderators=Moderator.objects.filter(country=form.fields['country'])
-            mails.on_create(new_data_credit, moderators)
+                if form.cleaned_data['governance_type']:
+                    governance_obj = GovernanceOption.objects.filter(name=form.cleaned_data['governance_type']).first()
+                    
+                if form.cleaned_data['ownership_type']:
+                    ownership_obj = OwnershipOption.objects.filter(name=form.cleaned_data['ownership_type']).first()
+                
+                new_space = ProvisionalSpace()
+                for field in ProvisionalSpace._meta.get_fields():
+                    if type(field).__name__ is not "ManyToManyField":
+                        try:
+                            form_field=form.cleaned_data[field.name]
+                        except Exception:
+                            form_field=None
+                        if form_field is not None:
+                            setattr(new_space,field.name,form.cleaned_data[field.name])
+                    else:
+                        try:
+                            if ownership_obj:
+                                new_space.ownership_type.add(ownership_obj)
+                            if affiliation_obj:
+                               new_space.network_affiliation.add(affiliation_obj)
+                            if governance_obj:
+                               new_space.governance_type.add(governance_obj)
+                        except Exception:
+                            print(Exception)
+
+                new_space.override_analysis = False
+                new_space.discarded = False
+                new_space.fhash = calculate_fhash(new_space)
+                print(new_space.fhash)
+                new_space.save() 
+                messages.success(self.request, 'The space create successfullsfully, it will be aproved  by page moderator sooon', extra_tags='alert')
+                try:
+                    moderators=Moderator.objects.filter(province=new_space.province)
+                except Exception :
+                    moderators=Moderator.objects.filter(country=new_space.country)
+                
+                data_credit = {
+                           'ip_address': self.request.META['REMOTE_ADDR'],
+                           'space_id': new_space.id,
+                           'credit': user
+
+                          }
+                new_data_credit = DataCreditLog(**data_credit)
+                new_data_credit.save()
+                mails.on_create(new_data_credit, moderators)
         return redirect_url
 add_space = SpaceCreate.as_view()
 
@@ -179,7 +233,7 @@ class SpaceEdit(LoginRequiredMixin, UpdateView):
                     mails.on_change(new_data_credit, moderators)
             else:#if is not an administrator then is just a suggestion
                 suggestion ={
-                            'space' : self.space,
+                            'space' : self.object,
                             'user' :self.request.user
                              }
                 new_suggestion= Suggestion(**suggestion)
@@ -244,7 +298,7 @@ def analyze_spaces(request):
         '''Don't know why but the query adds a None element to the dict'''
         if gspace['country'] is not None:
             country_list.append(gspace["country"])
-
+    country_list.append(None)
     fields = ['latitude','longitude','name','city','website','email', 'fhash', 
               'postal_code', 'province', 'address1', 'id']
             
@@ -305,6 +359,10 @@ def analyze_spaces(request):
                 error = 1
             if not pspace.fhash:
                 problems.append({"desc": "Space has no hash: see note at header", "crit":1})
+                critical = 1
+                error = 1
+            if not pspace.country:
+                problems.append({"desc": "Space has no country", "crit":1})
                 critical = 1
                 error = 1
             if critical:
@@ -527,6 +585,7 @@ def calculate_fhash(new_space):
         space_info.append(new_space.postal_code)
     space_stuff = " ".join(space_info).replace(",", "").replace("-","").replace(".","").replace("_","").replace("+","")
     space_string = ' '.join(space_stuff.split()).encode("raw_unicode_escape")
+    print('string',space_string)
     return tlsh.forcehash(space_string)
 
 @staff_member_required
@@ -634,7 +693,7 @@ def signup(request):
                     }),
                     
                     )
-            messages.info(request, 'The activation mail was send!')
+            messages.info(request, 'The activation mail was sent!')
             return redirect('/contribute')
     else:
         form = UserForm()
