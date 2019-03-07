@@ -127,6 +127,7 @@ class SpaceCreate(LoginRequiredMixin, CreateView):
                 new_space.override_analysis = False
                 new_space.discarded = False
                 new_space.fhash = calculate_fhash(new_space)
+                print('hash')
                 print(new_space.fhash)
                 new_space.save() 
                 messages.success(self.request, 'The space create successfullsfully, it will be aproved  by page moderator sooon', extra_tags='alert')
@@ -207,37 +208,33 @@ class SpaceEdit(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         if form.has_changed():   
             '''* **if form data is valid create the new data credit whit username Save the space and credit log entry and finally if user isnt moderator or admin send mail to correspondent moderator**'''
-           
-            if  self.request.user.is_staff:
-                redirect_url = super(SpaceEdit, self).form_valid(form)
-                #if is a administrator made changes
-                space = self.object
-                
-                user=self.request.user.username
-                self.object = form.save()
-                
-
-                ''' (Pedro) Related to #92 Add new anonymous credit to the credit log
-                '''
-                data_credit = {
+            space = self.object
+            user=self.request.user.username
+            data_credit = {
                                'ip_address': self.request.META['REMOTE_ADDR'],
                                'space_id': self.object.id,
                                'credit': user
 
                               }
-                new_data_credit = DataCreditLog(**data_credit)
+            new_data_credit = DataCreditLog(**data_credit)
+            if  self.request.user.is_staff:
+                redirect_url = super(SpaceEdit, self).form_valid(form)
+                #if is a administrator made changes
+                
+                
+                
+                self.object = form.save()
+                
+
+                ''' (Pedro) Related to #92 Add new anonymous credit to the credit log
+                '''
+                
                 new_data_credit.save()
                 messages.success(self.request, 'The space changes success', extra_tags='alert')
-                if not self.request.user.is_staff:
-                    try:
-                        moderators=Moderator.objects.filter(province=space.province)
-                    except Exception :
-                        moderators=Moderator.objects.filter(country=space.country)
-                    mails.on_change(new_data_credit, moderators)
             else:#if is not an administrator then is just a suggestion
                 redirect_url = redirect('contribute')
                 suggestion ={
-                            'space' : self.object,
+                            'space' : space,
                             'user' :self.request.user
                              }
                 new_suggestion= Suggestion(**suggestion)
@@ -261,6 +258,11 @@ class SpaceEdit(LoginRequiredMixin, UpdateView):
                             new_field_suggestion.suggestion=new_suggestion
                             new_field_suggestion.save()
                             print(new_field_suggestion)
+                try:
+                    moderators=Moderator.objects.filter(province=space.province)
+                except Exception :
+                    moderators=Moderator.objects.filter(country=space.country)
+                    mails.on_change(new_data_credit, moderators)
                 messages.success(self.request, 'The space suggestion will be evaluate by an moderator soon', extra_tags='alert')
         else:
             messages.error(self.request,'The form has not change',extra_tags='alert')
@@ -600,7 +602,7 @@ def calculate_fhash(new_space):
         space_info.append(new_space.postal_code)
     space_stuff = " ".join(space_info).replace(",", "").replace("-","").replace(".","").replace("_","").replace("+","")
     space_string = ' '.join(space_stuff.split()).encode("raw_unicode_escape")
-    print('string',space_string)
+    print(tlsh.forcehash(space_string))
     return tlsh.forcehash(space_string)
 
 @staff_member_required

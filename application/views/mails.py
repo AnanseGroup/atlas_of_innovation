@@ -4,20 +4,28 @@ from post_office import mail
 from django.contrib.auth.models import User
 from django.conf import settings as djangoSettings
 
-def run_once(f):
-    def wrapper(*args, **kwargs):
-        if not wrapper.has_run:
-            wrapper.has_run = True
-            return f(*args, **kwargs)
-    wrapper.has_run = False
-    return wrapper
+def createTemplates():
+	if not EmailTemplate.objects.filter(name='onchange_notification'):
+		EmailTemplate.objects.create(
+		    name='onchange_notification',#
+		    subject='Space changed, {{ name|capfirst }}',
+		    
+		    html_content='Hi <strong>{{ name }}</strong> some changes has made in a space by {{credit}}, click <a href={{url}}>here</a>to go to space'
+		)
+	if not EmailTemplate.objects.filter(name='oncreate_notification'):
+		EmailTemplate.objects.create(
+		    name='oncreate_notification',#
+		    subject='Space created, {{ name|capfirst }}',
+		    
+		    html_content='Hi <strong>{{ name }}</strong>  a new space was created , click <a href={{url}}>here</a> to go provisional spaces analizer'
+		)
 
-
+createTemplates()
 
 #mail sender, on space change 
 
 def on_create(DataCreditLog,moderators):
-	url = djangoSettings.URL+"space/"+str(DataCreditLog.space_id)
+	url = djangoSettings.URL+"analyze/provisional_spaces/"
 	credit=str(DataCreditLog.credit)
 	if not moderators:
 		mail.send(['orlandosalvadorcamarillomoreno@gmail.com'],template='oncreate_notification',context={'url':url,'name':'Ana',})
@@ -53,22 +61,4 @@ def on_change(DataCreditLog,moderators):
 
 
 
-# @run_once
-# def createTemplates():
-# 	EmailTemplate.objects.create(
-# 	    name='onchange_notification',#
-# 	    subject='Space changed, {{ name|capfirst }}',
-	    
-# 	    html_content='Hi <strong>{{ name }}</strong> some changes has made in a space by {{credit}}, click <a href={{url}}>here</a>to go to space'
-# 	)
 
-# 	EmailTemplate.objects.create(
-# 	    name='oncreate_notification',#
-# 	    subject='Space created, {{ name|capfirst }}',
-	    
-# 	    html_content='Hi <strong>{{ name }}</strong>  a new space was created , click <a href={{url}}>here</a>to go to space'
-# 	)
-
-
-
-# createTemplates()
