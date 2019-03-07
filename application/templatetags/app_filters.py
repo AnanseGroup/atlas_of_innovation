@@ -3,7 +3,8 @@ from datetime import date, timedelta
 from application.models import ProvisionalSpace
 from itertools import chain
 from django.contrib.auth.models import Permission
-
+import re
+from django.conf import settings
 register = template.Library()
 
 @register.filter
@@ -38,3 +39,18 @@ def check_permission(user, permission):
     if perm_list:
         return True
     return False
+def getattribute(value, arg):
+    """Gets an attribute of an object dynamically from a string name"""
+    numeric_test = re.compile("^\d+$")
+    if hasattr(value, str(arg)):
+       if value._meta.get_field(arg).get_internal_type()=='ManyToManyField':
+         return getattr(value,arg).first().name      
+       else:
+        return getattr(value, arg)
+    elif hasattr(value, 'has_key') and value.has_key(arg):
+        return value[arg]
+    elif numeric_test.match(str(arg)) and len(value) > int(arg):
+        return value[int(arg)]
+    else:
+        return settings.TEMPLATE_STRING_IF_INVALID
+register.filter('getattribute', getattribute)

@@ -20,7 +20,11 @@ urlpatterns = [
     path('space/<int:id>/', views.space_profile, name='space_profile'),
     path('space/<int:pk>/edit/', views.edit_space, name='edit_space'),
     path('space/add/', views.add_space, name='create_space'),
-    
+    #suggestions
+    path('suggestion/<int:space_id>/', views.Suggestions, name='space_suggestion'),
+    path('suggestions/', views.AllSuggestion, name='all_suggestion'),
+    path('suggestion/<int:suggestion_id>', views.Discart_suggestion, name='discart_suggestion'),
+    path('space/<int:pk>/edit/<int:suggestion_id>', views.Acept_suggestion, name='edit_space_suggest'),
     # CSV Interactive Importer
     path('csv/upload/', views.upload_file, name='upload_file'),
     path('analyze/provisional_spaces/', views.analyze_spaces, name='analyze_spaces'),

@@ -62,7 +62,7 @@
 	<div class="app-auth module">
 		<table style="width:100%">
 			<caption>
-				<a href="/admin" class="section" title="CSV Interactive Importer">CSV Interactive Upload</a>
+				<a href="/admin" class="section" title="CSV Interactive Importer">CSV Interactive Upload & suggestions</a>
 			</caption>
 			<tbody>
 				{% if user|check_permission:'upload_provisonal_spaces' %}
@@ -75,9 +75,13 @@
 					<th scope="row"><a href="/analyze/provisional_spaces/">Analyze Current Provisional Spaces</a></th>
 				</tr>
 				{% endif %}
+                <tr class="model-group">
+                    <th scope="row"><a href="/suggestions/">Spaces whit active Suggestions</a></th>
+                </tr>
 			</tbody>
 		</table>
 	</div>
+
 </div>
 {% endblock %}
 

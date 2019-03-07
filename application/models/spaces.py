@@ -105,10 +105,10 @@ class Space(models.Model):
         else:
             return False
     
-# def keep_track_save(sender, instance, created, **kwargs):
-#         if created:
-#           print("save")
-# post_save.connect(keep_track_save, sender=Space)
+def keep_track_save(sender, instance, created, **kwargs):
+        if created:
+          print("save")
+post_save.connect(keep_track_save, sender=Space)
 class ProvisionalSpace(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=140)
@@ -243,9 +243,19 @@ class SpaceForm(ModelForm):
         model = Space
         fields = '__all__'
 class Suggestion(models.Model):
-    '''Model for sugested changes entry'''
+    '''Model for sugested changes entry, it can have more than one Field suggestion'''
     id= models.AutoField(primary_key=True)
     space = models.ForeignKey(
         Space, on_delete=models.CASCADE)
     user = models.ForeignKey(
         User, on_delete=models.CASCADE)
+    active= models.BooleanField(default=True)
+    date=models.DateTimeField(auto_now_add=True)
+class FieldSuggestion(models.Model):
+    '''Model that store the field suggestion'''
+    id = models.AutoField(primary_key=True)
+    suggestion = models.ForeignKey(
+        Suggestion, on_delete=models.CASCADE)
+    field_name = models.CharField(max_length=500, null=True, blank=True)
+    field_suggestion = models.CharField(max_length=500, null=True, blank=True)
+    actual=models.CharField(max_length=500, null=True, blank=True)

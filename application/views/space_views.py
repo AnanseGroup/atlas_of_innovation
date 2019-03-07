@@ -50,6 +50,8 @@ from django.utils.http import urlsafe_base64_decode
 
 from django.forms.models import model_to_dict
 from application.models.spaces import Suggestion
+from application.models.spaces import FieldSuggestion
+from django import template
 def space_profile(request, id):
     space = Space.objects.get(id=id)
 
@@ -89,7 +91,6 @@ class SpaceCreate(LoginRequiredMixin, CreateView):
             moderators=None
                
         else:
-                print('not staff')
                 redirect_url = redirect('contribute')
                 affiliation_obj=None
                 governance_obj=None
@@ -206,13 +207,15 @@ class SpaceEdit(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         if form.has_changed():   
             '''* **if form data is valid create the new data credit whit username Save the space and credit log entry and finally if user isnt moderator or admin send mail to correspondent moderator**'''
+           
             if  self.request.user.is_staff:
+                redirect_url = super(SpaceEdit, self).form_valid(form)
                 #if is a administrator made changes
                 space = self.object
                 
                 user=self.request.user.username
                 self.object = form.save()
-                redirect_url = super(SpaceEdit, self).form_valid(form)
+                
 
                 ''' (Pedro) Related to #92 Add new anonymous credit to the credit log
                 '''
@@ -232,20 +235,33 @@ class SpaceEdit(LoginRequiredMixin, UpdateView):
                         moderators=Moderator.objects.filter(country=space.country)
                     mails.on_change(new_data_credit, moderators)
             else:#if is not an administrator then is just a suggestion
+                redirect_url = redirect('contribute')
                 suggestion ={
                             'space' : self.object,
                             'user' :self.request.user
                              }
                 new_suggestion= Suggestion(**suggestion)
                 new_suggestion.save()
-                print("The following fields changed: %s" % ", ".join(f.changed_data))
-                # for field in saved_fields
-                #     if get_data(field) != get_data(form.field)
-                #         field_suggest{
-                #                         'field' :field,
-                #                         'suggest':getdata(field),
-                #                         'suggestion':new_suggestion
-                #                             }
+                print("The following fields changed: %s" % ", ".join(form.changed_data))
+                print(form.changed_data)
+                changed_fields=form.changed_data
+                for field in changed_fields:
+                        if field not in ["id","captcha"]:
+                            if Space._meta.get_field(field).get_internal_type() is not "ManyToManyField":
+                                field_suggest = {
+                                              'field_name': field,
+                                              'field_suggestion':form.cleaned_data[field]
+                                                 }
+                            else:
+                                field_suggest = {
+                                              'field_name': field,
+                                              'field_suggestion':form.cleaned_data[field].first().name
+                                                 }
+                            new_field_suggestion = FieldSuggestion(**field_suggest)
+                            new_field_suggestion.suggestion=new_suggestion
+                            new_field_suggestion.save()
+                            print(new_field_suggestion)
+                messages.success(self.request, 'The space suggestion will be evaluate by an moderator soon', extra_tags='alert')
         else:
             messages.error(self.request,'The form has not change',extra_tags='alert')
         return redirect_url
@@ -323,7 +339,6 @@ def analyze_spaces(request):
     for country in country_list:
         spaces = Space.objects.filter(country=country).all()
         pspaces = ProvisionalSpace.objects.filter(country=country, override_analysis=False, discarded=False).all()
-        print(len(pspaces))
         
         ''' (Pedro) The list that will hold the id of the spaces we need to 
             filter so they won't go to the approved list '''
@@ -720,3 +735,68 @@ def login_user(request, template_name='registration/login.html', extra_context=N
      response = auth_views.login(request, template_name)
      if request.POST.has_key('remember_me'):
         request.session.set_expiry(1209600) # 2 weeks
+@staff_member_required
+def Suggestions(request,space_id):
+        data = Suggestion.objects.filter(space=space_id).filter(active=True).order_by('-date')
+        fields=[]
+        for suggest in data:
+            fields.append(FieldSuggestion.objects.filter(suggestion=suggest))
+        print(fields)
+
+        return render(
+        request,
+        'suggest.html',
+        {"id": space_id, "data":data,"fields":fields}
+    )
+@staff_member_required
+def Discart_suggestion(request,suggestion_id):
+    Suggestion.objects.filter(id=suggestion_id).update(active=False)
+    messages.info(request, 'The suggested change was discarted!')
+    return redirect(request.GET.get('next'))
+@staff_member_required
+def Acept_suggestion(request,pk,suggestion_id):
+    fields=FieldSuggestion.objects.filter(suggestion=suggestion_id)
+    for field in fields:
+        type1=Space._meta.get_field(field.field_name).get_internal_type()
+        if type1 is not "ManyToManyField":
+            Space.objects.filter(id=pk).update(**{field.field_name:field.field_suggestion})
+        else:   
+                space=Space.objects.get(id=pk)
+                if field.field_name == 'network_affiliation':
+                    obj = AffiliationOption.objects.filter(name=field.field_suggestion).first()
+                    space.network_affiliation.add(obj)
+                else:
+                    if field.field_name == 'governance_type':
+                       obj = GovernanceOption.objects.filter(name=field.field_suggestion).first()
+                       space.governance_type.add(obj)
+                    else:
+                        if field.field_name =='ownership_type':
+                           obj = OwnershipOption.objects.filter(name=field.field_suggestion).first()
+                           space.ownership_type.add(obj)
+               
+    Suggestion.objects.filter(id=suggestion_id).update(active=False)
+    data_credit = {
+                               'ip_address': request.META['REMOTE_ADDR'],
+                               'space_id': pk,
+                               'credit': Suggestion.objects.get(id=suggestion_id).user.username
+
+                              }
+    new_data_credit = DataCreditLog(**data_credit)
+    new_data_credit.save()
+    messages.info(request, 'The Space was updated!')
+    return redirect(request.GET.get('next'))
+
+@staff_member_required
+def AllSuggestion(request):
+        suggestions = Suggestion.objects.filter(active=True).distinct("space").all()
+
+        data=[]
+        for suggestion in suggestions:
+            data.append(suggestion.space)
+        print(data)
+
+        return render(
+        request,
+        'all_suggestion.html',
+        { "data":data}
+    )
