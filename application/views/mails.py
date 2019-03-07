@@ -28,7 +28,7 @@ def on_create(DataCreditLog,moderators):
 	url = djangoSettings.URL+"analyze/provisional_spaces/"
 	credit=str(DataCreditLog.credit)
 	if not moderators:
-		mail.send(['orlandosalvadorcamarillomoreno@gmail.com'],template='oncreate_notification',context={'url':url,'name':'Ana',})
+		mail.send(['ana@parthenontech.com'],template='oncreate_notification',context={'url':url,'name':'Ana',})
 	else:
 		for moderator in moderators:
 			name=moderator.user.first_name
@@ -43,7 +43,7 @@ def on_change(DataCreditLog,moderators):
 	print(moderators)
 	if not moderators :
 		mail.send(
-			   ['orlandosalvadorcamarillomoreno@gmail.com'],#''], #List of email addresses also accepted  
+			   ['ana@parthenontech.com'],#''], #List of email addresses also accepted  
 				'noreply@atlasofinnovation.com',
 			   template= 'onchange_notification',
 			   context={'url':url,'name':'Ana','credit':credit,},)
