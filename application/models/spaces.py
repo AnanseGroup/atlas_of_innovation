@@ -258,4 +258,3 @@ class FieldSuggestion(models.Model):
         Suggestion, on_delete=models.CASCADE)
     field_name = models.CharField(max_length=500, null=True, blank=True)
     field_suggestion = models.CharField(max_length=500, null=True, blank=True)
-    actual=models.CharField(max_length=500, null=True, blank=True)
