@@ -1,0 +1,83 @@
+{% include "snippets/head.html" %}
+{% include "snippets/header.html" %}
+<div class="container">
+    <div class="row">
+      <div class="col-offset-2 m6">
+        <div class="card hoverable">
+          <div class="card-content">
+            <span class="card-title center-align" id="cardtitle">Suggested changes</span>
+            <p class="center-align"> the space have {{data.count}} suggested changes </p>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+{% for credit in  data%}
+  {%if credit.active%}
+  <div class="container">
+      <div class="row">
+        <div class="col-offset-2 m6">
+          <div class="card hoverable">
+            <div class="card-content  center-align">
+                <div >
+                  <strong>SUGGESTION:   </strong> {{credit.suggestion.id}} 
+                </div>
+                {% load my_templatetag %}
+                {% load app_filters %}
+                {%for query in fields%}
+
+                {%for field in query%}
+                {%if field.suggestion == credit%}
+              
+                 <div class="row">
+                   <div class="card-panel teal lighten-2 col s4">
+                     <strong>Field:   </strong>{{field.field_name}}
+                   </div>
+                  
+                   <div class="card-panel teal lighten-2 col s4 ">         
+                     <strong>Actual:   </strong>{{ credit.space|getattribute:field.field_name }}
+                  </div>                          
+                   <div class="card-panel teal lighten-2 col s4 ">         
+                     <strong>Suggestion:   </strong>{{field.field_suggestion}}
+                  </div>
+                </div>
+                {%endif%}
+                {%endfor%}
+                {%endfor%}
+                
+
+               <div >
+                  <strong> CREDIT:   </strong> {{credit.user.username}}
+
+                 
+                </div>
+                 <div >
+                  <strong> Email:   </strong> {{credit.user.email}}
+
+                 
+                </div>
+                
+                <div >
+                 <strong>DATE:   </strong>{{credit.date}}
+                </div>
+               
+                
+                  <a id="cardtitle" class="waves-effect waves-light btn" href="{% url 'edit_space_suggest' credit.space.id credit.id %}?next={{request.path}}"><i class="material-icons right">done</i>Accept Suggestion</a>
+                  <a id="cardtitle" class="waves-effect waves-light btn" href="{% url 'discart_suggestion' credit.id %}?next={{request.path}}"><i class="material-icons right">delete_forever</i>Discart Sugesstion </a>
+                  
+                  
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+  {%endif%}
+{% endfor %}
+{% include "snippets/delete-space.html" %}
+
+<script>
+$(document).ready(function(){
+    $('select').formSelect();
+  });
+</script>
