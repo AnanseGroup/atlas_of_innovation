@@ -1332,3 +1332,6 @@ span.badge.red {
   background-color: #29b6f6;
   color: white;
 }
+.toggle-content{
+	display: none;
+}

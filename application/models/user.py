@@ -46,4 +46,4 @@ class AccountActivationTokenGenerator(PasswordResetTokenGenerator):
 
 account_activation_token = AccountActivationTokenGenerator()
 
-
+#User._meta.get_field('email').unique = True

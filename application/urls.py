@@ -20,6 +20,7 @@ urlpatterns = [
     path('space/<int:id>/', views.space_profile, name='space_profile'),
     path('space/<int:pk>/edit/', views.edit_space, name='edit_space'),
     path('space/add/', views.add_space, name='create_space'),
+    path('space/<int:space>/remove/<int:user>', views.DeleteOwner, name='remove_owner'),
     #suggestions
     path('suggestion/<int:space_id>/', views.Suggestions, name='space_suggestion'),
     path('suggestions/', views.AllSuggestion, name='all_suggestion'),

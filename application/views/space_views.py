@@ -51,14 +51,40 @@ from django.utils.http import urlsafe_base64_decode
 from django.forms.models import model_to_dict
 from application.models.spaces import Suggestion
 from application.models.spaces import FieldSuggestion
+from application.models.spaces import Owners
 from django import template
 def space_profile(request, id):
     space = Space.objects.get(id=id)
-
+    owners= Owners.objects.filter(space=space)
+    if not owners:
+       print(owners)
+       owners = None
+    if(request.method == 'POST'):
+       #creating a new owner, the commented blok is for only create a suggestion
+       # new_suggestion = CreateSuggestion(space,request.user)
+       # CreateFieldSuggestion('owner',None,request.user,new_suggestion)
+       # messages.success(request, 'Owner suggestion will be reviewed by administrator soon', extra_tags='alert')
+       try:
+        user=User.objects.get(id=request.POST.get('user_id'))
+       except: 
+        user= None
+       if user == None:
+          user=User.objects.filter(email=request.POST.get('user_email')).first()
+       print(user)
+       print("puto")
+       if user == None:
+        messages.error(request, 'Error, user  not exist')
+       else: 
+        if IsOwner(user.id,id):
+            messages.error(request, 'Error, user  its already an owner of this space') 
+        else:
+            CreateOwner(user,space)
+            messages.success(request, 'owner added correctly')
+            return redirect('space_profile', id=id)
     return render(
         request,
         'space_profile.html',
-        {"id": id, "space":space}
+        {"id": id, "space":space,"owners":owners}
     )
 
 
@@ -233,31 +259,17 @@ class SpaceEdit(LoginRequiredMixin, UpdateView):
                 messages.success(self.request, 'The space changes success', extra_tags='alert')
             else:#if is not an administrator then is just a suggestion
                 redirect_url = redirect('contribute')
-                suggestion ={
-                            'space' : space,
-                            'user' :self.request.user
-                             }
-                new_suggestion= Suggestion(**suggestion)
-                new_suggestion.save()
-                print("The following fields changed: %s" % ", ".join(form.changed_data))
-                print(form.changed_data)
+                # suggestion ={
+                #             'space' : space,
+                #             'user' :self.request.user
+                #              }
+                # new_suggestion= Suggestion(**suggestion)
+                # new_suggestion.save()
+                new_suggestion = CreateSuggestion(space,self.request.user)
                 changed_fields=form.changed_data
                 for field in changed_fields:
-                        if field not in ["id","captcha"]:
-                            if Space._meta.get_field(field).get_internal_type() is not "ManyToManyField":
-                                field_suggest = {
-                                              'field_name': field,
-                                              'field_suggestion':form.cleaned_data[field]
-                                                 }
-                            else:
-                                field_suggest = {
-                                              'field_name': field,
-                                              'field_suggestion':form.cleaned_data[field].first().name
-                                                 }
-                            new_field_suggestion = FieldSuggestion(**field_suggest)
-                            new_field_suggestion.suggestion=new_suggestion
-                            new_field_suggestion.save()
-                            print(new_field_suggestion)
+                            CreateFieldSuggestion(field,form,None,new_suggestion)
+                            
                 try:
                     moderators=Moderator.objects.filter(province=space.province)
                 except Exception :
@@ -743,8 +755,6 @@ def Suggestions(request,space_id):
         fields=[]
         for suggest in data:
             fields.append(FieldSuggestion.objects.filter(suggestion=suggest))
-        print(fields)
-
         return render(
         request,
         'suggest.html',
@@ -755,27 +765,29 @@ def Discart_suggestion(request,suggestion_id):
     Suggestion.objects.filter(id=suggestion_id).update(active=False)
     messages.info(request, 'The suggested change was discarted!')
     return redirect(request.GET.get('next'))
-@staff_member_required
+
 def Acept_suggestion(request,pk,suggestion_id):
     fields=FieldSuggestion.objects.filter(suggestion=suggestion_id)
     for field in fields:
-        type1=Space._meta.get_field(field.field_name).get_internal_type()
-        if type1 is not "ManyToManyField":
-            Space.objects.filter(id=pk).update(**{field.field_name:field.field_suggestion})
-        else:   
-                space=Space.objects.get(id=pk)
-                if field.field_name == 'network_affiliation':
-                    obj = AffiliationOption.objects.filter(name=field.field_suggestion).first()
-                    space.network_affiliation.add(obj)
-                else:
-                    if field.field_name == 'governance_type':
-                       obj = GovernanceOption.objects.filter(name=field.field_suggestion).first()
-                       space.governance_type.add(obj)
+        if field.field_name !='owner':
+            type1=Space._meta.get_field(field.field_name).get_internal_type()
+            if type1 is not "ManyToManyField":
+                Space.objects.filter(id=pk).update(**{field.field_name:field.field_suggestion})
+            else:   
+                    space=Space.objects.get(id=pk)
+                    if field.field_name == 'network_affiliation':
+                        obj = AffiliationOption.objects.filter(name=field.field_suggestion).first()
+                        space.network_affiliation.add(obj)
                     else:
-                        if field.field_name =='ownership_type':
-                           obj = OwnershipOption.objects.filter(name=field.field_suggestion).first()
-                           space.ownership_type.add(obj)
-               
+                        if field.field_name == 'governance_type':
+                           obj = GovernanceOption.objects.filter(name=field.field_suggestion).first()
+                           space.governance_type.add(obj)
+                        else:
+                            if field.field_name =='ownership_type':
+                               obj = OwnershipOption.objects.filter(name=field.field_suggestion).first()
+                               space.ownership_type.add(obj)
+        else:
+            CreateOwner(Suggestion.objects.get(id=suggestion_id).user,Space.objects.get(id=pk))           
     Suggestion.objects.filter(id=suggestion_id).update(active=False)
     data_credit = {
                                'ip_address': request.META['REMOTE_ADDR'],
@@ -802,3 +814,53 @@ def AllSuggestion(request):
         'all_suggestion.html',
         { "data":data}
     )
+
+def CreateSuggestion(space,user):
+    suggestion ={
+                            'space' : space,
+                            'user' :user
+                             }
+    new_suggestion= Suggestion(**suggestion)
+    new_suggestion.save()
+    return  new_suggestion
+def CreateFieldSuggestion(field,form,data,suggestion):
+    if field not in ["id","captcha"]:
+        if form is not None:
+                            if Space._meta.get_field(field).get_internal_type() is not "ManyToManyField":
+                                field_suggest = {
+                                              'field_name': field,
+                                              'field_suggestion':form.cleaned_data[field]
+                                                 }
+                            else:
+                                field_suggest = {
+                                              'field_name': field,
+                                              'field_suggestion':form.cleaned_data[field].first().name
+                                                 }
+        else:
+            field_suggest = {
+                                              'field_name': field,
+                                              'field_suggestion':data
+                                                 }
+        new_field_suggestion = FieldSuggestion(**field_suggest)
+        print(new_field_suggestion)
+        new_field_suggestion.suggestion=suggestion
+        new_field_suggestion.save()
+def CreateOwner(user,space):
+            owner={
+                    'user':user,
+                    'space':space
+            }
+            new_owner=Owners(**owner)
+            new_owner.save()
+#if user is owner of the provide space return true
+def IsOwner(user_id,space_id):
+            owners = Owners.objects.filter(space=space_id,user=user_id)
+            if owners.count()>0:
+                return True
+            return False
+@staff_member_required
+def DeleteOwner(request,space,user):
+    Owners.objects.filter(space=space,user=user).delete()
+    messages.success(request, 'owner deleted')
+    return redirect(request.GET.get('next'))
+

@@ -258,3 +258,7 @@ class FieldSuggestion(models.Model):
         Suggestion, on_delete=models.CASCADE)
     field_name = models.CharField(max_length=500, null=True, blank=True)
     field_suggestion = models.CharField(max_length=500, null=True, blank=True)
+class Owners(models.Model):
+    user = models.ForeignKey(User, on_delete = models.CASCADE)
+    space= models.ForeignKey(Space, on_delete= models.CASCADE)
+User._meta.get_field('email').__dict__['_unique'] = True

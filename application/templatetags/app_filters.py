@@ -5,6 +5,8 @@ from itertools import chain
 from django.contrib.auth.models import Permission
 import re
 from django.conf import settings
+from application.models import Space
+from application.views import IsOwner
 register = template.Library()
 
 @register.filter
@@ -54,3 +56,16 @@ def getattribute(value, arg):
     else:
         return settings.TEMPLATE_STRING_IF_INVALID
 register.filter('getattribute', getattribute)
+@register.filter
+def ExistSpaces(arg):
+    query=Space.objects.filter(country=arg)
+    if query.first() is not None:
+     return True
+    else:
+        return False
+@register.filter
+def isAuthorized(user,space):
+    print(user)
+    print(space)
+    if IsOwner(user.id,space.id):
+       return True
