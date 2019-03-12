@@ -149,19 +149,14 @@ class SpaceCreate(LoginRequiredMixin, CreateView):
                                new_space.governance_type.add(governance_obj)
                         except Exception:
                             print(Exception)
-
+                moderators=GetModerators(new_space.province,new_space.country)
                 new_space.override_analysis = False
                 new_space.discarded = False
                 new_space.fhash = calculate_fhash(new_space)
                 print('hash')
                 print(new_space.fhash)
                 new_space.save() 
-                messages.success(self.request, 'The space create successfullsfully, it will be aproved  by page moderator sooon', extra_tags='alert')
-                try:
-                    moderators=Moderator.objects.filter(province=new_space.province)
-                except Exception :
-                    moderators=Moderator.objects.filter(country=new_space.country)
-                
+                messages.success(self.request, 'The space create successfullsfully, it will be aproved  by page moderator soon', extra_tags='alert')                
                 data_credit = {
                            'ip_address': self.request.META['REMOTE_ADDR'],
                            'space_id': new_space.id,
@@ -268,12 +263,10 @@ class SpaceEdit(LoginRequiredMixin, UpdateView):
                 changed_fields=form.changed_data
                 for field in changed_fields:
                             CreateFieldSuggestion(field,form,None,new_suggestion)
-                            
-                try:
-                    moderators=Moderator.objects.filter(province=space.province)
-                except Exception :
-                    moderators=Moderator.objects.filter(country=space.country)
-                    mails.on_change(new_data_credit, moderators)
+                moderators=GetOwners(space)
+                if moderators is None:
+                    moderators=GetModerators(space.province,space.country)         
+                mails.on_change(new_data_credit, moderators)
                 messages.success(self.request, 'The space suggestion will be evaluate by an moderator soon', extra_tags='alert')
         else:
             messages.error(self.request,'The form has not change',extra_tags='alert')
@@ -661,10 +654,26 @@ def provisional_space(request):
                 
         return JsonResponse(spaces_list, safe=False)
     if request.method == "DELETE":
-        spaces = ProvisionalSpace.objects.filter(discarded=True).delete()
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+        except:
+            data = None
+        print(data)
+        if data is None:
+          spaces = ProvisionalSpace.objects.filter(discarded=True).delete()
+        else:
+          spaces = ProvisionalSpace.objects.filter(id__in=data['id']).delete()
         return JsonResponse({'success':1}, safe=False)
     if request.method == "PATCH":
-        spaces = ProvisionalSpace.objects.filter(override_analysis=True).all()
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+        except:
+            data = None
+        print(data)
+        if data is None:
+            spaces = ProvisionalSpace.objects.filter(override_analysis=True).all()
+        else:
+            spaces = ProvisionalSpace.objects.filter(id__in=data['id'])
         for space in spaces:
             new_space = Space()
             for field in space._meta.fields:
@@ -865,4 +874,18 @@ def DeleteOwner(request,space,user):
     Owners.objects.filter(space=space,user=user).delete()
     messages.success(request, 'owner deleted')
     return redirect(request.GET.get('next'))
-
+def GetModerators(province,country):
+                try:
+                    moderators=Moderator.objects.filter(province=province,is_moderator=True)
+                except Exception :
+                    moderators=Moderator.objects.filter(country=country,is_country_moderator=True)
+                return moderators
+def GetOwners(space_id):
+    owners=Owners.objects.filter(space=space_id)
+    if owners.count() == 0:
+        return None
+    users=[]
+    for owner in owners:
+        users.append(owner.user.moderator)
+    print(users)
+    return users

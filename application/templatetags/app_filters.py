@@ -80,3 +80,16 @@ def isAuthorized(user,space):
             if(space.country == user.moderator.country):
                     return True
     return False
+@register.filter
+def moderateThisSpace(user_id,country,province):
+    user=User.objects.get(id=user_id)
+    moderator=Moderator.objects.get(user=user)
+    if moderator.is_moderator:
+        if moderator.province.lower()==province.lower():
+           return True
+    if moderator.is_country_moderator:
+        if moderator.country == country:
+            return True
+    return False
+
+
