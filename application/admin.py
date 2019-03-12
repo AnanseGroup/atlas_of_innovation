@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
-from application.models.user import Moderator, UserForm, BasicUser
+from application.models.user import Moderator, UserForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.base import TemplateView
 

@@ -46,7 +46,12 @@ def getattribute(value, arg):
     numeric_test = re.compile("^\d+$")
     if hasattr(value, str(arg)):
        if value._meta.get_field(arg).get_internal_type()=='ManyToManyField':
-         return getattr(value,arg).first().name      
+         value=getattr(value,arg).first()
+         print(value)
+         if value is not None:
+            return value.name 
+         else:
+            return value  
        else:
         return getattr(value, arg)
     elif hasattr(value, 'has_key') and value.has_key(arg):
@@ -65,7 +70,13 @@ def ExistSpaces(arg):
         return False
 @register.filter
 def isAuthorized(user,space):
-    print(user)
-    print(space)
+    print(space.province.lower())
+    print(user.moderator.province.lower())
     if IsOwner(user.id,space.id):
        return True
+    if(user.moderator.is_moderator or user.moderator.is_country_moderator):
+            if space.province.lower() == user.moderator.province.lower():
+                    return True
+            if(space.country == user.moderator.country):
+                    return True
+    return False

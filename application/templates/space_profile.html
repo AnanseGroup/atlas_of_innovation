@@ -146,7 +146,7 @@
           <div >
             {%if owners is not None%}
               {%for owner in owners%}
-                <h8 class="center-align " >{{owner.user.username}}</h8>
+                <h8 class="center-align " >{{owner.user.first_name}}</h8>
                 {%if user.is_staff%}
                 <h8 class="center-align">{{owner.user.email}}</h8>
                  <a id="cardtitle" class="waves-effect waves-light btn" href="{% url 'remove_owner' space.id owner.user.id %}?next={{request.path}}"><i class="material-icons right">delete_forever</i>Remove owner </a>

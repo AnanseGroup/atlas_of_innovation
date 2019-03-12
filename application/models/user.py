@@ -13,23 +13,17 @@ from django.contrib.auth.forms import UserCreationForm
 class Moderator(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     country = CountryField(max_length=20, null=True, blank=True)
-
-class BasicUser(models.Model):
-      user = models.OneToOneField(User, on_delete=models.CASCADE)
-      email_confirmed = models.BooleanField(default=False)
-      country = CountryField(max_length=20, null=True, blank=True)
-@receiver(post_save, sender=User)
-def update_user_profile(sender, instance, created, **kwargs):
-    if created:
-        BasicUser.objects.create(user=instance)
-    instance.basicuser.save()
+    province= models.CharField(max_length=140,blank=True)
+    email_confirmed = models.BooleanField(default=False)
+    is_moderator=models.BooleanField(default=False)
+    is_country_moderator=models.BooleanField(default=False)
 class UserForm(UserCreationForm):
     email=forms.EmailField(label='Your email', max_length=100)
     country=CountryField(blank_label='(select country)').formfield()
     captcha = ReCaptchaField()
     class Meta:
         model = User
-        fields = ('username', 'email', 'password1', 'password2', )
+        fields = ('first_name','username', 'email', 'password1', 'password2', )
     def __init__(self, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)
 
@@ -41,7 +35,7 @@ class AccountActivationTokenGenerator(PasswordResetTokenGenerator):
     def _make_hash_value(self, user, timestamp):
         return (
             six.text_type(user.pk) + six.text_type(timestamp) +
-            six.text_type(user.basicuser.email_confirmed)
+            six.text_type(user.moderator.email_confirmed)
         )
 
 account_activation_token = AccountActivationTokenGenerator()

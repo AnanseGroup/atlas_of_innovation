@@ -16,9 +16,13 @@
       </div>
     </div>
 </div>
+
 <div class="collection">
+  {% load app_filters %}
 	{%for space in data%}
+  {%if  user.is_superuser or user|isAuthorized:space %}
       <a href="{% url 'space_suggestion' space.id %}" class="collection-item">{{space.name}}</a>
+  {%endif%}
     {%endfor%}
     </div>
 

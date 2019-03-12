@@ -33,9 +33,10 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
 from post_office import mail
 from application.views import mails
-from application.models.user import Moderator,UserForm, BasicUser
+from application.models.user import Moderator,UserForm
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect
 from django.utils.encoding import force_bytes
@@ -53,6 +54,7 @@ from application.models.spaces import Suggestion
 from application.models.spaces import FieldSuggestion
 from application.models.spaces import Owners
 from django import template
+from application.decorators import user_is_autorized
 def space_profile(request, id):
     space = Space.objects.get(id=id)
     owners= Owners.objects.filter(space=space)
@@ -70,8 +72,6 @@ def space_profile(request, id):
         user= None
        if user == None:
           user=User.objects.filter(email=request.POST.get('user_email')).first()
-       print(user)
-       print("puto")
        if user == None:
         messages.error(request, 'Error, user  not exist')
        else: 
@@ -213,7 +213,7 @@ add_space = SpaceCreate.as_view()
 
 #     add_provisionalspace = provisionalSpaceCreate.as_view()
     
- 
+
 class SpaceEdit(LoginRequiredMixin, UpdateView):
     '''* **Edit a permanently space**'''
     form_class = SpaceForm
@@ -230,7 +230,6 @@ class SpaceEdit(LoginRequiredMixin, UpdateView):
         if space.validated:
             raise Http404
         return context
-
     def form_valid(self, form):
         if form.has_changed():   
             '''* **if form data is valid create the new data credit whit username Save the space and credit log entry and finally if user isnt moderator or admin send mail to correspondent moderator**'''
@@ -243,7 +242,7 @@ class SpaceEdit(LoginRequiredMixin, UpdateView):
 
                               }
             new_data_credit = DataCreditLog(**data_credit)
-            if  self.request.user.is_staff:
+            if  self.request.user.is_staff or IsOwner(self.request.user.id,space.id):
                 redirect_url = super(SpaceEdit, self).form_valid(form)
                 #if is a administrator made changes
                 
@@ -290,7 +289,7 @@ class ListSpaces(TemplateView):
 list_spaces = ListSpaces.as_view()
 
 
-
+@login_required
 def show_data_credit(request, id):
         '''* **shows the historical changes credit for the selected space
         order by date in reverse order**'''
@@ -710,6 +709,8 @@ def signup(request):
             user = form.save(commit=False)
             user.is_active = False
             user.save()
+            Moderator.objects.create(user=user)
+            user.moderator.save()
             mail.send(
                     [form.cleaned_data.get('email')], # List of email addresses also accepted
                     'from@example.com',
@@ -738,8 +739,7 @@ def activate(request, uidb64, token):
 
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
-        user.basicuser.email_confirmed = True
-       
+        user.moderator.email_confirmed = True
         user.save()
         login(request, user)
         return redirect('home')
@@ -749,7 +749,7 @@ def login_user(request, template_name='registration/login.html', extra_context=N
      response = auth_views.login(request, template_name)
      if request.POST.has_key('remember_me'):
         request.session.set_expiry(1209600) # 2 weeks
-@staff_member_required
+@user_is_autorized
 def Suggestions(request,space_id):
         data = Suggestion.objects.filter(space=space_id).filter(active=True).order_by('-date')
         fields=[]
@@ -760,12 +760,12 @@ def Suggestions(request,space_id):
         'suggest.html',
         {"id": space_id, "data":data,"fields":fields}
     )
-@staff_member_required
+@login_required
 def Discart_suggestion(request,suggestion_id):
     Suggestion.objects.filter(id=suggestion_id).update(active=False)
     messages.info(request, 'The suggested change was discarted!')
     return redirect(request.GET.get('next'))
-
+@login_required
 def Acept_suggestion(request,pk,suggestion_id):
     fields=FieldSuggestion.objects.filter(suggestion=suggestion_id)
     for field in fields:
@@ -823,6 +823,7 @@ def CreateSuggestion(space,user):
     new_suggestion= Suggestion(**suggestion)
     new_suggestion.save()
     return  new_suggestion
+
 def CreateFieldSuggestion(field,form,data,suggestion):
     if field not in ["id","captcha"]:
         if form is not None:
@@ -845,6 +846,7 @@ def CreateFieldSuggestion(field,form,data,suggestion):
         print(new_field_suggestion)
         new_field_suggestion.suggestion=suggestion
         new_field_suggestion.save()
+
 def CreateOwner(user,space):
             owner={
                     'user':user,
