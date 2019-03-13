@@ -54,7 +54,9 @@ from application.models.spaces import Suggestion
 from application.models.spaces import FieldSuggestion
 from application.models.spaces import Owners
 from django import template
-from application.decorators import user_is_autorized
+from application.decorators import user_is_autorized_in_Space,user_is_autorized_to_upload
+
+import ast
 def space_profile(request, id):
     space = Space.objects.get(id=id)
     owners= Owners.objects.filter(space=space)
@@ -103,6 +105,8 @@ class SpaceCreate(LoginRequiredMixin, CreateView):
             print("is staff")
             space = self.object
             self.object = form.save()
+            space.province=space.province.strip().lower().capitalize()
+            space.save()
             ''' (Pedro) Related to #92 Add new anonymous credit to the credit log
             '''
             data_credit = {
@@ -152,6 +156,7 @@ class SpaceCreate(LoginRequiredMixin, CreateView):
                 moderators=GetModerators(new_space.province,new_space.country)
                 new_space.override_analysis = False
                 new_space.discarded = False
+                new_space.province=new_space.province.strip().lower().capitalize()
                 new_space.fhash = calculate_fhash(new_space)
                 print('hash')
                 print(new_space.fhash)
@@ -341,11 +346,17 @@ def analyze_spaces(request):
     
     ''' Processed spaces'''
     processed_spaces = []
-    
+    if not request.user.is_superuser and (request.user.moderator.is_country_moderator or request.user.moderator.is_moderator):
+        country_list=[request.user.moderator.country]
+    permited_all_spaces_in_country= (request.user.moderator.is_country_moderator or request.user.is_superuser)
+    print(permited_all_spaces_in_country)
     for country in country_list:
         spaces = Space.objects.filter(country=country).all()
-        pspaces = ProvisionalSpace.objects.filter(country=country, override_analysis=False, discarded=False).all()
-        
+        if permited_all_spaces_in_country:
+            pspaces = ProvisionalSpace.objects.filter(country=country, override_analysis=False, discarded=False).all()
+        else:
+            pspaces = ProvisionalSpace.objects.filter(country=country,province=request.user.moderator.province, override_analysis=False, discarded=False).all()
+            print(pspaces)
         ''' (Pedro) The list that will hold the id of the spaces we need to 
             filter so they won't go to the approved list '''
         pop_list = []
@@ -393,8 +404,18 @@ def analyze_spaces(request):
 
         ''' Provisional spaces with critical errors cant be added to the match 
             comparison so we filter those spaces '''
-        pspaces = ProvisionalSpace.objects.filter(
+        if permited_all_spaces_in_country:
+           pspaces = ProvisionalSpace.objects.filter(
                                                  country=country,
+                                                 override_analysis=False,
+                                                 discarded=False
+                                             ).exclude(
+                                                 id__in=pop_list
+                                             ).all()
+        else:  
+            pspaces = ProvisionalSpace.objects.filter(
+                                                 country=country,
+                                                 province=request.user.moderator.province,
                                                  override_analysis=False,
                                                  discarded=False
                                              ).exclude(
@@ -421,8 +442,11 @@ def analyze_spaces(request):
 
             '''We filter the spaces yet again so the ones with a match problem 
             don't make the approved list'''
-            pspaces = ProvisionalSpace.objects.filter(country=country, override_analysis=False, discarded=False).exclude(id__in=pop_list).all()
-            
+            if permited_all_spaces_in_country:
+                pspaces = ProvisionalSpace.objects.filter(country=country, override_analysis=False, discarded=False).exclude(id__in=pop_list).all()
+            else:
+                pspaces = ProvisionalSpace.objects.filter(country=country,province=request.user.moderator.province, override_analysis=False, discarded=False).exclude(id__in=pop_list).all()
+            print(pspaces)
             approved_spaces.extend([model_to_dict(pspace,fields=fields) for pspace in pspaces])
         else:
             ''' If there are no spaces to compare we add all provision spaces
@@ -430,28 +454,43 @@ def analyze_spaces(request):
             approved_spaces.extend([model_to_dict(pspace,fields=fields) for pspace in pspaces])
 
         # Lets add the discarded spaces
-        dspaces = ProvisionalSpace.objects.filter(country=country, override_analysis=False, discarded=True).all()
+        if permited_all_spaces_in_country:
+           dspaces = ProvisionalSpace.objects.filter(country=country, override_analysis=False, discarded=True).all()
+        else:
+            dspaces = ProvisionalSpace.objects.filter(country=country,province=request.user.moderator.province, override_analysis=False, discarded=True).all() 
+            if dspaces is None:
+               dspaces = ProvisionalSpace.objects.filter(country=country,province=request.user.moderator.province, override_analysis=False, discarded=True).all()  
         discarded_spaces.extend([model_to_dict(pspace,fields=fields) for pspace in dspaces])
 
         # Lets add the processed spaces
-        pspaces = ProvisionalSpace.objects.filter(country=country, override_analysis=True, discarded=False).all()
+        if permited_all_spaces_in_country:
+           pspaces = ProvisionalSpace.objects.filter(country=country, override_analysis=True, discarded=False).all()
+        else:
+            pspaces = ProvisionalSpace.objects.filter(country=country,province=request.user.moderator.province, override_analysis=True, discarded=False).all()
         processed_spaces.extend([model_to_dict(pspace,fields=fields) for pspace in pspaces])
             
     data = request.GET.copy()
     if data and data.get("json_list"):
+        print("hola")
         return JsonResponse({'approved': approved_spaces,
                              'problem': problem_spaces,
                              'excluded': excluded_spaces,
                             })
     else:
+        discarded_id=[]
+        for pspaces in discarded_spaces:
+            discarded_id.append({'id' : pspaces['id']})
+        print(type(discarded_id))
         return render(request, 'space_analysis.html', {'approved': approved_spaces, 
                                                    'problem': problem_spaces,
                                                    'excluded': excluded_spaces,
                                                    'discarded': discarded_spaces,
-                                                   'processed': processed_spaces
+                                                   'processed': processed_spaces,
+                                                   'discarded_id': discarded_id
                                                    })
 
 @staff_member_required
+@user_is_autorized_to_upload
 def upload_file(request):
     '''* **check if the fileselected for upload  is valid**'''
     if request.method == 'POST':
@@ -504,6 +543,8 @@ def handle_csv(file):
                 processed_space['province'] = space.pop('state', None)
                 if processed_space['province']:
                     processed_space['province'] = processed_space['province'].strip()
+                    processed_space['province'] = processed_space['province'].lower().capitalize()
+                    print(processed_space['province'])
                 processed_space['data_credit'] = space.pop('source', None)
                 processed_space['date_opened'] = space.pop('date_of_founding', None)
                 if processed_space['date_opened']:
@@ -658,11 +699,13 @@ def provisional_space(request):
             data = json.loads(request.body.decode('utf-8'))
         except:
             data = None
-        print(data)
+        
         if data is None:
-          spaces = ProvisionalSpace.objects.filter(discarded=True).delete()
+           print('da')# spaces = ProvisionalSpace.objects.filter(discarded=True).delete()
         else:
-          spaces = ProvisionalSpace.objects.filter(id__in=data['id']).delete()
+           data=ast.literal_eval(data)
+           for id in data:
+            spaces = ProvisionalSpace.objects.filter(id=id['id']).delete()
         return JsonResponse({'success':1}, safe=False)
     if request.method == "PATCH":
         try:
@@ -717,6 +760,7 @@ def signup(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.is_active = False
+            user.province=user.province.strip().lower().capitalize()
             user.save()
             Moderator.objects.create(user=user)
             user.moderator.save()
@@ -758,7 +802,7 @@ def login_user(request, template_name='registration/login.html', extra_context=N
      response = auth_views.login(request, template_name)
      if request.POST.has_key('remember_me'):
         request.session.set_expiry(1209600) # 2 weeks
-@user_is_autorized
+@user_is_autorized_in_Space
 def Suggestions(request,space_id):
         data = Suggestion.objects.filter(space=space_id).filter(active=True).order_by('-date')
         fields=[]

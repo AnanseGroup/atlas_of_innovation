@@ -1,16 +1,21 @@
 {% include "snippets/head.html"%}
-    {% include "snippets/header.html" %}
+{% include "snippets/header.html" %}
+{% load app_filters %}
 <br><br><br>
 <div class="row" style="font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', sans-serif;">
   <div class="col s12 m6 offset-m3">
     <div class="card hoverable">
       <div class="card-content">
         <span class="card-title" id="wTitle">Space upload</span>
+        {% if user|check_permission:'upload_provisonal_spaces' %}
         <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
             {{ form.as_p }}
             <!--<input type="submit" value="Send message" />-->
             <button type="submit" class="btn btn-primary btn-lg">Submit</button>
         </form>
+        {%else%}
+        You are not permited
+        {%endif%}
       </div>
     </div>
   </div>

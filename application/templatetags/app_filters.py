@@ -20,10 +20,19 @@ def hide_phone(value):
     f = "".join(['*' for a in value[:-2]])+value[-2:]
     return f
 
-@register.simple_tag
-def get_provisional_sum():
-    sum = ProvisionalSpace.objects.count()
-    return sum
+@register.filter
+def get_provisional_sum(user):
+    if user.is_superuser:
+        print('superuser')
+        return ProvisionalSpace.objects.count()
+    if user.moderator.is_country_moderator:
+        print('is country moderator')
+        sum = ProvisionalSpace.objects.filter(country=user.moderator.country).count()
+    else:
+        print('is province moderator')
+        sum = ProvisionalSpace.objects.filter(country=user.moderator.country,province=user.moderator.province).count()
+    print(sum)
+    return sum 
 
 @register.filter
 def check_permission(user, permission):
@@ -73,11 +82,15 @@ def isAuthorized(user,space):
     print(space.province.lower())
     print(user.moderator.province.lower())
     if IsOwner(user.id,space.id):
+       print('IsOwner')
        return True
-    if(user.moderator.is_moderator or user.moderator.is_country_moderator):
+    if(user.moderator.is_moderator):
             if space.province.lower() == user.moderator.province.lower():
+                    print('province moderator')
                     return True
+    if  user.moderator.is_country_moderator:
             if(space.country == user.moderator.country):
+                    print('country moderator')
                     return True
     return False
 @register.filter

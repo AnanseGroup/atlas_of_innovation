@@ -112,16 +112,15 @@
 			</div>
 		</div>
 	</div>
-	<div id="discarded" class="col s12">
-		<div class="card hoverable">
+	<div id="discarded" class="col s12 ">
+		<div class="card hoverable discarted" >
 			<div class="card-content">
 			<span class="card-title" id="wTitle">Discarded</span>
-			{%if user.is_superadmin or user.is_country_moderator%}
-			<p>
+			<p >
 				<a class="waves-effect waves-light btn undo-all" href="#!" id="undo-discard">Undo All Spaces</a>
-				<a style="float:right" class="waves-effect waves-light btn modal-trigger red  accent-2" href="#delete-forever">DELETE FOREVER</a>
+				<a style="float:right" class="waves-effect waves-light btn modal-trigger red discard-all accent-2"   href="#delete-forever">DELETE FOREVER</a>
 			</p>
-			{%endif%}
+		
 				<ul class="collection" id="discard-collection">
 					{% for space in discarded %}
 					<li class="collection-item avatar" id="lispace-{{space.id}}">
@@ -298,12 +297,12 @@
 		<div class="modal-content">
 			<h4>Delete Forever</h4>
 			<p>This will delete this provisional spaces forever, this data can't be recovered, think carefully before accepting</p>
-			<div class="modal-footer">
+			<div class="modal-footer"id="{{dicarded_id}}">
 				<div class="col s4">
 					<a class="waves-effect waves-light modal-close red lighten-2 btn" style="float:left">Cancel</a>
 				</div>
 				<div class="col s4">
-					<a class="waves-effect waves-light btn" id="delete-discarded" href="#">YES! Delete them all</a>
+					<a class="waves-effect waves-light btn delete-discarded"  id="{{discarded_id}}" href="#">YES! Delete them all</a>
 				</div>
 			</div>
 		</div>
@@ -452,10 +451,12 @@
 		});
 
 		/* Deletes all the discarded provisional spaces */
-		$('#delete-discarded').click( function(){
+		$('.modal-content').on('click', '.delete-discarded', function(){
+			var id = $(this).attr('id');
 			$.ajax({
 				type: 'DELETE',
 				dataType: "json",
+				data: JSON.stringify(id),
 				url: '/provisional_space/',
 				success: function (data) {
 					$('.modal-h').modal('close');
@@ -467,11 +468,16 @@
 		});
 
 		/* Adds and deletes all the processed provisional spaces */
-		$('#commit-spaces').click(function(){
-			$.ajax({
-				type: 'PATCH',
-				dataType: "json",
-				url: '/provisional_space/',
+		$('#commit-spaces').click(
+			function() {
+					var id = $(this).attr('id');
+					$(this).remove();
+					next();
+					$.ajax({
+						type: 'DELETE',
+						dataType: "json",
+						url: '/provisional_space/',
+						data: JSON.stringify({discarded:'all', id:[id]}),
 				success: function (data) {
 					$('.modal-h').modal('close');
 					$("#processed-collection").html("");
@@ -479,7 +485,7 @@
 					M.toast({html: 'Provisional spaces commited successfully'})
 				}
 			});
-		});
+			});
 
 		/* Handles the merger buttons */
 		$('.mergerbtn').click(function(){
@@ -526,7 +532,7 @@
 			});
 		});
 
-		/* Handles processing all spaces */
+		/* Handles undo all spaces */
 		$(".undo-all").click(function(){
 			var ids = [];
 			type = $(this).attr("id").split('-')[1];
@@ -774,7 +780,7 @@
 						type: 'PATCH',
 						dataType: "json",
 						url: '/provisional_space/',
-						data: JSON.stringify({discarded:'1', id:[id]}),
+						data: JSON.stringify({commited:'1', id:[id]}),
 						success: function (data){
 							M.toast({html: 'Provisional space deleted'})
 							new_elem = $('<li class="collection-item avatar" id="lispace-'+data[0].id+'"><p>'+
