@@ -36,3 +36,13 @@ if 'RDS_DB_NAME' in os.environ:
 
 STATIC_ROOT = os.path.join(BASE_DIR, "..", "www", "static")
 STATIC_URL = '/static/'
+EMAIL_BACKEND = 'post_office.EmailBackend'
+#use gmailserver
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'atlasofinnovation@gmail.com'
+EMAIL_HOST_PASSWORD = '4tl4sofinnovation'
+EMAIL_PORT = 587
+POST_OFFICE = {
+    'DEFAULT_PRIORITY': 'now'
+}
