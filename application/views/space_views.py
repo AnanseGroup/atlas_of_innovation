@@ -244,7 +244,7 @@ class SpaceEdit(LoginRequiredMixin, UpdateView):
 
                               }
             new_data_credit = DataCreditLog(**data_credit)
-            if  self.request.user.is_staff or IsOwner(self.request.user.id,space.id):
+            if  self.request.user.is_superuser or IsOwner(self.request.user.id,space.id) or IsModeratorOfSpace(self.request.user,space.province,space.country):
                 redirect_url = super(SpaceEdit, self).form_valid(form)
                 #if is a administrator made changes
                 
@@ -1008,16 +1008,25 @@ def IsOwner(user_id,space_id):
             if owners.count()>0:
                 return True
             return False
+def IsModeratorOfSpace(user,province,country):
+                if user.moderator.is_moderator:
+                    if user.province and province:
+                        return True
+                if user.moderator.is_country_moderator:
+                    if user.country == country:
+                        return True
+                return False  
+
 @staff_member_required
 def DeleteOwner(request,space,user):
     Owners.objects.filter(space=space,user=user).delete()
     messages.success(request, 'owner deleted')
     return redirect(request.GET.get('next'))
 def GetModerators(province,country):
-                try:
-                    moderators=Moderator.objects.filter(province=province,is_moderator=True)
-                except Exception :
+                moderators=Moderator.objects.filter(province=province,is_moderator=True)
+                if moderators.count() == 0: 
                     moderators=Moderator.objects.filter(country=country,is_country_moderator=True)
+                print(moderators)
                 return moderators
 def GetOwners(space_id):
     owners=Owners.objects.filter(space=space_id)

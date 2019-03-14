@@ -27,6 +27,8 @@ createTemplates()
 def on_create(DataCreditLog,moderators):
 	url = djangoSettings.URL+"analyze/provisional_spaces/"
 	credit=str(DataCreditLog.credit)
+	print('send to')
+	print(moderators)
 	if not moderators:
 		mail.send(['ana@parthenontech.com'],template='oncreate_notification',context={'url':url,'name':'Ana',})
 	else:
@@ -40,6 +42,7 @@ def on_create(DataCreditLog,moderators):
 def on_change(DataCreditLog,moderators):  
 	url = djangoSettings.URL+"space/"+str(DataCreditLog.space_id)
 	credit=str(DataCreditLog.credit)
+	print('send to')
 	print(moderators)
 	if not moderators :
 		mail.send(

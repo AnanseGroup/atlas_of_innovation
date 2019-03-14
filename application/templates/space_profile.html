@@ -149,7 +149,9 @@
                 <h8 class="center-align " >{{owner.user.first_name}}</h8>
                 {%if  user.is_superuser or user|isAuthorized:space %}
                 <h8 class="center-align">{{owner.user.email}}</h8>
+                {%if user.moderator.is_moderator or user.moderator.is_country_moderator%}
                  <a id="cardtitle" class="waves-effect waves-light btn" href="{% url 'remove_owner' space.id owner.user.id %}?next={{request.path}}"><i class="material-icons right">delete_forever</i>Remove owner </a>
+                 {%endif%}
                  <br/>
                 {%endif%}
               {%endfor%}
@@ -166,6 +168,7 @@
                 {%endif%}
             {%endif%}
              {%if  user.is_superuser or user|isAuthorized:space %}
+             {%if user.moderator.is_moderator or user.moderator.is_country_moderator%}
               <p>
               <a class="toggle" href="#example">Add owner</a>
              </p>
@@ -178,6 +181,7 @@
                   <input class="btn waves-effect waves-light" type="submit" name="upvote" value="save Owner" />
               </form>
               </div>
+              {%endif%}
               {%endif%}
          </div>
         </div>
