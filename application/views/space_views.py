@@ -96,31 +96,7 @@ class SpaceCreate(LoginRequiredMixin, CreateView):
     template_name = 'space_edit.html'
     login_url = '/login/'
     def form_valid(self, form):
-       
-        
-        user=self.request.user.username
-        if self.request.user.is_staff:
-            redirect_url = super(SpaceCreate, self).form_valid(form)
-            '''* **if form data is valid create the new data credit whit username Save the space and credit log entry and finally if user isnt moderator or admin send mail to correspondent moderator**'''
-            print("is staff")
-            space = self.object
-            self.object = form.save()
-            space.province=space.province.strip().lower().capitalize()
-            space.save()
-            ''' (Pedro) Related to #92 Add new anonymous credit to the credit log
-            '''
-            data_credit = {
-                           'ip_address': self.request.META['REMOTE_ADDR'],
-                           'space_id': self.object.id,
-                           'credit': user
-
-                          }
-            new_data_credit = DataCreditLog(**data_credit)
-            new_data_credit.save()
-            messages.success(self.request, 'The space create success', extra_tags='alert')
-            moderators=None
-               
-        else:
+                user=self.request.user
                 redirect_url = redirect('contribute')
                 affiliation_obj=None
                 governance_obj=None
@@ -153,24 +129,51 @@ class SpaceCreate(LoginRequiredMixin, CreateView):
                                new_space.governance_type.add(governance_obj)
                         except Exception:
                             print(Exception)
-                moderators=GetModerators(new_space.province,new_space.country)
                 new_space.override_analysis = False
                 new_space.discarded = False
                 new_space.province=new_space.province.strip().lower().capitalize()
                 new_space.fhash = calculate_fhash(new_space)
                 print(new_space.fhash)
                 new_space.save() 
-                messages.success(self.request, 'The space create successfullsfully, it will be aproved  by page moderator soon', extra_tags='alert')                
-                data_credit = {
+                if user.is_staff:
+                    new_space=ProvisionalSpace.objects.get(id=new_space.id)
+                    if not problemsPspace(self.request,new_space):
+                        redirect_url = super(SpaceCreate, self).form_valid(form)
+                        space = self.object
+                        space.province=space.province.strip().lower().capitalize()
+                        space.save()
+                        messages.success(self.request, 'The space create success', extra_tags='alert')
+                        new_space.delete()
+                        data_credit = {
+                           'ip_address': self.request.META['REMOTE_ADDR'],
+                           'space_id': space.id,
+                           'credit': user.username
+
+                        }
+                        new_data_credit = DataCreditLog(**data_credit)
+                        new_data_credit.save()
+                    else:
+                        messages.success(self.request, 'The space was problems, you need to fix it in the analizer', extra_tags='alert')
+                        data_credit = {
                            'ip_address': self.request.META['REMOTE_ADDR'],
                            'space_id': new_space.id,
-                           'credit': user
+                           'credit': user.username
 
                           }
-                new_data_credit = DataCreditLog(**data_credit)
-                new_data_credit.save()
+                        new_data_credit = DataCreditLog(**data_credit)
+                        moderators=GetModerators(new_space.province,new_space.country)
+                else:
+                    data_credit = {
+                           'ip_address': self.request.META['REMOTE_ADDR'],
+                           'space_id': new_space.id,
+                           'credit': user.username
+
+                          }
+                    new_data_credit = DataCreditLog(**data_credit)
+                    messages.success(self.request, 'The space create successfullsfully, it will be aproved  by page moderator soon', extra_tags='alert')                
+                    moderators=GetModerators(new_space.province,new_space.country)
                 mails.on_create(new_data_credit, moderators)
-        return redirect_url
+                return redirect_url
 add_space = SpaceCreate.as_view()
 
 
@@ -491,13 +494,8 @@ def analyze_spaces(request):
                                                    'processed_id':processed_id
                                                    })
 
-def analizePspace(request,pspaces):
-        spaces = Space.objects.all()
-        pop_list = []
-        
-        ''' First we analyze each space for problems in the data 
-        '''
-        for pspace in pspaces:
+def problemsPspace(request,pspace):
+            spaces = Space.objects.all()
             problems = [] 
             critical = 0
             error = 0 
@@ -531,48 +529,28 @@ def analizePspace(request,pspaces):
                 problems.append({"desc": "Space has no country", "crit":1})
                 critical = 1
                 error = 1
-            if critical:
-                pop_list.append(pspace.id)
-            if error:
-                excluded_spaces.append([model_to_dict(pspace,fields=fields), problems]) 
-
-        ''' Provisional spaces with critical errors cant be added to the match 
+            ''' Provisional spaces with critical errors cant be added to the match 
             comparison so we filter those spaces '''
-        pspaces = ProvisionalSpace.objects.filter(
-                                                 country=country,
-                                                 override_analysis=False,
-                                                 discarded=False
-                                             ).exclude(
-                                                 id__in=pop_list
-                                             ).all()
-      
-        if spaces:
-            for a, b in itertools.product(spaces, pspaces):
+            if spaces:
+             for a, b in itertools.product(spaces, [pspace]):
                 try:
                     num = tlsh.diffxlen(a.fhash, b.fhash)
                     if num < 66: 
                         ''' If we find a match we add those spaces to our 
                             problem list'''
-                        problem_spaces.append([model_to_dict(a,fields=fields),
-                                               model_to_dict(b,fields=fields),
-                                               num])
-                        pop_list.append(b.id)
+                        problems.append({"dec":"space has one coincidence","crit":1})
                 except:
                     '''There are many ways this can make an exception for once
                     the spaces may not have a fhash because is missing data so
                     we take a look
                     '''
                     pass
-
+            if problems:
+                return 1
+            return 0
             '''We filter the spaces yet again so the ones with a match problem 
             don't make the approved list'''
-            pspaces = ProvisionalSpace.objects.filter(country=country, override_analysis=False, discarded=False).exclude(id__in=pop_list).all()
             
-            approved_spaces.extend([model_to_dict(pspace,fields=fields) for pspace in pspaces])
-        else:
-            ''' If there are no spaces to compare we add all provision spaces
-            to the approved list (yay?)'''
-            approved_spaces.extend([model_to_dict(pspace,fields=fields) for pspace in pspaces])
 
 
 @staff_member_required
@@ -877,9 +855,9 @@ def signup(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.is_active = False
-            user.province=user.province.strip().lower().capitalize()
             user.save()
             Moderator.objects.create(user=user)
+            user.moderator.country=form.cleaned_data['country']
             user.moderator.save()
             mail.send(
                     [form.cleaned_data.get('email')], # List of email addresses also accepted
