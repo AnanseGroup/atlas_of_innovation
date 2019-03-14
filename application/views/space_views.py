@@ -158,7 +158,6 @@ class SpaceCreate(LoginRequiredMixin, CreateView):
                 new_space.discarded = False
                 new_space.province=new_space.province.strip().lower().capitalize()
                 new_space.fhash = calculate_fhash(new_space)
-                print('hash')
                 print(new_space.fhash)
                 new_space.save() 
                 messages.success(self.request, 'The space create successfullsfully, it will be aproved  by page moderator soon', extra_tags='alert')                
@@ -492,6 +491,90 @@ def analyze_spaces(request):
                                                    'processed_id':processed_id
                                                    })
 
+def analizePspace(request,pspaces):
+        spaces = Space.objects.all()
+        pop_list = []
+        
+        ''' First we analyze each space for problems in the data 
+        '''
+        for pspace in pspaces:
+            problems = [] 
+            critical = 0
+            error = 0 
+            ''' (Pedro) added the critical flag thinking maybe in the future some
+                of this problems aren't really critical '''
+            if not pspace.address1:
+                problems.append({"desc":"Space has no main address", "crit":1})
+                critical = 1
+                error = 1 
+            if not pspace.city:
+                problems.append({"desc":"Space has no city", "crit":1})
+                critical = 1
+                error = 1
+            if not pspace.province:
+                problems.append({"desc":"Space has no province", "crit":1})
+                critical = 1
+                error = 1
+            if not pspace.email:
+                problems.append({"desc":"Space has no contact email", "crit":1})
+                critical = 1
+                error = 1
+            if not pspace.website:
+                problems.append({"desc":"Space has no website", "crit":1})
+                critical = 1
+                error = 1
+            if not pspace.fhash:
+                problems.append({"desc": "Space has no hash: see note at header", "crit":1})
+                critical = 1
+                error = 1
+            if not pspace.country:
+                problems.append({"desc": "Space has no country", "crit":1})
+                critical = 1
+                error = 1
+            if critical:
+                pop_list.append(pspace.id)
+            if error:
+                excluded_spaces.append([model_to_dict(pspace,fields=fields), problems]) 
+
+        ''' Provisional spaces with critical errors cant be added to the match 
+            comparison so we filter those spaces '''
+        pspaces = ProvisionalSpace.objects.filter(
+                                                 country=country,
+                                                 override_analysis=False,
+                                                 discarded=False
+                                             ).exclude(
+                                                 id__in=pop_list
+                                             ).all()
+      
+        if spaces:
+            for a, b in itertools.product(spaces, pspaces):
+                try:
+                    num = tlsh.diffxlen(a.fhash, b.fhash)
+                    if num < 66: 
+                        ''' If we find a match we add those spaces to our 
+                            problem list'''
+                        problem_spaces.append([model_to_dict(a,fields=fields),
+                                               model_to_dict(b,fields=fields),
+                                               num])
+                        pop_list.append(b.id)
+                except:
+                    '''There are many ways this can make an exception for once
+                    the spaces may not have a fhash because is missing data so
+                    we take a look
+                    '''
+                    pass
+
+            '''We filter the spaces yet again so the ones with a match problem 
+            don't make the approved list'''
+            pspaces = ProvisionalSpace.objects.filter(country=country, override_analysis=False, discarded=False).exclude(id__in=pop_list).all()
+            
+            approved_spaces.extend([model_to_dict(pspace,fields=fields) for pspace in pspaces])
+        else:
+            ''' If there are no spaces to compare we add all provision spaces
+            to the approved list (yay?)'''
+            approved_spaces.extend([model_to_dict(pspace,fields=fields) for pspace in pspaces])
+
+
 @staff_member_required
 @user_is_autorized_to_upload
 def upload_file(request):
@@ -523,6 +606,7 @@ def handle_csv(file):
             complete_spaces = [{key: value if not value == '' else None \
                                 for key, value in row.items()} for row in reader]
             processed_spaces = []
+            contacted_moderators=[]
             for space in complete_spaces:
                 processed_space = {}
                 
@@ -629,6 +713,19 @@ def handle_csv(file):
                     if governance_obj:
                         new_space.governance_type.add(governance_obj)
                     new_space.save() 
+                    data_credit = {
+                           'ip_address': self.request.META['REMOTE_ADDR'],
+                           'space_id': new_space.id,
+                           'credit': user
+
+                          }
+                    new_data_credit = DataCreditLog(**data_credit)
+                    moderators=GetModerators(new_space.province,new_space.country) 
+                    for moderator in moderators:
+                        if not ( moderator in contacted_moderators):
+                            contacted_moderators.append(moderator)
+                            if not moderator.user==request.user:
+                                mails.on_create(new_data_credit,[moderators])
                     
                 except Exception as e:
                     

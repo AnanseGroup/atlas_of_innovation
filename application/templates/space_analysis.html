@@ -644,7 +644,6 @@
 				url: '/analyze/provisional_spaces/',
 				data: {json_list:'1'},
 				success: function (space){
-					$('#excluded-collection').empty();
 					for(var i = 0; i < space.approved.length; i++) {
 						data = space.approved[i];
 						new_elem = $('<li class="collection-item avatar scale-transition" id="lispace-'+data.id+'"><p>'+
