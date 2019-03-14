@@ -478,15 +478,18 @@ def analyze_spaces(request):
                             })
     else:
         discarded_id=[]
+        processed_id=[]
         for pspaces in discarded_spaces:
             discarded_id.append({'id' : pspaces['id']})
-        print(type(discarded_id))
+        for pspaces in processed_spaces:
+            processed_id.append({'id' : pspaces['id']})
         return render(request, 'space_analysis.html', {'approved': approved_spaces, 
                                                    'problem': problem_spaces,
                                                    'excluded': excluded_spaces,
                                                    'discarded': discarded_spaces,
                                                    'processed': processed_spaces,
-                                                   'discarded_id': discarded_id
+                                                   'discarded_id': discarded_id,
+                                                   'processed_id':processed_id
                                                    })
 
 @staff_member_required
@@ -655,6 +658,7 @@ def provisional_space(request):
     '''* **provides the  way to show and  modify the provisional spaces stored in the db**'''
     fields = ['latitude','longitude','name','city','country','website', 'postal_code','email', 'province', 'address1', 'id']
     if request.method == 'GET':
+        print(request.GET["id"])
         if request.GET["id"]:
             id = request.GET["id"]
             space = ProvisionalSpace.objects.filter(id=id).first()
@@ -666,6 +670,7 @@ def provisional_space(request):
     if request.method == 'POST':
         data = request.POST.copy()
         id = data.pop('id')
+        print(id)
         space = ProvisionalSpace.objects.filter(id=id[0]).first()
         if space:
             for key, value in data.items():
@@ -701,22 +706,33 @@ def provisional_space(request):
             data = None
         
         if data is None:
-           print('da')# spaces = ProvisionalSpace.objects.filter(discarded=True).delete()
+           print("data is None")# spaces = ProvisionalSpace.objects.filter(discarded=True).delete()
         else:
-           data=ast.literal_eval(data)
-           for id in data:
-            spaces = ProvisionalSpace.objects.filter(id=id['id']).delete()
+
+           if isinstance(data,str):
+              data=ast.literal_eval(data)
+              for id in data:
+                 spaces = ProvisionalSpace.objects.filter(id=id['id']).delete()
+           else:
+                spaces = ProvisionalSpace.objects.filter(id__in=data['id']).delete()
         return JsonResponse({'success':1}, safe=False)
     if request.method == "PATCH":
         try:
             data = json.loads(request.body.decode('utf-8'))
         except:
             data = None
-        print(data)
+        spaces=[]
         if data is None:
-            spaces = ProvisionalSpace.objects.filter(override_analysis=True).all()
+            print('data is none')#spaces = ProvisionalSpace.objects.filter(override_analysis=True).all()
         else:
-            spaces = ProvisionalSpace.objects.filter(id__in=data['id'])
+            print(isinstance(data,str))
+            if isinstance(data,str):
+              data=ast.literal_eval(data)
+              for id in data:
+                 spaces.append(ProvisionalSpace.objects.get(id=id['id']))
+            else:
+                spaces.append(ProvisionalSpace.objects.get(id__in=data['id']))
+
         for space in spaces:
             new_space = Space()
             for field in space._meta.fields:

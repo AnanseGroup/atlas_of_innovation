@@ -297,7 +297,7 @@
 		<div class="modal-content">
 			<h4>Delete Forever</h4>
 			<p>This will delete this provisional spaces forever, this data can't be recovered, think carefully before accepting</p>
-			<div class="modal-footer"id="{{dicarded_id}}">
+			<div class="modal-footer">
 				<div class="col s4">
 					<a class="waves-effect waves-light modal-close red lighten-2 btn" style="float:left">Cancel</a>
 				</div>
@@ -317,7 +317,7 @@
 					<a class="waves-effect waves-light modal-close red lighten-2 btn" style="float:left">Cancel</a>
 				</div>
 				<div class="col s4">
-					<a class="waves-effect waves-light btn" id="commit-spaces" href="#">YES! Commit them </a>
+					<a class="waves-effect waves-light btn commit-spaces" id="{{processed_id}}" href="#">YES! Commit them </a>
 				</div>
 			</div>
 		</div>
@@ -358,13 +358,16 @@
 			}
 		});
 		/* CSRF stuff ends */
-
+		$('.modal-d').modal();
 		$('.tabs').tabs();
 		$('.modal-h').modal();
-		$('.modal-d').modal({
-			onOpenStart: function(modal, trigger) {
-
+		$('.modal-trigger').modal({
+			ready: function(modal, trigger) {
+				var idaux =modal.find('input[name="id"]').val(trigger.data('id'))
+				alert(idaux);
+				console.log('mi id');
 				var id = trigger.id.split("-");
+				console.log('mi id'+id);
 				/*  We get the data from the provisional space if the
 					provisonal space modal is called
 				*/
@@ -373,7 +376,7 @@
 						type: 'GET',
 						dataType: "json",
 						url: '/provisional_space/',
-						data: {id:id[1]},
+						data: {id:id[0]},
 						success: function (data){
 								for(var k in data){
 									$("#espace-"+k).val(data[k]);
@@ -461,31 +464,31 @@
 				success: function (data) {
 					$('.modal-h').modal('close');
 					$("#discard-collection").html("");
-					recount_spaces();
 					M.toast({html: 'Provisional spaces deleted successfully'})
+					recount_spaces();
+					
 				}
 			});
 		});
 
 		/* Adds and deletes all the processed provisional spaces */
-		$('#commit-spaces').click(
-			function() {
-					var id = $(this).attr('id');
-					$(this).remove();
-					next();
-					$.ajax({
-						type: 'DELETE',
-						dataType: "json",
-						url: '/provisional_space/',
-						data: JSON.stringify({discarded:'all', id:[id]}),
+		$('.modal-content').on('click','.commit-spaces',function(){
+			var id = $(this).attr('id');
+			$.ajax({
+				type: 'PATCH',
+				dataType: "json",
+				data: JSON.stringify(id),
+				url: '/provisional_space/',
 				success: function (data) {
 					$('.modal-h').modal('close');
 					$("#processed-collection").html("");
-					recount_spaces();
 					M.toast({html: 'Provisional spaces commited successfully'})
+					recount_spaces();
+					
 				}
 			});
-			});
+		});
+
 
 		/* Handles the merger buttons */
 		$('.mergerbtn').click(function(){
@@ -762,6 +765,7 @@
 							Postal Code: '+data[0].postal_code+'<br/> \
 							Fhash: '+data[0].fhash+'<br/>'+
 							'</p>'+'<a class="secondary-content reset-space" href="#!" id="undosp-'+data[0].id+'"><i class="material-icons">undo</i></a>' )
+						    M.toast({html: 'Provisional space deleted successfully'});
 							recount_spaces();
 						}
 					});
@@ -791,6 +795,7 @@
 							Postal Code: '+data[0].postal_code+'<br/> \
 							Fhash: '+data[0].fhash+'<br/>'+
 							'</p>'+'<a class="secondary-content reset-space" href="#!" id="undosp-'+data[0].id+'"><i class="material-icons">undo</i></a>' )
+							M.toast({html: 'Provisional spaces commited successfully'});
 							recount_spaces();
 						}
 					});
