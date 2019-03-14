@@ -2,10 +2,12 @@
      <div class="navigation-bar-container row "style="margin-bottom: 0;">
         <div class="col l2 m12 s12 ">
             <div class="row">
+               {%if request.path != '/analyze/provisional_spaces/'%}
+               {{request.path}}
                 <div class="col m4 s4 container button-collapse-container" >
                  <a href="#" data-activates="mobile-demo" class="button-collapse hide-on-large-only " " ><i class="material-icons">menu</i></a>
                 </div>
-             
+                {%endif%}
                 <a  class="navigation-bar-logo col l12" href="/"><img  class="navigation-bar-img" ;" src="{% static 'images/logo_atlas_of_innovation.png' %}"/></a>
             </div>
         </div>
@@ -24,6 +26,7 @@
         </ul>
        
     </div>
+    {%if request.path != '/analyze/provisional_spaces/'%}
 <ul class="side-nav" id="mobile-demo">
     <li><a href="{% url 'map' %}" class="selected-navigation-bar-button">MAP</a></li>
     <li><a href="{% url 'about' %}" class="selected-navigation-bar-button">ABOUT</a></li>
@@ -33,7 +36,7 @@
     <li><a href="mailto:anansegroup@gmail.com" class="no-underline navigation-right dark-blue">CONTACT US</a></li>
     
 </ul>
-
+{%endif%}
 
 {% if messages %}
     {% for message in messages %}

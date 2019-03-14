@@ -1,10 +1,10 @@
 <html>
-	  {% include "snippets/head.html" %}
+{%include "snippets/head.html"%}
     {% include "snippets/header.html" %}
 <br><br><br>
 <div class="row" style="font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', sans-serif;">
 	<div class="col s12">
-		<ul class="tabs">
+		<ul class="tabs" href="#tabs">
 			<li class="tab col s2"><a id="approved-tag" href="#approved">New Spaces ({{ approved | length }})</a></li>
 			<li class="tab col s2"><a id="excluded-tag" href="#dataerr">Data errors ({{ excluded | length }})</a></li>
 			<li class="tab col s2"><a id="problem-tag" href="#problem">Match Problem ({{ problem | length }})</a></li>
@@ -327,7 +327,7 @@
 
 <script>
 	$(document).ready(function(){
-
+		
 		/*	This script is needed so we dont get CSRF errors when making ajax
 			requests to the django methods */
 		function getCookie(name) {
@@ -358,16 +358,15 @@
 			}
 		});
 		/* CSRF stuff ends */
-		$('.modal-d').modal();
+
 		$('.tabs').tabs();
 		$('.modal-h').modal();
-		$('.modal-trigger').modal({
-			ready: function(modal, trigger) {
-				var idaux =modal.find('input[name="id"]').val(trigger.data('id'))
-				alert(idaux);
-				console.log('mi id');
+		$('.modal-d').modal({
+			onOpenStart: function(modal, trigger) {
+
 				var id = trigger.id.split("-");
-				console.log('mi id'+id);
+				console.log(id)
+				console.log('puto')
 				/*  We get the data from the provisional space if the
 					provisonal space modal is called
 				*/
@@ -376,7 +375,7 @@
 						type: 'GET',
 						dataType: "json",
 						url: '/provisional_space/',
-						data: {id:id[0]},
+						data: {id:id[1]},
 						success: function (data){
 								for(var k in data){
 									$("#espace-"+k).val(data[k]);
@@ -645,9 +644,7 @@
 				url: '/analyze/provisional_spaces/',
 				data: {json_list:'1'},
 				success: function (space){
-					$('#approved-collection').html('');
-					$('#excluded-collection').html('');
-					$('#problem-collection').html('');
+					$('#excluded-collection').empty();
 					for(var i = 0; i < space.approved.length; i++) {
 						data = space.approved[i];
 						new_elem = $('<li class="collection-item avatar scale-transition" id="lispace-'+data.id+'"><p>'+
@@ -675,7 +672,7 @@
 						Fhash: '+data[0].fhash+'<br/> \
 						Problems: <br/> '+ problems +
 						'</p>'+'<a class="secondary-content modal-trigger approved-space" id="pspace-'+data[0].id+'" href="#modal1"><i class="material-icons">edit</i></a><a class="secondary-content process-space " style="margin-top:40px" id="dspace-'+data[0].id+'" href="#!"><i class="material-icons green-text text-darken-2">check_circle</i></a><a class="secondary-content discard-space" style="margin-top:100px" id="dspace-'+data[0].id+'" href="#!"><i class="material-icons red-text text-darken-2">remove_circle</i></a>')
-						new_elem.appendTo("#excluded-collection");
+						new_elem.appendTo("#excluded-collection").load();
 					}
 					for(var i = 0; i < space.problem.length; i++) {
 						data = space.problem[i]
@@ -724,6 +721,7 @@
 		/* Counts the number of spaces in the collections */
 		function recount_spaces() {
 			var len =$("#approved-collection li").length;
+			console.log(len);
 			var dislen = "New Spaces ("+len+")";
 			$("#approved-tag").html(dislen);
 			var len =$("#excluded-collection li").length;
@@ -738,11 +736,10 @@
 			var len =$("#processed-collection li").length;
 			var dislen = "Processed ("+len+")";
 			$("#processed-tag").html(dislen);
-			$('.tabs').html('').load()
+			
 			
 		}
 
-	});
 		/* Handles the delete only one space event */
 		$('.collection').on('click', '.delete-space',
 			function() {
@@ -756,16 +753,8 @@
 						url: '/provisional_space/',
 						data: JSON.stringify({discarded:'1', id:[id]}),
 						success: function (data){
-							M.toast({html: 'Provisional space deleted'})
-							new_elem = $('<li class="collection-item avatar" id="lispace-'+data[0].id+'"><p>'+
-							'Name: '+data[0].name+' <br/> \
-							Address: '+data[0].address1+' <br/> \
-							City: '+data[0].city+'<br/>  \
-							Province: '+data[0].province+'<br/> \
-							Postal Code: '+data[0].postal_code+'<br/> \
-							Fhash: '+data[0].fhash+'<br/>'+
-							'</p>'+'<a class="secondary-content reset-space" href="#!" id="undosp-'+data[0].id+'"><i class="material-icons">undo</i></a>' )
-						    M.toast({html: 'Provisional space deleted successfully'});
+							M.toast({html: 'Provisional space deleted'});
+							
 							recount_spaces();
 						}
 					});
@@ -786,21 +775,15 @@
 						url: '/provisional_space/',
 						data: JSON.stringify({commited:'1', id:[id]}),
 						success: function (data){
-							M.toast({html: 'Provisional space deleted'})
-							new_elem = $('<li class="collection-item avatar" id="lispace-'+data[0].id+'"><p>'+
-							'Name: '+data[0].name+' <br/> \
-							Address: '+data[0].address1+' <br/> \
-							City: '+data[0].city+'<br/>  \
-							Province: '+data[0].province+'<br/> \
-							Postal Code: '+data[0].postal_code+'<br/> \
-							Fhash: '+data[0].fhash+'<br/>'+
-							'</p>'+'<a class="secondary-content reset-space" href="#!" id="undosp-'+data[0].id+'"><i class="material-icons">undo</i></a>' )
-							M.toast({html: 'Provisional spaces commited successfully'});
+							M.toast({html: 'Provisional space deleted'});
+							
 							recount_spaces();
 						}
 					});
 				});
 			}
 		);
+
+	});
 
 </script>

@@ -471,7 +471,7 @@ def analyze_spaces(request):
             
     data = request.GET.copy()
     if data and data.get("json_list"):
-        print("hola")
+        print("hola chunco")
         return JsonResponse({'approved': approved_spaces,
                              'problem': problem_spaces,
                              'excluded': excluded_spaces,
@@ -672,9 +672,12 @@ def provisional_space(request):
         id = data.pop('id')
         print(id)
         space = ProvisionalSpace.objects.filter(id=id[0]).first()
+
         if space:
             for key, value in data.items():
-                setattr(space,key,value)
+                if value:
+                  setattr(space,key,value)
+                  print(key,value)
             space.fhash = calculate_fhash(space)
             space.save()
 
@@ -682,6 +685,7 @@ def provisional_space(request):
     if request.method == "PUT":
         data = json.loads(request.body.decode('utf-8'))
         spaces_list = []
+        print(data)
         if data and data['id']:
             spaces = ProvisionalSpace.objects.filter(id__in=data['id']).all()
             for space in spaces:
