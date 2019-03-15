@@ -127,6 +127,6 @@ STATIC_URL = '/static/'
 #Set post_office.EmailBackend as your EMAIL_BACKEND
 
 #URL="http://localhost:8000/"
-URL="http://52.37.166.83"
+URL="http://52.37.166.83/"
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 30
 TEMPLATE_STRING_IF_INVALID="invalid field name"

@@ -36,7 +36,7 @@
 <a id="cardtitle" class="waves-effect waves-light btn" href="{% url 'space_suggestion' space.id %}"><i class="material-icons right">edit</i>Sugessted changes </a>
 <a id="cardtitle" class="waves-effect waves-light btn" href="{% url 'edit_space' space.id %}"><i class="material-icons right">edit</i>Edit</a>
 {%else%}
-<a id="cardtitle" class="waves-effect waves-light btn" href="{% url 'edit_space' space.id %}"><i class="material-icons right">edit</i>Edit as Suggestion</a>
+<a id="cardtitle" class="waves-effect waves-light btn" href="{% url 'edit_space' space.id %}"><i class="material-icons right">edit</i>Suggest an edit</a>
 {%endif%}
           
         <a id="cardtitle" class="waves-effect waves-light btn" href="{%url 'show_data_credit' space.id %}"><i class="material-icons right">history</i>View History</a>

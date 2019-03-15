@@ -111,6 +111,7 @@ class SpaceCreate(LoginRequiredMixin, CreateView):
                     ownership_obj = OwnershipOption.objects.filter(name=form.cleaned_data['ownership_type']).first()
                 
                 new_space = ProvisionalSpace()
+
                 for field in ProvisionalSpace._meta.get_fields():
                     if type(field).__name__ is not "ManyToManyField":
                         try:
@@ -131,7 +132,8 @@ class SpaceCreate(LoginRequiredMixin, CreateView):
                             print(Exception)
                 new_space.override_analysis = False
                 new_space.discarded = False
-                new_space.province=new_space.province.strip().lower().capitalize()
+                if new_space.province:
+                    new_space.province=new_space.province.strip().lower().capitalize()
                 new_space.fhash = calculate_fhash(new_space)
                 print(new_space.fhash)
                 new_space.save() 
@@ -560,13 +562,13 @@ def upload_file(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-            handle_csv(request.FILES['file'])
+            handle_csv(request,request.FILES['file'])
             return HttpResponseRedirect('/analyze/provisional_spaces/')
     else:
         form = UploadFileForm()
     return render(request, 'space_upload.html', {'form': form})
 
-def handle_csv(file):
+def handle_csv(request,file):
         '''**process the spaces in the file uploaded,
         applying the nesesary changes to ensure the new spaces have the correct format and can be 
         saved as provisional spaces to analize it**'''
@@ -692,19 +694,20 @@ def handle_csv(file):
                         new_space.governance_type.add(governance_obj)
                     new_space.save() 
                     data_credit = {
-                           'ip_address': self.request.META['REMOTE_ADDR'],
+                           'ip_address': request.META['REMOTE_ADDR'],
                            'space_id': new_space.id,
-                           'credit': user
+                           'credit': request.user.first_name
 
                           }
                     new_data_credit = DataCreditLog(**data_credit)
                     moderators=GetModerators(new_space.province,new_space.country) 
                     for moderator in moderators:
                         if not ( moderator in contacted_moderators):
+                            print(moderator)
                             contacted_moderators.append(moderator)
                             if not moderator.user==request.user:
-                                mails.on_create(new_data_credit,[moderators])
-                    
+                                mails.on_create(new_data_credit,[moderator])
+                                print(moderator)
                 except Exception as e:
                     
                     raise e
