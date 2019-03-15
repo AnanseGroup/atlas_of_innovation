@@ -352,7 +352,7 @@ def analyze_spaces(request):
     processed_spaces = []
     if not request.user.is_superuser and (request.user.moderator.is_country_moderator or request.user.moderator.is_moderator):
         country_list=[request.user.moderator.country]
-    permited_all_spaces_in_country= (request.user.moderator.is_country_moderator or request.user.is_superuser)
+    permited_all_spaces_in_country= (request.user.is_superuser or request.user.moderator.is_country_moderator )
     print(permited_all_spaces_in_country)
     for country in country_list:
         spaces = Space.objects.filter(country=country).all()
