@@ -239,13 +239,13 @@ def upload_file(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-            handle_csv(request.FILES['file'])
+            handle_csv(request,request.FILES['file'])
             return HttpResponseRedirect('/analyze/provisional_spaces/')
     else:
         form = UploadFileForm()
     return render(request, 'space_upload.html', {'form': form})
 
-def handle_csv(file):
+def handle_csv(request,file):
 
         data_filename = file
 
@@ -258,8 +258,12 @@ def handle_csv(file):
         with open(djangoSettings.BASE_DIR+"/temp.csv", encoding="utf-8") as csvfile:
             reader = csv.DictReader(csvfile)
             # replace empty strings with None
-            complete_spaces = [{key: value if not value == '' else None \
+            try:
+                complete_spaces = [{key: value if not value == '' else None \
                                 for key, value in row.items()} for row in reader]
+            except:
+                messages.error(request, 'The file has an error, to fix it open in libre office and save "Use Text CSV Format"', extra_tags='file')
+                complete_spaces = []
             processed_spaces = []
             for space in complete_spaces:
                 processed_space = {}
@@ -409,6 +413,7 @@ def provisional_space(request):
             space.save()
         return JsonResponse({'success':1})
     if request.method == "PUT":
+        print(request.body)
         data = json.loads(request.body)
         if data and data['id']:
             spaces_list = []
