@@ -394,6 +394,7 @@ def calculate_fhash(new_space):
 def provisional_space(request):
     fields = ['latitude','longitude','name','city','country','website', 'postal_code','email', 'province', 'address1', 'id']
     if request.method == 'GET':
+        print(request)
         if request.GET["id"]:
             id = request.GET["id"]
             space = ProvisionalSpace.objects.filter(id=id).first()
@@ -413,8 +414,11 @@ def provisional_space(request):
             space.save()
         return JsonResponse({'success':1})
     if request.method == "PUT":
-        print(request.body)
-        data = json.loads(request.body)
+        if(isinstance(request.body,(bytes, bytearray))):
+            str_response = request.body.decode('utf-8')
+            data = json.loads(str_response)
+        else:
+            data = json.loads(request.body)
         if data and data['id']:
             spaces_list = []
             spaces = ProvisionalSpace.objects.filter(id__in=data['id']).all()

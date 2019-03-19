@@ -13,3 +13,9 @@
         <a href="mailto:anansegroup@gmail.com" id="navigation-bar-contact-button" class="no-underline navigation-right dark-blue">Contact Us</a>
 	</div>
 </div>
+{% if messages %}
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }} "{% endif %}><script type="text/javascript">M.toast('{{ message }}', 8000,'msg-info');</script> 
+    </li>
+    {% endfor %}
+{% endif %}

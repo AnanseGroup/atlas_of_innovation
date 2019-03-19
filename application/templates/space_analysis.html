@@ -584,6 +584,7 @@
 			function() {
 				$(this).parent().addClass("scale-out").delay(400).queue(function(next){
 					var id = $(this).attr('id').split("-")[1];
+					console.log(id)
 					$(this).remove();
 					next();
 					$.ajax({
@@ -633,7 +634,11 @@
 		/* Runs the analysis again asyncronously */
 		function rerun_analysis(){
 			$('#loading').modal('open');
-			$.ajax({
+			 setTimeout(function(){// wait for 5 secs(2)
+           location.reload(); // then reload the page.(3)
+      }, 500); 
+			$('#loading').modal('close');
+			/*$.ajax({
 				type: 'GET',
 				dataType: "json",
 				url: '/analyze/provisional_spaces/',
@@ -712,7 +717,7 @@
 					}
 					$('#loading').modal('close');
 				}
-			});
+			});*/
 		}
 
 		/* Counts the number of spaces in the collections */
