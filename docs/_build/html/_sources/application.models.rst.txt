@@ -1,0 +1,38 @@
+application.models package
+==========================
+
+Submodules
+----------
+
+application.models.space\_multiselectfields module
+--------------------------------------------------
+
+.. automodule:: application.models.space_multiselectfields
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+application.models.spaces module
+--------------------------------
+
+.. automodule:: application.models.spaces
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+application.models.user module
+------------------------------
+
+.. automodule:: application.models.user
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: application.models
+    :members:
+    :undoc-members:
+    :show-inheritance:

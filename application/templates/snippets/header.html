@@ -1,21 +1,76 @@
 {% load static %}
-
-<div id="navigation-bar-container">
-    <a class="navigation-bar-logo" href="/">
-        <img src="{% static 'images/logo_atlas_of_innovation.png' %}" id="navigation-bar-home"/>
-    </a>
-    <div class="navigation-bar">
-        <a href="{% url 'map' %}" id="navigation-bar-map-button" class="navigation-bar-button selected-navigation-bar-button">MAP</a>
-        <a href="{% url 'about' %}" id="navigation-bar-about-button" class="navigation-bar-button">ABOUT</a>
-        <a href="{% url 'userDocs' %}" id="navigation-bar-document-licensing-button" class="navigation-bar-button">DOCUMENTATION & LICENSING</a>
-        <a href="{% url 'wiki' %}" id="navigation-bar-wiki-button" class="navigation-bar-button">LIST</a>
-        <a href="{% url 'contribute' %}" id="navigation-bar-contribute-button" class="navigation-bar-button">CONTRIBUTE</a>
-        <a href="mailto:anansegroup@gmail.com" id="navigation-bar-contact-button" class="no-underline navigation-right dark-blue">Contact Us</a>
-	</div>
-</div>
+     <div class="navigation-bar-container row "style="margin-bottom: 0;">
+        <div class="col l2 m12 s12 ">
+            <div class="row">
+               {%if request.path != '/analyze/provisional_spaces/'%}
+                <div class="col m4 s4 container button-collapse-container" >
+                 <a href="#" data-activates="mobile-demo" class="button-collapse hide-on-large-only " " ><i class="material-icons">menu</i></a>
+                </div>
+                {%endif%}
+                <a  class="navigation-bar-logo col l12" href="/"><img  class="navigation-bar-img" ;" src="{% static 'images/logo_atlas_of_innovation.png' %}"/></a>
+            </div>
+        </div>
+       
+        <ul id="nav-mobile" class="right hide-on-med-and-down col l10" style=" margin-top: 0px;">
+            <li> <a href="{% url 'map' %}" id="navigation-bar-map-button" class="navigation-bar-button selected-navigation-bar-button">MAP</a>
+            </li>
+            <li><a href="{% url 'about' %}" id="navigation-bar-about-button" class="navigation-bar-button">ABOUT</a>
+                </li>
+            <li><a href="{% url 'userDocs' %}" id="navigation-bar-document-licensing-button" class="navigation-bar-button">DOCUMENTATION & LICENSING</a>
+                </li>
+           <li> <a href="{% url 'wiki' %}" id="navigation-bar-wiki-button" class="navigation-bar-button">LIST</a></li>
+           <li> <a href="{% url 'contribute' %}" id="navigation-bar-contribute-button" class="navigation-bar-button">CONTRIBUTE</a></li>
+            <li><a href="mailto:anansegroup@gmail.com" id="navigation-bar-contact-button" class="no-underline navigation-right dark-blue">Contact Us</a></li>
+             
+        </ul>
+       
+    </div>
+    {%if request.path != '/analyze/provisional_spaces/'%}
+<ul class="side-nav" id="mobile-demo">
+    <li><a href="{% url 'map' %}" class="selected-navigation-bar-button">MAP</a></li>
+    <li><a href="{% url 'about' %}" class="selected-navigation-bar-button">ABOUT</a></li>
+    <li><a href="{% url 'userDocs' %}" class="selected-navigation-bar-button">DOC & LICENSING</a></li>
+    <li><a href="{% url 'wiki' %}" class="selected-navigation-bar-button">LIST</a></li>
+    <li><a href="{% url 'contribute' %}" class="selected-navigation-bar-button">CONTRIBUTE</a></li>
+    <li><a href="mailto:anansegroup@gmail.com" class="no-underline navigation-right dark-blue">CONTACT US</a></li>
+    
+</ul>
 {% if messages %}
     {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }} "{% endif %}><script type="text/javascript">M.toast({html:'{{ message }}', displayLength:8000,classes:'msg-info'});</script> 
+    <li{% if message.tags %} class="{{ message.tags }} "{% endif %}><script type="text/javascript">Materialize.toast('{{ message }}', 8000,'msg-info');</script> 
     </li>
     {% endfor %}
 {% endif %}
+{%else%}
+    {% if messages %}
+       {% for message in messages %}
+           <li{% if message.tags %} class="{{ message.tags }} "{% endif %}><script type="text/javascript">M.toast({html:'{{ message }}', displayLength:8000,classes:'msg-info'});</script> 
+           </li>
+       {% endfor %}
+     {% endif %}
+{%endif%}
+{% if user.is_authenticated %}
+
+    <div class="row" style="padding-top: 10px;">
+        {% if user.is_staff %}
+        <div class="col s2">
+            <a href="/admin" class=" dark-blue " >ADMIN MENU</a>
+        </div>
+         <div class="col s2 ">
+            <a href="{%url 'logout'%}" class=" dark-blue logout" >LOGOUT</a>
+        </div>
+        {% else %}
+        
+        <div class="col s2 offset-s10">
+         <a href="{%url 'logout'%}" class=" dark-blue logout" >LOGOUT</a>
+        </div>
+         {% endif %}
+        </div>
+ {% else %}
+      <div class="row" style="padding-top: 10px;">
+        <div class="col s2 offset-s10" style="padding-left: 60px;">
+         <a href="{% url 'login'%}?next={{request.path}}">login</a> / <a href="{% url 'signup' %}?next={{request.path}}">signup</a>
+        </div>
+        </div> 
+{% endif%}
+

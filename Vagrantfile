@@ -6,8 +6,8 @@ Vagrant.configure("2") do |config|
   config.vm.define "atlas"
 
   # Port forwarding
-  config.vm.network :forwarded_port, guest: 8000, host: 8000, host_ip: "127.0.0.1" # Django
-  config.vm.network :forwarded_port, guest: 80, host: 9090, host_ip: "127.0.0.1"  
+  config.vm.network :forwarded_port, guest: 8000, host: 8000 # Django
+  config.vm.network :forwarded_port, guest: 80, host: 9090
 
   # Provider configuration
   config.vm.provider 'virtualbox' do |vb|

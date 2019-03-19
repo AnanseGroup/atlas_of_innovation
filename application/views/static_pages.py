@@ -4,6 +4,7 @@ from django_countries import countries
 from django.views.decorators.clickjacking import xframe_options_exempt
 
 def map(request):
+    '''**Control the map**'''
     type = ['All', 'Ecovillage', 'Event', 'Hub', 'Virtual', 'Workshop']
     theme = ['Agriculture', 'Appropriate Technology', 'Art and Culture', 'Biology', 'Design', 'Education', 'Food', 'Materials', 'Media', 'Politics', 'Science', 'Youth']
     filter = ['Type', 'Theme']
@@ -30,6 +31,7 @@ def whitelabel_map(request):
 
 
 def about(request):
+    '''**about section**'''
     return render(
         request,
         'static/about.html',
@@ -37,6 +39,7 @@ def about(request):
 
 
 def goals(request):
+    '''**goals section**'''
     return render(
         request,
         'static/goals.html',
@@ -44,6 +47,7 @@ def goals(request):
 
 
 def contributors(request):
+    '''**contributors**'''
     return render(
         request,
         'static/contributors.html',
@@ -51,6 +55,7 @@ def contributors(request):
 
 
 def userDocs(request):
+    '''**user-documentation**'''
     return render(
         request,
         'static/user-documentation.html',
@@ -58,6 +63,7 @@ def userDocs(request):
 
 
 def devDocs(request):
+    '''**developer-documentation**'''
     return render(
         request,
         'static/developer-documentation.html',
@@ -65,6 +71,7 @@ def devDocs(request):
 
 
 def wiki(request):
+    '''**list of countries**'''
     context = {'countries':countries}
     return render(
         request,
@@ -74,6 +81,7 @@ def wiki(request):
 
 
 def contribute(request):
+    '''**contribute section**'''
     user = request.user
     return render(
         request,

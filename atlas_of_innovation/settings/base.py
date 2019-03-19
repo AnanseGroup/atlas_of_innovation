@@ -8,7 +8,6 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -25,7 +24,12 @@ INSTALLED_APPS = [
     'django_countries',
     'rest_framework',
     'captcha',
+    'post_office',
+    'django.contrib.sites',
 ]
+
+SITE_ID = 1
+
 
 MIDDLEWARE = [
     'application.middleware.CorsMiddleware',
@@ -120,3 +124,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+#Set post_office.EmailBackend as your EMAIL_BACKEND
+
+#URL="http://localhost:8000/"
+URL="52.37.166.83/"
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 30
+TEMPLATE_STRING_IF_INVALID="invalid field name"
