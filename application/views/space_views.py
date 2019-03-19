@@ -819,8 +819,13 @@ def provisional_space(request):
             print(isinstance(data,str))
             if isinstance(data,str):
               data=ast.literal_eval(data)
+
               for id in data:
-                 spaces.append(ProvisionalSpace.objects.get(id=id['id']))
+                print(id)
+                try:
+                  spaces.append(ProvisionalSpace.objects.get(id=id['id']))
+                except Exception:
+                            print(Exception)
             else:
                 spaces.append(ProvisionalSpace.objects.get(id__in=data['id']))
 
