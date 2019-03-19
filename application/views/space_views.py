@@ -262,7 +262,7 @@ def handle_csv(request,file):
                 complete_spaces = [{key: value if not value == '' else None \
                                 for key, value in row.items()} for row in reader]
             except:
-                messages.error(request, 'The file has an error, to fix it open in libre office and save "Use Text CSV Format"', extra_tags='file')
+                messages.error(request, 'The file has an error, to fix it you can open in libre office and save "Use Text CSV Format', extra_tags='alert')
                 complete_spaces = []
             processed_spaces = []
             for space in complete_spaces:

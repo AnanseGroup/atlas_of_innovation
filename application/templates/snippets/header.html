@@ -15,7 +15,7 @@
 </div>
 {% if messages %}
     {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }} "{% endif %}><script type="text/javascript">M.toast('{{ message }}', 8000,'msg-info');</script> 
+    <li{% if message.tags %} class="{{ message.tags }} "{% endif %}><script type="text/javascript">M.toast({html:'{{ message }}', displayLength:8000,classes:'msg-info'});</script> 
     </li>
     {% endfor %}
 {% endif %}
