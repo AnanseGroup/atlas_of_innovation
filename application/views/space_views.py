@@ -9,10 +9,15 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.conf import settings
 from django.contrib import messages
 
+
 from django.http import Http404, HttpResponseRedirect
 from django import forms
 
-from application.models import Space
+
+from django.http import Http404, HttpResponseRedirect
+from django import forms
+
+from application.models import Space, DataCreditLog
 from application.models.spaces import SpaceForm
 from django.forms.models import model_to_dict
 
@@ -30,6 +35,9 @@ from django.db.models import Count
 from application.serializers import SpaceSerializer
 from django.http import HttpResponse, JsonResponse
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+
 from django.contrib.admin.views.decorators import staff_member_required
 
 def space_profile(request, id):
@@ -40,17 +48,20 @@ def space_profile(request, id):
         {"id": id, "space":space}
     )
 
-class SpaceCreate(CreateView):
+ 
+class SpaceCreate(LoginRequiredMixin, CreateView):
     form_class = SpaceForm
     model = Space
     template_name = 'space_edit.html'
+    login_url = '/admin/'
 
 add_space = SpaceCreate.as_view()
-
-class SpaceEdit(UpdateView):
+ 
+class SpaceEdit(LoginRequiredMixin, UpdateView):
     form_class = SpaceForm
     model = Space
     template_name = 'space_edit.html'
+    login_url = '/admin/'
     
     def get_context_data(self, **kwargs):
         context = super(SpaceEdit, self).get_context_data(**kwargs)
@@ -62,7 +73,7 @@ class SpaceEdit(UpdateView):
             raise Http404
         return context
 
-    def form_valid(self, form): 
+    def form_valid(self, form):
         self.object = form.save()
         redirect_url = super(SpaceEdit, self).form_valid(form)
 
@@ -184,12 +195,21 @@ def analyze_spaces(request):
             for a, b in itertools.product(spaces, pspaces):
                 try:
                     num = tlsh.diffxlen(a.fhash, b.fhash)
-                    if num < 66: 
+
+                    if num<5:
+                        b.override_analysis=False
+                        b.discarded=True
+                        b.save();
+                        pop_list.append(b.id)
+                    else:
+                      if num < 66: 
+
                         ''' If we find a match we add those spaces to our 
                             problem list'''
                         problem_spaces.append([model_to_dict(a,fields=fields),
                                                model_to_dict(b,fields=fields),
                                                num])
+
                         pop_list.append(b.id)
                 except:
                     '''There are many ways this can make an exception for once
@@ -235,13 +255,17 @@ def upload_file(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-            handle_csv(request.FILES['file'])
+
+            handle_csv(request,request.FILES['file'])
+
             return HttpResponseRedirect('/analyze/provisional_spaces/')
     else:
         form = UploadFileForm()
     return render(request, 'space_upload.html', {'form': form})
 
-def handle_csv(file):
+
+def handle_csv(request,file):
+
 
         data_filename = file
 
@@ -254,8 +278,14 @@ def handle_csv(file):
         with open(djangoSettings.BASE_DIR+"/temp.csv", encoding="utf-8") as csvfile:
             reader = csv.DictReader(csvfile)
             # replace empty strings with None
-            complete_spaces = [{key: value if not value == '' else None \
+
+            try:
+                complete_spaces = [{key: value if not value == '' else None \
                                 for key, value in row.items()} for row in reader]
+            except:
+                messages.error(request, 'The file has an error, to fix it you can open in libre office and save "Use Text CSV Format"', extra_tags='alert')
+                complete_spaces = []
+
             processed_spaces = []
             for space in complete_spaces:
                 processed_space = {}
@@ -386,6 +416,7 @@ def calculate_fhash(new_space):
 def provisional_space(request):
     fields = ['latitude','longitude','name','city','country','website', 'postal_code','email', 'province', 'address1', 'id']
     if request.method == 'GET':
+
         if request.GET["id"]:
             id = request.GET["id"]
             space = ProvisionalSpace.objects.filter(id=id).first()
@@ -405,7 +436,13 @@ def provisional_space(request):
             space.save()
         return JsonResponse({'success':1})
     if request.method == "PUT":
-        data = json.loads(request.body)
+
+        if(isinstance(request.body,(bytes, bytearray))):
+            str_response = request.body.decode('utf-8')
+            data = json.loads(str_response)
+        else:
+            data = json.loads(request.body)
+
         if data and data['id']:
             spaces_list = []
             spaces = ProvisionalSpace.objects.filter(id__in=data['id']).all()
