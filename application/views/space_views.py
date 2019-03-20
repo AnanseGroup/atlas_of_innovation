@@ -188,12 +188,19 @@ def analyze_spaces(request):
             for a, b in itertools.product(spaces, pspaces):
                 try:
                     num = tlsh.diffxlen(a.fhash, b.fhash)
-                    if num < 66: 
+                    if num<5:
+                        b.override_analysis=False
+                        b.discarded=True
+                        b.save();
+                        pop_list.append(b.id)
+                    else:
+                      if num < 66: 
                         ''' If we find a match we add those spaces to our 
                             problem list'''
                         problem_spaces.append([model_to_dict(a,fields=fields),
                                                model_to_dict(b,fields=fields),
                                                num])
+
                         pop_list.append(b.id)
                 except:
                     '''There are many ways this can make an exception for once

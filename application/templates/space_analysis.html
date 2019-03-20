@@ -9,14 +9,29 @@
 </head>
     {% include "snippets/header.html" %}
 <br><br><br>
+<div class="row preloader-centering">
+	<div class="col s2 offset-s5">
+	  <div class="preloader-wrapper center-align big active preloader ">
+	    <div class="spinner-layer  spinner-blue-only">
+	      <div class="circle-clipper left">
+	        <div class="circle"></div>
+	      </div><div class="gap-patch">
+	        <div class="circle"></div>
+	      </div><div class="circle-clipper right">
+	        <div class="circle"></div>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+</div>
 <div class="row" style="font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', sans-serif;">
 	<div class="col s12">
-		<ul class="tabs">
-			<li class="tab col s2"><a id="approved-tag" href="#approved">New Spaces ({{ approved | length }})</a></li>
-			<li class="tab col s2"><a id="excluded-tag" href="#dataerr">Data errors ({{ excluded | length }})</a></li>
-			<li class="tab col s2"><a id="problem-tag" href="#problem">Match Problem ({{ problem | length }})</a></li>
-			<li class="tab col s2"><a id="discarded-tag" href="#discarded">Discarded ({{ discarded | length }})</a></li>
-			<li class="tab col s2"><a id="processed-tag" href="#processed">Processed ({{ processed | length }})</a></li>
+		<ul class="tabs" id="tabs">
+			<li class="tab col s2"><a class="tabb" id="approved-tag" href="#approved">New Spaces ({{ approved | length }})</a></li>
+			<li class="tab col s2"><a class="tabb" id="excluded-tag" href="#dataerr">Data errors ({{ excluded | length }})</a></li>
+			<li class="tab col s2"><a class="tabb" id="problem-tag" href="#problem">Match Problem ({{ problem | length }})</a></li>
+			<li class="tab col s2"><a class="tabb" id="discarded-tag" href="#discarded">Discarded ({{ discarded | length }})</a></li>
+			<li class="tab col s2"><a class="tabb" id="processed-tag" href="#processed">Processed ({{ processed | length }})</a></li>
 		</ul>
 	</div>
 	<div id="approved" class="col s12">
@@ -96,6 +111,11 @@
 										<td>Address</td>
 										<td>{{space.1.address1}}</td>
 										<td>{{space.0.address1}}</td>
+									</tr>
+									<tr>
+										<td>City</td>
+										<td>{{space.1.city}}</td>
+										<td>{{space.0.city}}</td>
 									</tr>
 									<tr>
 										<td>Province</td>
@@ -193,6 +213,7 @@
 			<input type="hidden" class="mspace1 nrmodal" id="espace-id" value=""/>
 			<input type="text" id="espace-name" class="mspace1 nrmodal" placeholder="Name" value=""/>
 			<input type="text" id="espace-address1" class="mspace1 nrmodal" placeholder="Address" value="" />
+			<input type="text" id="espace-city" class="mspace1 nrmodal" placeholder="City" value="" />
 			<input type="text" id="espace-province" class="mspace1 nrmodal" placeholder="Province" value="" />
 			<input type="text" id="espace-postal_code" class="mspace1 nrmodal" placeholder="Postal Code" value="" />
 			<input type="text" id="espace-latitude" class="mspace1 nrmodal" placeholder="Latitude" value="" />
@@ -218,6 +239,7 @@
 					<input type="hidden" class="mspace1 prmodal" id="mspace1-id" value=""/>
 					<input type="text" class="mspace1 prmodal" placeholder="Name" id="mspace1-name" value=""/>
 					<input type="text" class="mspace1 prmodal" placeholder="Address" id="mspace1-address1" value="" />
+					<input type="text" class="mspace1 prmodal" placeholder="City" id="mspace1-city" value="" />
 					<input type="text" class="mspace1 prmodal" placeholder="Province" id="mspace1-province" value="" />
 					<input type="text" class="mspace1 prmodal" placeholder="Postal code" id="mspace1-postal_code" value="" />
 					<input type="text" class="mspace1 prmodal" placeholder="Latitude" id="mspace1-latitude" value="" />
@@ -234,6 +256,10 @@
 					<div class="row mrow">
 						<a class="waves-effect waves-teal btn-flat leftm-arr mergerbtn" id="sendl-address1"><i class="material-icons">arrow_back</i></a>
 						<a class="waves-effect waves-teal btn-flat rightm-arr mergerbtn"  id="sendr-address1"><i class="material-icons">arrow_forward</i></a>
+					</div>
+					<div class="row mrow">
+						<a class="waves-effect waves-teal btn-flat leftm-arr mergerbtn" id="sendl-city"><i class="material-icons">arrow_back</i></a>
+						<a class="waves-effect waves-teal btn-flat rightm-arr mergerbtn" id="sendr-city"><i class="material-icons">arrow_forward</i></a>
 					</div>
 					<div class="row mrow">
 						<a class="waves-effect waves-teal btn-flat leftm-arr mergerbtn" id="sendl-province"><i class="material-icons">arrow_back</i></a>
@@ -264,6 +290,7 @@
 					<input type="hidden" class="mspace2" id="mspace2-id" value=""/>
 					<input type="text" class="mspace2" placeholder="Name" id="mspace2-name" value=""/>
 					<input type="text" class="mspace2" placeholder="Address" id="mspace2-address1" value="" />
+					<input type="text" class="mspace2" placeholder="City" id="mspace2-city" value="" />
 					<input type="text" class="mspace2" placeholder="Province" id="mspace2-province" value="" />
 					<input type="text" class="mspace2" placeholder="Postal code" id="mspace2-postal_code" value="" />
 					<input type="text" class="mspace2" placeholder="Latitude" id="mspace2-latitude" value="" />
@@ -290,7 +317,7 @@
 
 	<div id="loading" class="modal-h modal" style="width:300;height:250px">
 		<div class="modal-content" style="margin-top:15%">
-			<h5>Running analysis, please wait...</h5>
+			<h5>Processing, please wait...</h5>
 			<div class="progress">
 				<div class="indeterminate"></div>
 			</div>
@@ -332,6 +359,13 @@
 <script>
 	$(document).ready(function(){
 
+	$('.preloader-centering')
+		.delay(1700)
+		.fadeOut();
+	$('.preloader-wrapper')
+		.delay(1700)
+		.fadeOut();
+
 		/*	This script is needed so we dont get CSRF errors when making ajax
 			requests to the django methods */
 		function getCookie(name) {
@@ -362,8 +396,33 @@
 			}
 		});
 		/* CSRF stuff ends */
+			$('a[class="tabb"]').on('click', function(e) {
+    localStorage.setItem('activeTab', $(e.target).attr('href'));
+    
+});
+		var activeTab = localStorage.getItem('activeTab');
 
-		$('.tabs').tabs();
+// En la consola te va a mostrar la pestaña donde hiciste el último click y lo
+// guarda en "activeTab". Te dejo el console para que lo veas. Y cuando refresques
+// el browser, va a quedar activa la última donde hiciste el click.
+$('.tabs').tabs();
+//activeTab=activeTab.replace(/#/g, '');
+var elem = document.querySelector('.tabs');
+//var instance = M.Tabs.getInstance(elem);
+
+var options = {}
+
+var instance = M.Tabs.init(elem, options);
+activeTab=activeTab.replace(/#/g, '');
+if (activeTab) {
+	//$('.tabs').tabs('select',activeTab);
+	instance.select(activeTab);
+   
+   console.log(activeTab);
+}
+		
+                              
+		
 		$('.modal-h').modal();
 		$('.modal-d').modal({
 			onOpenStart: function(modal, trigger) {
@@ -552,10 +611,12 @@
 		/* Handles the discard space event */
 		$('.collection').on('click', '.discard-space',
 			function() {
+				$('#loading').modal('open');
 				$(this).parent().addClass("scale-out").delay(400).queue(function(next){
 					var id = $(this).attr('id').split("-")[1];
 					$(this).remove();
 					next();
+					$('#loading').modal('close');
 					$.ajax({
 						type: 'PUT',
 						dataType: "json",
@@ -582,11 +643,13 @@
 		/* Handles the processed space event */
 		$('.collection').on('click', '.process-space',
 			function() {
+				$('#loading').modal('open');
 				$(this).parent().addClass("scale-out").delay(400).queue(function(next){
 					var id = $(this).attr('id').split("-")[1];
 					console.log(id)
 					$(this).remove();
 					next();
+					$('#loading').modal('close');
 					$.ajax({
 						type: 'PUT',
 						dataType: "json",
@@ -613,10 +676,12 @@
 		/* Resets the space, runs the analysis again */
 		$('.collection').on('click', '.reset-space',
 			function(){
+				$('#loading').modal('open');
 				$(this).parent().addClass("scale-out").delay(400).queue(function(next){
 					var id = $(this).attr('id').split("-")[1];
 					$(this).remove();
 					next();
+					$('#loading').modal('close');
 					$.ajax({
 						type: 'PUT',
 						dataType: "json",
