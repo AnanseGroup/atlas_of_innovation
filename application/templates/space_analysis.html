@@ -430,8 +430,8 @@ var elem = document.querySelector('.tabs');
 var options = {}
 
 var instance = M.Tabs.init(elem, options);
-activeTab=activeTab.replace(/#/g, '');
 if (activeTab) {
+	activeTab=activeTab.replace(/#/g, '');
 	//$('.tabs').tabs('select',activeTab);
 	instance.select(activeTab);
    
