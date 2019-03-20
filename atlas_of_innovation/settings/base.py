@@ -7,12 +7,18 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
+# To get environment values
 import os
+# To get booleans from strings
+from ast import literal_eval
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Application definition
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(", ")
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -30,7 +36,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'application.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware', 
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -57,7 +63,9 @@ TEMPLATES = [
                 'my_templatetag': 'atlas_of_innovation.templatetags.my_templatetag',
     
             }
+
         },
+
     },
 ]
 
@@ -70,11 +78,11 @@ WSGI_APPLICATION = 'atlas_of_innovation.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'atlas',
-        'USER': 'ubuntu',
-        'PASSWORD': 'ubuntu',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': os.environ.get('RDS_DB_NAME'),
+        'USER': os.environ.get('RDS_USERNAME'),
+        'PASSWORD': os.environ.get('RDS_PASSWORD'),
+        'HOST': os.environ.get('RDS_HOSTNAME'),
+        'PORT': os.environ.get('RDS_PORT'),
     }
 }
 
@@ -106,15 +114,17 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = True
 
+# Time settings
 USE_TZ = True
+TIME_ZONE = 'UTC'
 
+# ReCaptcha
+RECAPTCHA_PUBLIC_KEY = os.environ['RECAPTCHA_PUBLIC_KEY']
+RECAPTCHA_PRIVATE_KEY = os.environ['RECAPTCHA_PRIVATE_KEY']
+NOCAPTCHA = literal_eval(os.getenv('NO_CAPTCHA', 'True'))
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/

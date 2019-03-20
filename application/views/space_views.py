@@ -9,6 +9,11 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.conf import settings
 from django.contrib import messages
 
+
+from django.http import Http404, HttpResponseRedirect
+from django import forms
+
+
 from django.http import Http404, HttpResponseRedirect
 from django import forms
 
@@ -29,7 +34,9 @@ import itertools
 from django.db.models import Count
 from application.serializers import SpaceSerializer
 from django.http import HttpResponse, JsonResponse
+
 from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 from django.contrib.admin.views.decorators import staff_member_required
 
@@ -188,6 +195,7 @@ def analyze_spaces(request):
             for a, b in itertools.product(spaces, pspaces):
                 try:
                     num = tlsh.diffxlen(a.fhash, b.fhash)
+
                     if num<5:
                         b.override_analysis=False
                         b.discarded=True
@@ -195,6 +203,7 @@ def analyze_spaces(request):
                         pop_list.append(b.id)
                     else:
                       if num < 66: 
+
                         ''' If we find a match we add those spaces to our 
                             problem list'''
                         problem_spaces.append([model_to_dict(a,fields=fields),
@@ -246,13 +255,17 @@ def upload_file(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
+
             handle_csv(request,request.FILES['file'])
+
             return HttpResponseRedirect('/analyze/provisional_spaces/')
     else:
         form = UploadFileForm()
     return render(request, 'space_upload.html', {'form': form})
 
+
 def handle_csv(request,file):
+
 
         data_filename = file
 
@@ -265,12 +278,14 @@ def handle_csv(request,file):
         with open(djangoSettings.BASE_DIR+"/temp.csv", encoding="utf-8") as csvfile:
             reader = csv.DictReader(csvfile)
             # replace empty strings with None
+
             try:
                 complete_spaces = [{key: value if not value == '' else None \
                                 for key, value in row.items()} for row in reader]
             except:
                 messages.error(request, 'The file has an error, to fix it you can open in libre office and save "Use Text CSV Format"', extra_tags='alert')
                 complete_spaces = []
+
             processed_spaces = []
             for space in complete_spaces:
                 processed_space = {}
@@ -401,7 +416,7 @@ def calculate_fhash(new_space):
 def provisional_space(request):
     fields = ['latitude','longitude','name','city','country','website', 'postal_code','email', 'province', 'address1', 'id']
     if request.method == 'GET':
-        print(request)
+
         if request.GET["id"]:
             id = request.GET["id"]
             space = ProvisionalSpace.objects.filter(id=id).first()
@@ -421,11 +436,13 @@ def provisional_space(request):
             space.save()
         return JsonResponse({'success':1})
     if request.method == "PUT":
+
         if(isinstance(request.body,(bytes, bytearray))):
             str_response = request.body.decode('utf-8')
             data = json.loads(str_response)
         else:
             data = json.loads(request.body)
+
         if data and data['id']:
             spaces_list = []
             spaces = ProvisionalSpace.objects.filter(id__in=data['id']).all()
