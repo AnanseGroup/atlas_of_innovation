@@ -17,17 +17,28 @@
         <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
             {{ form.as_p }}
             <!--<input type="submit" value="Send message" />-->
-            <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+            <button type="submit"  class="upload-file btn btn-primary btn-lg">Submit</button>
         </form>
       </div>
     </div>
   </div>
 </div>
-
+<div id="loading" class="modal-h modal" style="width:300;height:250px">
+    <div class="modal-content" style="margin-top:15%">
+      <h5>Processing, please wait...</h5>
+      <div class="progress">
+        <div class="indeterminate"></div>
+      </div>
+    </div>
+  </div>
 {% include "snippets/delete-space.html" %}
 
 <script>
 $(document).ready(function(){
     $('select').formSelect();
   });
+$('.modal-h').modal();
+$('.upload-file').click(function(){
+     $('#loading').modal('open');
+    });
 </script>

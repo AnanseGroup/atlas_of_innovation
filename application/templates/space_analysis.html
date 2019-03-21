@@ -303,11 +303,12 @@
 		<div class="modal-footer">
 			<div class="row">
 				<div class="col s4">
-					<a class="waves-effect waves-light modal-close red lighten-2 btn" style="float:left">Cancel</a>
-				</div>
-				<div class="col s4">
 					<a class="waves-effect waves-light btn save-pspace" id="prmodal">Save Provisional Space</a>
 				</div>
+				<div class="col s3 offset-s1">
+					<a class="waves-effect waves-light modal-close red lighten-2 btn" style="float:left">Cancel</a>
+				</div>
+				
 				<div class="col s4">
 					<a class="waves-effect waves-light btn save-dbspace">Save DB Space</a>
 				</div>
@@ -396,32 +397,23 @@
 			}
 		});
 		/* CSRF stuff ends */
-			$('a[class="tabb"]').on('click', function(e) {
-    localStorage.setItem('activeTab', $(e.target).attr('href'));
-    
-});
+		/*save current tab on refresh*/
+		$('a[class="tabb"]').on('click', function(e) {
+    		localStorage.setItem('activeTab', $(e.target).attr('href'));
+    	});
 		var activeTab = localStorage.getItem('activeTab');
 
-// En la consola te va a mostrar la pestaña donde hiciste el último click y lo
-// guarda en "activeTab". Te dejo el console para que lo veas. Y cuando refresques
-// el browser, va a quedar activa la última donde hiciste el click.
-$('.tabs').tabs();
-//activeTab=activeTab.replace(/#/g, '');
-var elem = document.querySelector('.tabs');
-//var instance = M.Tabs.getInstance(elem);
-
-var options = {}
-
-var instance = M.Tabs.init(elem, options);
-activeTab=activeTab.replace(/#/g, '');
-if (activeTab) {
-	//$('.tabs').tabs('select',activeTab);
-	instance.select(activeTab);
-   
-   console.log(activeTab);
-}
+		$('.tabs').tabs();
+		var elem = document.querySelector('.tabs');
+		var options = {}
+		var instance = M.Tabs.init(elem, options);
+		if (activeTab) {
+						activeTab=activeTab.replace(/#/g, '');
+						instance.select(activeTab);
+   						//console.log(activeTab);
+		}
 		
-                              
+             /*end  save current tab*/                 
 		
 		$('.modal-h').modal();
 		$('.modal-d').modal({
@@ -515,6 +507,7 @@ if (activeTab) {
 
 		/* Deletes all the discarded provisional spaces */
 		$('#delete-discarded').click( function(){
+			$('#loading').modal('open');
 			$.ajax({
 				type: 'DELETE',
 				dataType: "json",
@@ -523,6 +516,7 @@ if (activeTab) {
 					$('.modal-h').modal('close');
 					$("#discard-collection").html("");
 					recount_spaces();
+					$('#loading').modal('close');
 					M.toast({html: 'Provisional spaces deleted successfully'})
 				}
 			});
@@ -530,6 +524,7 @@ if (activeTab) {
 
 		/* Adds and deletes all the processed provisional spaces */
 		$('#commit-spaces').click(function(){
+			$('#loading').modal('open');
 			$.ajax({
 				type: 'PATCH',
 				dataType: "json",
@@ -538,6 +533,7 @@ if (activeTab) {
 					$('.modal-h').modal('close');
 					$("#processed-collection").html("");
 					recount_spaces();
+					$('#loading').modal('close');
 					M.toast({html: 'Provisional spaces commited successfully'})
 				}
 			});
@@ -560,6 +556,7 @@ if (activeTab) {
 
 		/* Handles processing all spaces */
 		$("#process-all").click(function() {
+			$('#loading').modal('open');
 			var ids = [];
 			$('#approved-collection li').each(function(i){
 				ids.push($(this).attr("id").split('-')[1])
@@ -582,6 +579,7 @@ if (activeTab) {
 						new_elem.appendTo("#processed-collection");
 					}
 					$("#approved-collection").html("");
+					$('#loading').modal('close');
 					M.toast({html: 'All provisional spaces processed'});
 					recount_spaces();
 				}
@@ -589,7 +587,9 @@ if (activeTab) {
 		});
 
 		/* Handles processing all spaces */
+		
 		$(".undo-all").click(function(){
+			$('#loading').modal('open');
 			var ids = [];
 			type = $(this).attr("id").split('-')[1];
 			$('#'+type+'-collection li').each(function(i){
@@ -602,6 +602,7 @@ if (activeTab) {
 				data: JSON.stringify({reset_flags:'1', id:ids}),
 				success: function (data){ 
 					$("#"+type+"-collection").html("");
+					$('#loading').modal('close');
 					M.toast({html: 'All provisional spaces undo'})
 					rerun_analysis();
 				}
