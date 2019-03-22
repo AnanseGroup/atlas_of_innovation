@@ -5,6 +5,7 @@ from application.models.space_multiselectfields import GovernanceOption, Ownersh
 from django_countries import countries
 import csv
 import datetime
+from urllib.parse import urlparse, ParseResult
 
 class Command(BaseCommand):
     help = 'Loads a CSV file into the database.'
@@ -25,6 +26,16 @@ class Command(BaseCommand):
             processed_spaces = []
             for space in complete_spaces:
                 processed_space = {}
+
+                # Parse the url in case it doesn't have http
+                processed_space['website'] = space.pop('primary_website', None)
+                if processed_space['website']:
+                    p = urlparse(processed_space['website'], 'http')
+                    netloc = p.netloc or p.path
+                    path = p.path if p.netloc else ''
+                    p = ParseResult('http', netloc, path, *p[3:])
+                    processed_space['website'] = p.geturl()
+                print(processed_space['website'])
 
                 # Fields that can be named other things
                 processed_space['address1'] = space.pop('street_address', None)

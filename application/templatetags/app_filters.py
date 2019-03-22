@@ -4,6 +4,7 @@ from application.models import ProvisionalSpace
 from itertools import chain
 from django.contrib.auth.models import Permission
 
+
 register = template.Library()
 
 @register.filter
