@@ -43,3 +43,15 @@ To join us, please email our team at anansegroup@gmail.com
 - run 'atlas_db_prepare'
 - run 'atlas_run'
 - That's all, just check your http://localhost:8000 and you are ready.
+
+## Steps for installing TLSH:
+We use TLSH as a way of detecting spaces that may be repeated in the DB, to build 
+follow this steps:
+- You may need to install cmake ```sudo apt-get install cmake```
+- git clone https://github.com/trendmicro/tlsh.git
+- cd tlsh
+- git checkout master
+- run ```./make.sh```
+If you get no errors, now is time to build the python extension
+- cd py_ext/
+- sudo python ./setup.py install

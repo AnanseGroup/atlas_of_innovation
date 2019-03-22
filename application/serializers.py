@@ -4,7 +4,9 @@ from urllib.parse import urlparse, ParseResult
 from django_countries.serializers import CountryFieldMixin
 
 class SpaceSerializer(CountryFieldMixin, serializers.ModelSerializer):
-
+    validated = serializers.ReadOnlyField()
+    recently_updated = serializers.ReadOnlyField()
+    
     def __init__(self, *args, fields=None, **kwargs):
 
         super(SpaceSerializer, self).__init__(*args, **kwargs)
@@ -12,6 +14,8 @@ class SpaceSerializer(CountryFieldMixin, serializers.ModelSerializer):
         if fields:
             allowed = set(fields)
             existing = set(self.fields.keys())
+            existing.add('validated')
+            existing.add('recently_updated')
             for field_name in existing - allowed:
                 self.fields.pop(field_name)
 
