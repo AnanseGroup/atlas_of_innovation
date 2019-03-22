@@ -430,12 +430,19 @@ def analyze_spaces(request):
             for a, b in itertools.product(spaces, pspaces):
                 try:
                     num = tlsh.diffxlen(a.fhash, b.fhash)
-                    if num < 66: 
+                    if num<5:
+                        b.override_analysis=False
+                        b.discarded=True
+                        b.save();
+                        pop_list.append(b.id)
+                    else:
+                      if num < 66: 
                         ''' If we find a match we add those spaces to our 
                             problem list'''
                         problem_spaces.append([model_to_dict(a,fields=fields),
                                                model_to_dict(b,fields=fields),
                                                num])
+
                         pop_list.append(b.id)
                 except:
                     '''There are many ways this can make an exception for once
@@ -569,9 +576,11 @@ def upload_file(request):
     return render(request, 'space_upload.html', {'form': form})
 
 def handle_csv(request,file):
+
         '''**process the spaces in the file uploaded,
         applying the nesesary changes to ensure the new spaces have the correct format and can be 
         saved as provisional spaces to analize it**'''
+
         data_filename = file
 
         reverse_country_list = {name:code for code, name in countries}
@@ -583,8 +592,12 @@ def handle_csv(request,file):
         with open(djangoSettings.BASE_DIR+"/temp.csv", encoding="utf-8") as csvfile:
             reader = csv.DictReader(csvfile)
             # replace empty strings with None
-            complete_spaces = [{key: value if not value == '' else None \
+            try:
+                complete_spaces = [{key: value if not value == '' else None \
                                 for key, value in row.items()} for row in reader]
+            except:
+                messages.error(request, 'The file has an error, to fix it you can open in libre office and save "Use Text CSV Format"', extra_tags='alert')
+                complete_spaces = []
             processed_spaces = []
             contacted_moderators=[]
             for space in complete_spaces:
@@ -736,7 +749,6 @@ def provisional_space(request):
     '''* **provides the  way to show and  modify the provisional spaces stored in the db**'''
     fields = ['latitude','longitude','name','city','country','website', 'postal_code','email', 'province', 'address1', 'id']
     if request.method == 'GET':
-        print(request.GET["id"])
         if request.GET["id"]:
             id = request.GET["id"]
             space = ProvisionalSpace.objects.filter(id=id).first()
@@ -761,9 +773,11 @@ def provisional_space(request):
 
         return JsonResponse({'success':1})
     if request.method == "PUT":
-        data = json.loads(request.body.decode('utf-8'))
-        spaces_list = []
-        print(data)
+        if(isinstance(request.body,(bytes, bytearray))):
+            str_response = request.body.decode('utf-8')
+            data = json.loads(str_response)
+        else:
+            data = json.loads(request.body)
         if data and data['id']:
             spaces = ProvisionalSpace.objects.filter(id__in=data['id']).all()
             for space in spaces:
@@ -778,6 +792,7 @@ def provisional_space(request):
                     space.override_analysis = False
                 space.save()
                 serializer = SpaceSerializer(space, fields=fields, many=False)
+                spaces_list=[]
                 spaces_list.append(serializer.data)
                 
         return JsonResponse(spaces_list, safe=False)
@@ -788,7 +803,7 @@ def provisional_space(request):
             data = None
         
         if data is None:
-           print("data is None")# spaces = ProvisionalSpace.objects.filter(discarded=True).delete()
+           spaces = ProvisionalSpace.objects.filter(discarded=True).delete()
         else:
 
            if isinstance(data,str):
