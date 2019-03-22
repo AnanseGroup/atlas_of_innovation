@@ -506,36 +506,39 @@
 				}
 			});
 		});
-
-		/* Deletes all the discarded provisional spaces */
-
-		$('#delete-discarded').click( function(){
+	/* Deletes all the discarded provisional spaces */
+		$('.modal-content').on('click', '.delete-discarded', function(){
 			$('#loading').modal('open');
+			var id = $(this).attr('id');
 			$.ajax({
 				type: 'DELETE',
 				dataType: "json",
+				data: JSON.stringify(id),
 				url: '/provisional_space/',
 				success: function (data) {
+					$('#loading').modal('close');	
 					$('.modal-h').modal('close');
 					$("#discard-collection").html("");
+					M.toast({html: 'Provisional spaces deleted successfully'})
 					recount_spaces();
-					$('#loading').modal('close');					
+					
 				}
 			});
 		});
 
 		/* Adds and deletes all the processed provisional spaces */
-
-		$('#commit-spaces').click(function(){
+		$('.modal-content').on('click','.commit-spaces',function(){
 			$('#loading').modal('open');
+			var id = $(this).attr('id');
 			$.ajax({
 				type: 'PATCH',
 				dataType: "json",
+				data: JSON.stringify(id),
 				url: '/provisional_space/',
 				success: function (data) {
+					$('#loading').modal('close');	
 					$('.modal-h').modal('close');
 					$("#processed-collection").html("");
-					$('#loading').modal('close');
 					M.toast({html: 'Provisional spaces commited successfully'})
 					recount_spaces();
 					
@@ -544,6 +547,7 @@
 		});
 
 
+		
 		/* Handles the merger buttons */
 		$('.mergerbtn').click(function(){
 			var id = $(this).attr('id').split("-");
@@ -580,7 +584,7 @@
 						Province: '+data[i].province+'<br/> \
 						Postal Code: '+data[i].postal_code+'<br/> \
 						Fhash: '+data[i].fhash+'<br/>'+
-						'</p>'+'<a class="secondary-content reset-space" href="#!" id="undosp-'+data[i].id+'"><i class="material-icons">undo</i></a>' )
+						'</p>'+'<a class="secondary-content reset-space" href="#!" id="undosp-'+data[i].id+'"><i class="material-icons">undo</i></a>'+'<a class="secondary-content commit-space" style="margin-top:40px" id="dspace-'+data[i].id+'" href="#!"><i class="material-icons green-text text-darken-2">check_circle</i></a>'  )
 						new_elem.appendTo("#processed-collection");
 					}
 					$("#approved-collection").html("");
@@ -638,7 +642,7 @@
 							Province: '+data[0].province+'<br/> \
 							Postal Code: '+data[0].postal_code+'<br/> \
 							Fhash: '+data[0].fhash+'<br/>'+
-							'</p>'+'<a class="secondary-content reset-space" href="#!" id="undosp-'+data[0].id+'"><i class="material-icons">undo</i></a>' )
+							'</p>'+'<a class="secondary-content reset-space" href="#!" id="undosp-'+data[0].id+'"><i class="material-icons">undo</i></a>'+ '<a class="secondary-content delete-space" style="margin-top:100px" id="dspace-'+data[0].id+'" href="#!"><i class="material-icons red-text text-darken-2">remove_circle</i></a>' )
 							new_elem.appendTo("#discard-collection");
 							recount_spaces();
 						}
@@ -671,7 +675,7 @@
 							Province: '+data[0].province+'<br/> \
 							Postal Code: '+data[0].postal_code+'<br/> \
 							Fhash: '+data[0].fhash+'<br/>'+
-							'</p>'+'<a class="secondary-content reset-space" href="#!" id="undosp-'+data[0].id+'"><i class="material-icons">undo</i></a>' )
+							'</p>'+'<a class="secondary-content reset-space" href="#!" id="undosp-'+data[0].id+'"><i class="material-icons">undo</i></a>'+'<a class="secondary-content commit-space" style="margin-top:40px" id="dspace-'+data[0].id+'" href="#!"><i class="material-icons green-text text-darken-2">check_circle</i></a>' )
 							new_elem.appendTo("#processed-collection");
 							recount_spaces();
 						}

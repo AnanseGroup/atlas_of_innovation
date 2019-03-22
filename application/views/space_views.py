@@ -773,6 +773,7 @@ def provisional_space(request):
 
         return JsonResponse({'success':1})
     if request.method == "PUT":
+        spaces_list=[]
         if(isinstance(request.body,(bytes, bytearray))):
             str_response = request.body.decode('utf-8')
             data = json.loads(str_response)
@@ -780,6 +781,7 @@ def provisional_space(request):
             data = json.loads(request.body)
         if data and data['id']:
             spaces = ProvisionalSpace.objects.filter(id__in=data['id']).all()
+            
             for space in spaces:
                 if space and data.get('override_analysis'):
                     space.override_analysis = True
@@ -792,9 +794,7 @@ def provisional_space(request):
                     space.override_analysis = False
                 space.save()
                 serializer = SpaceSerializer(space, fields=fields, many=False)
-                spaces_list=[]
-                spaces_list.append(serializer.data)
-                
+                spaces_list.append(serializer.data)               
         return JsonResponse(spaces_list, safe=False)
     if request.method == "DELETE":
         try:
