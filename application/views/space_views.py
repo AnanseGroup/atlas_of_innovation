@@ -131,7 +131,6 @@ def analyze_spaces(request):
     for country in country_list:
         spaces = Space.objects.filter(country=country).all()
         pspaces = ProvisionalSpace.objects.filter(country=country, override_analysis=False, discarded=False).all()
-        print(country)
         
         ''' (Pedro) The list that will hold the id of the spaces we need to 
             filter so they won't go to the approved list '''
@@ -248,13 +247,11 @@ def analyze_spaces(request):
 
    
     country_error_spaces=ProvisionalSpace.objects.all().exclude(id__in=analized_spaces)
-    print(len(country_error_spaces))
-    print(len(excluded_spaces))
     problems=[]
     problems.append({"desc": "Space has country errors", "crit":1})
     for pspace in country_error_spaces:
         excluded_spaces.append([model_to_dict(pspace,fields=fields), problems]) 
-    print(len(excluded_spaces))
+    
 
     data = request.GET.copy()
     if data and data.get("json_list"):
@@ -316,7 +313,6 @@ def handle_csv(request,file):
                     processed_space['country'] = reverse_country_list[space_country_name]
                 elif space_country_name in reverse_country_list2:
                     space_country_name=reverse_country_list[space_country_name2]
-                    print(processed_space)
                     processed_space['country'] = reverse_country_list[space_country_name]
                 elif space_country_name == "United States":
                     processed_space['country'] = \
@@ -434,7 +430,7 @@ def calculate_fhash(new_space):
 def provisional_space(request):
     fields = ['latitude','longitude','name','city','country','website', 'postal_code','email', 'province', 'address1', 'id']
     if request.method == 'GET':
-        print(request)
+        
         if request.GET["id"]:
             id = request.GET["id"]
             space = ProvisionalSpace.objects.filter(id=id).first()
