@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
 
+from django.contrib import admin
+
 urlpatterns = [
     # None of these pages require access to the database
     path('', views.map, name='home'),
@@ -18,9 +20,17 @@ urlpatterns = [
     path('space/<int:id>/', views.space_profile, name='space_profile'),
     path('space/<int:pk>/edit/', views.edit_space, name='edit_space'),
     path('space/add/', views.add_space, name='create_space'),
+    
+    # CSV Interactive Importer
+    path('csv/upload/', views.upload_file, name='upload_file'),
+    path('analyze/provisional_spaces/', views.analyze_spaces, name='analyze_spaces'),
+    path('provisional_space/', views.provisional_space, name='provisional_spaces'),
+    path('space_csv/', views.space_csv, name='space_csv'),
 
     path('space/filter/', views.list_spaces, name='list_spaces'),
 
     # REST API
     path('api/space/filter/', views.filter_spaces, name='filter_spaces'),
+
+    path(r'admin/', admin.site.urls),
 ]

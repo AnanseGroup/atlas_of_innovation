@@ -27,29 +27,44 @@
     <a href="/" id="wnavigation-bar-document-revision-button" class="navigation-bar-button">Revision</a>
 	</div>
 </div-->
+{% if not space.validated %}
 <a id="cardtitle" class="waves-effect waves-light btn" href="{% url 'edit_space' space.id %}"><i class="material-icons right">edit</i>Edit</a>
+{% endif %}
 
 <div class="container">
-  <div class="row">
-    <div class="col m12">
-      <div class="wBlockOne">
-       <!-- <img src="/static/images/Placeholder_logo.png" alt="#" style="height: 100px; display:block;margin-left: auto;margin-right: auto;"> -->
-       <p ></p>
-       <h2 id="wTitle">{{space.name}}</h2>
-       {% if space.website %}
-       <a id="wWebsite" href="{{space.website}}" target="_blank">{{space.website}}</a>
-       {% else %}
-       <a id="wWebsite" href="{%url 'space_profile' space.id %}" target="_blank">
-       Link to Atlas Profile</a>
-       {% endif %}
-       <blockquote style="border-left: 5px solid #00d4d2;">
-       <p >
-       {{space.short_description| default_if_none:""}}</p>
-      </blockquote>
-       <p >{{space.description | default_if_none:""}}</p>
-       <!--<hr />-->
-     </div>
-    </div>
+	<div class="row">
+		<div class="col m12">
+				<div class="wBlockOne" style="display: flex;flex-direction: row;justify-content:center">
+				<!-- <img src="/static/images/Placeholder_logo.png" alt="#" style="height: 100px; display:block;margin-left: auto;margin-right: auto;"> -->
+				{% if space.validated or space.recently_updated %}
+				<div style="flex-shrink:0;width:18%">
+					{% if space.validated %}
+					<h2 class="ribbon green"> Validated </h2>
+					{% endif %}
+					{% if space.recently_updated %}
+					<h2 class="ribbon red"> Recently Updated </h2>
+					{% endif %}
+				</div>
+				{% endif %}
+				<div style="width:100%">
+					<h2 id="wTitle">{{space.name}}</h2>
+					{% if space.website %}
+					<a id="wWebsite" href="{{space.website}}" target="_blank">{{space.website}}</a>
+					{% else %}
+					<a id="wWebsite" href="{%url 'space_profile' space.id %}" target="_blank">
+					Link to Atlas Profile</a>
+					{% endif %}
+					<blockquote style="border-left: 5px solid #00d4d2;margin:auto">
+						<p>{{space.short_description| default_if_none:""}}</p>
+					</blockquote>
+					<p style="text-align:center">{{space.description | default_if_none:""}}</p>
+				</div>
+				{% if space.validated or space.recently_updated %}
+				<div style="flex-grow:1;width:28.1%"></div>
+				{% endif %}
+				<!--<hr />-->
+			 </div>
+		</div>
   </div>
 
     <div class="row">
