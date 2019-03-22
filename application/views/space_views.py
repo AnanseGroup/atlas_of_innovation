@@ -131,7 +131,7 @@ def analyze_spaces(request):
     for country in country_list:
         spaces = Space.objects.filter(country=country).all()
         pspaces = ProvisionalSpace.objects.filter(country=country, override_analysis=False, discarded=False).all()
-        print(len(pspaces))
+        print(country)
         
         ''' (Pedro) The list that will hold the id of the spaces we need to 
             filter so they won't go to the approved list '''
@@ -192,17 +192,18 @@ def analyze_spaces(request):
                         b.override_analysis=False
                         b.discarded=True
                         b.save();
+                        problem_spaces=[x for x in problem_spaces if x[1]['id']!=b.id]
                         pop_list.append(b.id)
                     else:
                       if num < 66: 
                         ''' If we find a match we add those spaces to our 
                             problem list'''
-                        print(b.name)
-                        problem_spaces.append([model_to_dict(a,fields=fields),
+                        if not b.override_analysis and not b.discarded:#can be discarted in perfect match
+                            problem_spaces.append([model_to_dict(a,fields=fields),
                                                model_to_dict(b,fields=fields),
                                                num])
 
-                        pop_list.append(b.id)
+                            pop_list.append(b.id)
                 except:
                     '''There are many ways this can make an exception for once
                     the spaces may not have a fhash because is missing data so
