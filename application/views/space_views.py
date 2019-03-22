@@ -197,6 +197,7 @@ def analyze_spaces(request):
                       if num < 66: 
                         ''' If we find a match we add those spaces to our 
                             problem list'''
+                        print(b.name)
                         problem_spaces.append([model_to_dict(a,fields=fields),
                                                model_to_dict(b,fields=fields),
                                                num])
@@ -226,7 +227,34 @@ def analyze_spaces(request):
         # Lets add the processed spaces
         pspaces = ProvisionalSpace.objects.filter(country=country, override_analysis=True, discarded=False).all()
         processed_spaces.extend([model_to_dict(pspace,fields=fields) for pspace in pspaces])
+    analized_spaces=[]
+    for pspace in discarded_spaces:
+        #print(pspace['id'],'discarted')
+        analized_spaces.append(pspace['id'])
+    for pspace in processed_spaces:
+        #print(pspace['id'],'processed_spaces')
+        analized_spaces.append(pspace['id'])
+    for pspace in approved_spaces:
+        #print(pspace['id'],'aproved')
+        analized_spaces.append(pspace['id'])
+    for pspace in problem_spaces:
+        #print(pspace[1]['id'],'problem')
+        analized_spaces.append(pspace[1]['id'])
+    for pspace in excluded_spaces:
+        #print(pspace[0]['id'],'excluded')
+        analized_spaces.append(pspace[0]['id'])
             
+
+   
+    country_error_spaces=ProvisionalSpace.objects.all().exclude(id__in=analized_spaces)
+    print(len(country_error_spaces))
+    print(len(excluded_spaces))
+    problems=[]
+    problems.append({"desc": "Space has country errors", "crit":1})
+    for pspace in country_error_spaces:
+        excluded_spaces.append([model_to_dict(pspace,fields=fields), problems]) 
+    print(len(excluded_spaces))
+
     data = request.GET.copy()
     if data and data.get("json_list"):
         return JsonResponse({'approved': approved_spaces,
@@ -257,7 +285,7 @@ def handle_csv(request,file):
         data_filename = file
 
         reverse_country_list = {name:code for code, name in countries}
-        
+        reverse_country_list2 = {code:name for code, name in countries}
         with open(djangoSettings.BASE_DIR+'/temp.csv', 'wb+') as destination:
             for chunk in file.chunks():
                 destination.write(chunk)
@@ -284,6 +312,10 @@ def handle_csv(request,file):
                 processed_space['address1'] = space.pop('street_address', None)
                 space_country_name = space.pop('country', None)
                 if space_country_name in reverse_country_list:
+                    processed_space['country'] = reverse_country_list[space_country_name]
+                elif space_country_name in reverse_country_list2:
+                    space_country_name=reverse_country_list[space_country_name2]
+                    print(processed_space)
                     processed_space['country'] = reverse_country_list[space_country_name]
                 elif space_country_name == "United States":
                     processed_space['country'] = \

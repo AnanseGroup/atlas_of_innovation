@@ -209,8 +209,20 @@
 
 	<!-- Provisional Space Modal -->
 	<div id="modal1" class="modal modal-d">
+		{% load countries %}
+{% get_countries as countries %}
 		<div class="modal-content">
 			<input type="hidden" class="mspace1 nrmodal" id="espace-id" value=""/>
+			<input  id="espace-country1" class="mspace1 nrmodal" value="" readonly />
+			<select style="display:inline-block;"  id="espace-country" class="mspace1 nrmodal" value="">
+			
+				<option value="">---------</option>
+
+{% for country in countries %}
+
+            <option value="{{ country.0 }}">{{ country.1 }}</option>
+            {% endfor %}
+            </select>
 			<input type="text" id="espace-name" class="mspace1 nrmodal" placeholder="Name" value=""/>
 			<input type="text" id="espace-address1" class="mspace1 nrmodal" placeholder="Address" value="" />
 			<input type="text" id="espace-city" class="mspace1 nrmodal" placeholder="City" value="" />
@@ -432,6 +444,9 @@
 						success: function (data){
 								for(var k in data){
 									$("#espace-"+k).val(data[k]);
+									if(k== "country"){
+										$("#espace-"+k+'1').val(data[k]);
+									}
 								}
 						}
 					})
