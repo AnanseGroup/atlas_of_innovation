@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.core.exceptions import ValidationError
-from application.models import Space
+from application.models import Space, DataCreditLog
 from application.models.space_multiselectfields import GovernanceOption, OwnershipOption, AffiliationOption
 from django_countries import countries
 import csv
@@ -58,7 +58,20 @@ class Command(BaseCommand):
                     processed_space['operational_status'] = "Planned"
                 elif activity_level == 'inactive':
                     processed_space['operational_status'] = "Closed"
-               
+                    
+                ''' (PEDRO) Related to #93 I imagine the CSV to import may
+                    have a trusted_source field or at least a validation_status
+                    field with the corresponding option
+                '''
+                trusted_source = space.pop('trusted_source', False)
+                if trusted_source:
+                    processed_space['validation_status'] = 'Verified'
+                    
+                validation_status = space.pop('validation_status', None)
+                if validation_status:
+                    processed_space['validation_status'] = validation_status
+                
+                
                 # Gets the affiliation ManyToMany option 
                 affiliation = space.pop('network_affiliation', None)
                 affiliation_obj = None
@@ -106,6 +119,14 @@ class Command(BaseCommand):
                     if governance_obj:
                         new_space.governance_type.add(governance_obj)
                     new_space.save()
+                    data_credit = {
+                               'ip_address': '127.0.0.1',
+                               'space_id': new_space.id,
+                               'credit': 'CSV / '+new_space.data_credit
+                              }
+                    new_data_credit = DataCreditLog(**data_credit)
+                    new_data_credit.save()
+                    
                 except Exception as e:
                     print (space.__dict__)
                     raise e

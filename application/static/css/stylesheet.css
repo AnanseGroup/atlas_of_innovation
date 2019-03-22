@@ -1061,3 +1061,84 @@ a img {
 	color: #deef45;
 	border-color: #deef45;
 }
+
+
+/*Ribbon*/
+.ribbon {
+	position: relative;
+	width: 100%;
+	font-size: 1.2em;
+	font-weight: bold;
+	padding: 6px 20px 6px 70px;
+	margin: 30px 10px 10px -70px;
+	color: #FFF;
+	background-color: #999;
+	text-shadow: 0px 1px 2px #bbb;
+	-webkit-box-shadow: 0px 2px 4px #888;
+	-moz-box-shadow: 0px 2px 4px #888;
+	box-shadow: 0px 2px 4px #888;
+	text-align: center;
+}
+
+.ribbon:after {
+	content: ' ';
+	position: absolute;
+	width: 70px;
+	height: 0;
+	left: 0px;
+	top: 100%;
+	border-width: 5px 10px;
+	border-style: solid;
+	border-color: #666 #666 transparent transparent;
+}
+
+.ribbon.red {
+	background-color: #FF5252 !important;
+}
+
+.ribbon.green{
+	background-color:#26a69a !important;
+}
+
+/* BADGES */
+span.badge.new {
+    font-weight: 300;
+    font-size: 0.8rem;
+    color: #fff;
+    background-color: #26a69a;
+    border-radius: 2px;
+}
+span.badge {
+    min-width: 3rem;
+    padding: 0 6px;
+    margin-left: 14px;
+    text-align: center;
+    font-size: 1rem;
+    line-height: 22px;
+    height: 22px;
+    color: #757575;
+    float: right;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+span.badge.red {
+	background-color: #ef5350
+} 
+
+/* CSS IMPORTER */
+.leftm-arr, .rightm-arr {
+	padding: 0 !important; 
+}
+.mrow{
+	margin-bottom: 18px !important;
+}
+
+.leftm-arr {
+	margin-left: 38%;
+}
+
+.rightm-arr {
+	margin-left: -10px;
+} 
+/*center preload*/
