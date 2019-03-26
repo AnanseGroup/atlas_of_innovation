@@ -1303,6 +1303,7 @@ span.badge.red {
 .rightm-arr {
 	margin-left: -10px;
 } 
+
 .logout{
 	position: absolute;
     right:  70px;
@@ -1335,3 +1336,4 @@ span.badge.red {
 .toggle-content{
 	display: none;
 }
+

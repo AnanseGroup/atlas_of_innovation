@@ -35,6 +35,10 @@
     <li><a href="mailto:anansegroup@gmail.com" class="no-underline navigation-right dark-blue">CONTACT US</a></li>
     
 </ul>
+
+{%endif%}
+
+
 {% if messages %}
     {% for message in messages %}
     <li{% if message.tags %} class="{{ message.tags }} "{% endif %}><script type="text/javascript">Materialize.toast('{{ message }}', 8000,'msg-info');</script> 

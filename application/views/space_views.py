@@ -430,12 +430,19 @@ def analyze_spaces(request):
             for a, b in itertools.product(spaces, pspaces):
                 try:
                     num = tlsh.diffxlen(a.fhash, b.fhash)
-                    if num < 66: 
+                    if num<5:
+                        b.override_analysis=False
+                        b.discarded=True
+                        b.save();
+                        pop_list.append(b.id)
+                    else:
+                      if num < 66: 
                         ''' If we find a match we add those spaces to our 
                             problem list'''
                         problem_spaces.append([model_to_dict(a,fields=fields),
                                                model_to_dict(b,fields=fields),
                                                num])
+
                         pop_list.append(b.id)
                 except:
                     '''There are many ways this can make an exception for once
@@ -475,7 +482,6 @@ def analyze_spaces(request):
             
     data = request.GET.copy()
     if data and data.get("json_list"):
-        print("hola chunco")
         return JsonResponse({'approved': approved_spaces,
                              'problem': problem_spaces,
                              'excluded': excluded_spaces,
@@ -569,9 +575,12 @@ def upload_file(request):
     return render(request, 'space_upload.html', {'form': form})
 
 def handle_csv(request,file):
+
         '''**process the spaces in the file uploaded,
         applying the nesesary changes to ensure the new spaces have the correct format and can be 
         saved as provisional spaces to analize it**'''
+
+
         data_filename = file
 
         reverse_country_list = {name:code for code, name in countries}
@@ -765,16 +774,20 @@ def provisional_space(request):
 
         return JsonResponse({'success':1})
     if request.method == "PUT":
+
+        spaces_list=[]
+
         if(isinstance(request.body,(bytes, bytearray))):
             str_response = request.body.decode('utf-8')
             data = json.loads(str_response)
         else:
             data = json.loads(request.body)
-        
-        spaces_list = []
+
+
 
         if data and data['id']:
             spaces = ProvisionalSpace.objects.filter(id__in=data['id']).all()
+            
             for space in spaces:
                 if space and data.get('override_analysis'):
                     space.override_analysis = True
@@ -787,8 +800,7 @@ def provisional_space(request):
                     space.override_analysis = False
                 space.save()
                 serializer = SpaceSerializer(space, fields=fields, many=False)
-                spaces_list.append(serializer.data)
-                
+                spaces_list.append(serializer.data)               
         return JsonResponse(spaces_list, safe=False)
     if request.method == "DELETE":
         try:
@@ -797,7 +809,7 @@ def provisional_space(request):
             data = None
         
         if data is None:
-           print("data is None")# spaces = ProvisionalSpace.objects.filter(discarded=True).delete()
+           spaces = ProvisionalSpace.objects.filter(discarded=True).delete()
         else:
 
            if isinstance(data,str):
