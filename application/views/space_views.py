@@ -131,7 +131,6 @@ def analyze_spaces(request):
     for country in country_list:
         spaces = Space.objects.filter(country=country).all()
         pspaces = ProvisionalSpace.objects.filter(country=country, override_analysis=False, discarded=False).all()
-        print(len(pspaces))
         
         ''' (Pedro) The list that will hold the id of the spaces we need to 
             filter so they won't go to the approved list '''
@@ -192,16 +191,18 @@ def analyze_spaces(request):
                         b.override_analysis=False
                         b.discarded=True
                         b.save();
+                        problem_spaces=[x for x in problem_spaces if x[1]['id']!=b.id]
                         pop_list.append(b.id)
                     else:
                       if num < 66: 
                         ''' If we find a match we add those spaces to our 
                             problem list'''
-                        problem_spaces.append([model_to_dict(a,fields=fields),
+                        if not b.override_analysis and not b.discarded:#can be discarted in perfect match
+                            problem_spaces.append([model_to_dict(a,fields=fields),
                                                model_to_dict(b,fields=fields),
                                                num])
 
-                        pop_list.append(b.id)
+                            pop_list.append(b.id)
                 except:
                     '''There are many ways this can make an exception for once
                     the spaces may not have a fhash because is missing data so
@@ -226,7 +227,32 @@ def analyze_spaces(request):
         # Lets add the processed spaces
         pspaces = ProvisionalSpace.objects.filter(country=country, override_analysis=True, discarded=False).all()
         processed_spaces.extend([model_to_dict(pspace,fields=fields) for pspace in pspaces])
+    analized_spaces=[]
+    for pspace in discarded_spaces:
+        #print(pspace['id'],'discarted')
+        analized_spaces.append(pspace['id'])
+    for pspace in processed_spaces:
+        #print(pspace['id'],'processed_spaces')
+        analized_spaces.append(pspace['id'])
+    for pspace in approved_spaces:
+        #print(pspace['id'],'aproved')
+        analized_spaces.append(pspace['id'])
+    for pspace in problem_spaces:
+        #print(pspace[1]['id'],'problem')
+        analized_spaces.append(pspace[1]['id'])
+    for pspace in excluded_spaces:
+        #print(pspace[0]['id'],'excluded')
+        analized_spaces.append(pspace[0]['id'])
             
+
+   
+    country_error_spaces=ProvisionalSpace.objects.all().exclude(id__in=analized_spaces)
+    problems=[]
+    problems.append({"desc": "Space has country errors", "crit":1})
+    for pspace in country_error_spaces:
+        excluded_spaces.append([model_to_dict(pspace,fields=fields), problems]) 
+    
+
     data = request.GET.copy()
     if data and data.get("json_list"):
         return JsonResponse({'approved': approved_spaces,
@@ -257,7 +283,7 @@ def handle_csv(request,file):
         data_filename = file
 
         reverse_country_list = {name:code for code, name in countries}
-        
+        reverse_country_list2 = {code:name for code, name in countries}
         with open(djangoSettings.BASE_DIR+'/temp.csv', 'wb+') as destination:
             for chunk in file.chunks():
                 destination.write(chunk)
@@ -284,6 +310,9 @@ def handle_csv(request,file):
                 processed_space['address1'] = space.pop('street_address', None)
                 space_country_name = space.pop('country', None)
                 if space_country_name in reverse_country_list:
+                    processed_space['country'] = reverse_country_list[space_country_name]
+                elif space_country_name in reverse_country_list2:
+                    space_country_name=reverse_country_list[space_country_name2]
                     processed_space['country'] = reverse_country_list[space_country_name]
                 elif space_country_name == "United States":
                     processed_space['country'] = \
@@ -401,7 +430,7 @@ def calculate_fhash(new_space):
 def provisional_space(request):
     fields = ['latitude','longitude','name','city','country','website', 'postal_code','email', 'province', 'address1', 'id']
     if request.method == 'GET':
-        print(request)
+        
         if request.GET["id"]:
             id = request.GET["id"]
             space = ProvisionalSpace.objects.filter(id=id).first()
