@@ -482,7 +482,6 @@ def analyze_spaces(request):
             
     data = request.GET.copy()
     if data and data.get("json_list"):
-        print("hola chunco")
         return JsonResponse({'approved': approved_spaces,
                              'problem': problem_spaces,
                              'excluded': excluded_spaces,
