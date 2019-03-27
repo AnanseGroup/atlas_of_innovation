@@ -54,7 +54,7 @@ from application.models.spaces import Suggestion
 from application.models.spaces import FieldSuggestion
 from application.models.spaces import Owners
 from django import template
-from application.decorators import user_is_autorized_in_Space,user_is_autorized_to_upload
+from application.decorators import user_is_autorized_in_Space,user_is_autorized_to_upload,user_is_autorized_to_analize
 
 import ast
 def space_profile(request, id):
@@ -155,7 +155,7 @@ class SpaceCreate(LoginRequiredMixin, CreateView):
                         new_data_credit = DataCreditLog(**data_credit)
                         new_data_credit.save()
                     else:
-                        messages.success(self.request, 'The space was problems, you need to fix it in the analizer', extra_tags='alert')
+                        messages.success(self.request, 'The space was problems, an autorized moderator need to fix it in the analizer', extra_tags='alert')
                         data_credit = {
                            'ip_address': self.request.META['REMOTE_ADDR'],
                            'space_id': new_space.id,
@@ -288,6 +288,7 @@ edit_space = SpaceEdit.as_view()
 class ListSpaces(TemplateView):
     '''* **list the spaces in the seleted country**'''
     template_name = "list.html"
+
 list_spaces = ListSpaces.as_view()
 
 
@@ -316,6 +317,7 @@ class UploadFileForm(forms.Form):
     file = forms.FileField()
 
 @staff_member_required
+@user_is_autorized_to_analize
 @ensure_csrf_cookie
 def analyze_spaces(request):
     '''**first checks if exist the basic fields in the space if all exist then analize the spaces looking for coincidences,
@@ -500,9 +502,15 @@ def analyze_spaces(request):
         #print(pspace[0]['id'],'excluded')
         analized_spaces.append(pspace[0]['id'])
             
+    print(analized_spaces)
+    if request.user.is_superuser:
+        country_error_spaces=ProvisionalSpace.objects.all().exclude(id__in=analized_spaces)
 
-   
-    country_error_spaces=ProvisionalSpace.objects.all().exclude(id__in=analized_spaces)
+    else:
+        if permited_all_spaces_in_country:
+           country_error_spaces=ProvisionalSpace.objects.filter(country=request.user.moderator.country).exclude(id__in=analized_spaces)
+        else:
+            country_error_spaces=ProvisionalSpace.objects.filter(country=request.user.moderator.country).filter(province=request.user.moderator.province).exclude(id__in=analized_spaces)
     problems=[]
     problems.append({"desc": "Space has country errors", "crit":1})
     for pspace in country_error_spaces:
@@ -575,7 +583,7 @@ def problemsPspace(request,pspace):
                     if num < 66: 
                         ''' If we find a match we add those spaces to our 
                             problem list'''
-                        problems.append({"dec":"space has one coincidence","crit":1})
+                        problems.append({"desc":"space has one coincidence","crit":1})
                 except:
                     '''There are many ways this can make an exception for once
                     the spaces may not have a fhash because is missing data so
@@ -583,6 +591,8 @@ def problemsPspace(request,pspace):
                     '''
                     pass
             if problems:
+                for problem in problems:
+                    messages.success(request, 'The space have a problem:'+ problem['desc'], extra_tags='alert')
                 return 1
             return 0
             '''We filter the spaces yet again so the ones with a match problem 
@@ -777,6 +787,7 @@ def calculate_fhash(new_space):
     return tlsh.forcehash(space_string)
 
 @staff_member_required
+@user_is_autorized_to_analize
 def provisional_space(request):
     '''* **provides the  way to show and  modify the provisional spaces stored in the db**'''
     fields = ['latitude','longitude','name','city','country','website', 'postal_code','email', 'province', 'address1', 'id']

@@ -1,6 +1,7 @@
 import json
 from django.shortcuts import render
 from django_countries import countries
+from application.models import Space
 from django.views.decorators.clickjacking import xframe_options_exempt
 
 def map(request):
@@ -72,7 +73,8 @@ def devDocs(request):
 
 def wiki(request):
     '''**list of countries**'''
-    context = {'countries':countries}
+    spaces= Space.objects.all().count()
+    context = {'countries':countries,'spaces':spaces}
     return render(
         request,
         'wiki.html',
