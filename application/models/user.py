@@ -30,7 +30,11 @@ class UserForm(UserCreationForm):
         for fieldname in ['username', 'password1', 'password2']:
             self.fields[fieldname].help_text = None
 
-
+class MailResetPasswordForm(forms.Form):
+        email = forms.EmailField(required=True)
+class ResetPasswordForm(forms.Form):
+        password1=forms.CharField(min_length=8)
+        password2=forms.CharField(min_length=8)
 class AccountActivationTokenGenerator(PasswordResetTokenGenerator):
     def _make_hash_value(self, user, timestamp):
         return (

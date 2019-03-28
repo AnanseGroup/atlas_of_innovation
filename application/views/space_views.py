@@ -36,7 +36,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from post_office import mail
 from application.views import mails
-from application.models.user import Moderator,UserForm
+from application.models.user import Moderator,UserForm,MailResetPasswordForm,ResetPasswordForm
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect
 from django.utils.encoding import force_bytes
@@ -964,7 +964,73 @@ def activate(request, uidb64, token):
         login(request, user)
         return redirect('home')
     else:
+        messages.info(request, 'The page not exist!')
         return render(request, 'account_activation_invalid.html')
+
+def password_reset(request):
+    '''**allow to create an acount as basic user , the new account must be verified by email 
+    when it perform any change  o create a new space a email is send to correspondent moderator to validate the changes**'''
+    if request.method == 'POST':
+        form = MailResetPasswordForm(request.POST)
+        print("aqui")
+        if form.is_valid():
+            print("is valid")
+            try:
+                user=User.objects.get(email=form.cleaned_data.get('email'))
+            except:
+                user=None
+            print(user)
+            if(user is not None):
+                mail.send(
+                        [form.cleaned_data.get('email')], # List of email addresses also accepted
+                        'from@example.com',
+                        subject='Reset tour Atlas Password',
+                        message=render_to_string('reset_password_email.html', {
+                            'user': user,
+                            'domain': djangoSettings.URL,
+                            'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode(),
+                            'token': account_activation_token.make_token(user),
+                        }),
+                        
+                        )
+                messages.info(request, 'The Reset Password mail was sent!')
+            else:
+                messages.info(request, 'The Email not exist in db!')
+                return redirect('/reset_password')
+            return redirect('/contribute')
+    else:
+        form = MailResetPasswordForm()
+    return render(request, 'password_reset.html', {'form': form})
+
+def password_reset_confirm(request, uidb64, token):
+    '''* **Activate the account when the user acces to link provide in the mail**'''
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if request.method == 'GET':
+        form = ResetPasswordForm()
+        if user is not None and account_activation_token.check_token(user, token):
+            return render(request, 'password_reset_confirm.html', {'form': form})
+    if request.method == 'POST':
+        form = ResetPasswordForm(request.POST)
+        if( form.is_valid):
+            print(form['password1'].value())
+            if(form['password1'].value()==form['password2'].value()):
+                user.password=form['password1'].value()
+                user.save()
+                login(request, user)
+                messages.info(request, 'passsword reset successfully!')
+                return redirect('/')
+            else:
+                messages.info(request, 'passwords not match!')
+                return HttpResponseRedirect(request.path_info)
+    
+    messages.info(request, 'The page not exist!')
+    return redirect('/')
+
+
 def login_user(request, template_name='registration/login.html', extra_context=None):
      response = auth_views.login(request, template_name)
      if request.POST.has_key('remember_me'):

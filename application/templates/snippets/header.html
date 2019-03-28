@@ -41,15 +41,15 @@
 
 {% if messages %}
     {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }} "{% endif %}><script type="text/javascript">Materialize.toast('{{ message }}', 8000,'msg-info');</script> 
-    </li>
+    <script type="text/javascript">Materialize.toast('{{ message }}', 8000,'msg-info');</script> 
+    
     {% endfor %}
 {% endif %}
 {%else%}
     {% if messages %}
        {% for message in messages %}
-           <li{% if message.tags %} class="{{ message.tags }} "{% endif %}><script type="text/javascript">M.toast({html:'{{ message }}', displayLength:8000,classes:'msg-info'});</script> 
-           </li>
+           <script type="text/javascript">M.toast({html:'{{ message }}', displayLength:8000,classes:'msg-info'});</script> 
+           
        {% endfor %}
      {% endif %}
 {%endif%}

@@ -9,9 +9,7 @@ def user_is_autorized_in_Space(function):
             return function(request, *args, **kwargs)
         space = Space.objects.get(pk=kwargs['space_id'])
         owners = Owners.objects.filter(space=kwargs['space_id'],user=request.user.id)
-        print('hola')
-        print(space.province.lower())
-        print(request.user.moderator.province.lower())
+       
         if owners.count()>0:
             return function(request, *args, **kwargs)
         if(request.user.moderator.is_moderator):
@@ -33,6 +31,21 @@ def user_is_autorized_to_upload(function):
             raise PermissionDenied
         if list(set(chain(request.user.user_permissions.filter(codename='upload_provisonal_spaces').values_list('codename', flat=True), Permission.objects.filter(group__user=request.user, codename='upload_provisonal_spaces').values_list('codename', flat=True)))):
             return function(request, *args, **kwargs)
+        raise PermissionDenied
+    wrap.__doc__ = function.__doc__
+    wrap.__name__ = function.__name__
+    return wrap
+def user_is_autorized_to_analize(function):
+    def wrap(request, *args, **kwargs):
+        if request.user.is_superuser:
+            return function(request, *args, **kwargs)
+        if not (request.user.moderator.is_moderator or request.user.moderator.is_country_moderator):
+
+            raise PermissionDenied
+        if list(set(chain(request.user.user_permissions.filter(codename='analyse_provisional_spaces').values_list('codename', flat=True), Permission.objects.filter(group__user=request.user, codename='analyse_provisional_spaces').values_list('codename', flat=True)))):
+            
+            return function(request, *args, **kwargs)
+        print('no permission')
         raise PermissionDenied
     wrap.__doc__ = function.__doc__
     wrap.__name__ = function.__name__
