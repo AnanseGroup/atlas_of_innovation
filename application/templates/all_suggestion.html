@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+{% load static %}
+{% include "snippets/head.html" %}
+{% include "snippets/header.html" %}
+
+
+<div class="container">
+    <div class="row">
+      <div class="col-offset-2 m6">
+        <div class="card hoverable">
+          <div class="card-content">
+            <span class="card-title center-align" id="cardtitle">Spaces with suggestions</span>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="collection">
+  {% load app_filters %}
+	{%for space in data%}
+  {%if  user.is_superuser or user|isAuthorized:space %}
+      <a href="{% url 'space_suggestion' space.id %}" class="collection-item">{{space.name}}</a>
+  {%endif%}
+    {%endfor%}
+    </div>
+
+{% include "snippets/footer.html" %}

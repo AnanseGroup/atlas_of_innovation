@@ -6,9 +6,14 @@ from captcha.fields import ReCaptchaField
 from django_countries.fields import CountryField
 from django import forms
 from datetime import datetime, timedelta
-
+from django.db.models.signals import post_save
+#from application.views.mails import mails
+from post_office.models import EmailTemplate
+from post_office import mail
 from .space_multiselectfields import GovernanceOption, OwnershipOption, AffiliationOption
-
+from application.models.user import Moderator
+from django.conf import settings
+from django.contrib.auth.models import User
 class Space(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=140)
@@ -99,7 +104,11 @@ class Space(models.Model):
             return False
         else:
             return False
-
+    
+def keep_track_save(sender, instance, created, **kwargs):
+        if created:
+          print("save")
+post_save.connect(keep_track_save, sender=Space)
 class ProvisionalSpace(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=140)
@@ -233,3 +242,23 @@ class SpaceForm(ModelForm):
     class Meta:
         model = Space
         fields = '__all__'
+class Suggestion(models.Model):
+    '''Model for sugested changes entry, it can have more than one Field suggestion'''
+    id= models.AutoField(primary_key=True)
+    space = models.ForeignKey(
+        Space, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE)
+    active= models.BooleanField(default=True)
+    date=models.DateTimeField(auto_now_add=True)
+class FieldSuggestion(models.Model):
+    '''Model that store the field suggestion'''
+    id = models.AutoField(primary_key=True)
+    suggestion = models.ForeignKey(
+        Suggestion, on_delete=models.CASCADE)
+    field_name = models.CharField(max_length=500, null=True, blank=True)
+    field_suggestion = models.CharField(max_length=500, null=True, blank=True)
+class Owners(models.Model):
+    user = models.ForeignKey(User, on_delete = models.CASCADE)
+    space= models.ForeignKey(Space, on_delete= models.CASCADE)
+User._meta.get_field('email').__dict__['_unique'] = True

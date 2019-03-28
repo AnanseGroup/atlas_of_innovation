@@ -1,0 +1,27 @@
+{% include "snippets/head.html" %}
+{% include "snippets/header.html" %}
+
+
+
+{% block content %}
+  <div class="row" style="font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', sans-serif;">
+  <div class="col s12 m6 offset-m3">
+    <div class="card hoverable">
+      <div class="card-content">
+        <span class="card-title" id="wTitle">Login</span>
+		  <form method="post">
+		    {% csrf_token %}
+		    {{ form.as_p }}
+		     <!--  <p>
+      <input type="checkbox" id="remember_me" name="remember_me" />
+      <label for="remember_me">remember me</label>
+    </p> -->
+    <p>
+		    <button type="submit">Login</button>
+		  </form>
+      forget your password? click <a href="{% url 'password_reset' %}"> here</a>
+		</div>
+	</div>
+  </div>
+</div>
+{% endblock %}
