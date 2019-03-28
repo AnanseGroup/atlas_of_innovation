@@ -965,7 +965,7 @@ def activate(request, uidb64, token):
         return redirect('home')
     else:
         messages.info(request, 'The page not exist!')
-        return render(request, 'account_activation_invalid.html')
+        return redirect('/')
 
 def password_reset(request):
     '''**allow to create an acount as basic user , the new account must be verified by email 

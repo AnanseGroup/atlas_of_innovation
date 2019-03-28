@@ -2,12 +2,16 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-  config.vm.box = 'ubuntu/xenial64'
-  config.vm.define "atlas"
+  config.vm.box = 'ubuntu/bionic64'
+  config.vm.define "atlas-dev-env"
 
-  # Port forwarding
-  config.vm.network :forwarded_port, guest: 8000, host: 8000 # Django
-  config.vm.network :forwarded_port, guest: 80, host: 9090
+  # Forward ports
+  [
+    8000, # Django
+  ].each do |p|
+    config.vm.network :forwarded_port, guest: p, host: p, host_ip: '127.0.0.1'
+  end
+
 
   # Provider configuration
   config.vm.provider 'virtualbox' do |vb|
@@ -19,7 +23,7 @@ Vagrant.configure("2") do |config|
 
   # Machine initial provision
   config.vm.provision "shell", privileged: false, run: "once",
-  path: "bin/box_setup.sh",
+  path: "provision/virtual_dev_env.sh",
   env: {
     "LC_ALL"   => "en_US.UTF-8",
     "LANG"     => "en_US.UTF-8",
