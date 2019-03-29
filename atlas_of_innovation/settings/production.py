@@ -35,3 +35,4 @@ POST_OFFICE = {
     'DEFAULT_PRIORITY': 'now'
 }
 
+URL="52.37.166.83"
