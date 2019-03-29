@@ -1018,7 +1018,7 @@ def password_reset_confirm(request, uidb64, token):
         if( form.is_valid):
             print(form['password1'].value())
             if(form['password1'].value()==form['password2'].value()):
-                user.password=form['password1'].value()
+                user.set_password(form['password1'].value())
                 user.save()
                 login(request, user)
                 messages.info(request, 'passsword reset successfully!')
