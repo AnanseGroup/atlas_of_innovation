@@ -74,7 +74,8 @@ def wiki(request):
 
 
 def contribute(request):
+    user = request.user
     return render(
         request,
-        'static/contribute.html',
+        'static/contribute.html', {'user':user}
     )
