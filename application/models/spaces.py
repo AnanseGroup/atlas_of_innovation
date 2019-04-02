@@ -34,7 +34,7 @@ class Space(models.Model):
 
     email = models.EmailField(null=True, blank=True)
     phone = models.CharField(max_length=128, null=True, blank=True)
-
+    
     website = models.CharField(max_length=255, null=True, blank=True)
     date_opened = models.DateField(null=True, blank=True)
     date_closed = models.DateField(null=True, blank=True)
@@ -238,10 +238,13 @@ class SpaceForm(ModelForm):
         super(SpaceForm, self).__init__(*args, **kwargs)
         self.fields.pop('email')
         self.fields.pop('phone')
+        for field in ['name','latitude','longitude','address1','city','postal_code','country','website',]:
+            self.fields[field].required = True
 
     class Meta:
         model = Space
         fields = '__all__'
+        exclude=('fhash',)
 class Suggestion(models.Model):
     '''Model for sugested changes entry, it can have more than one Field suggestion'''
     id= models.AutoField(primary_key=True)
