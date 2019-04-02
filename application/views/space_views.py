@@ -1151,7 +1151,7 @@ def IsModeratorOfSpace(user,province,country):
                     if user.moderator.province and province:
                         return True
                 if user.moderator.is_country_moderator:
-                    if user.country == country:
+                    if user.moderator.country == country:
                         return True
                 return False  
 
