@@ -7,7 +7,13 @@
       <div class="card-content">
         <span class="card-title" id="wTitle">Space information</span>
         <form action="" method="post">{% csrf_token %}
-            {{ form.as_p }}
+          {% for field in form %}
+<div class="fieldWrapper{% if field.field.required %} required{% endif %}">
+  {{ field.errors }}
+  {{ field.label_tag }}: {{ field }}
+</div>
+{% endfor %}
+            <!-- {{ form.as_p }} -->
             <!--<input type="submit" value="Send message" />-->
             <button type="submit" class="btn btn-primary btn-lg">Submit</button>
         </form>

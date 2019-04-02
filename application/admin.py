@@ -18,7 +18,7 @@ class ModeratorInline(admin.StackedInline):
 
 # Define a new User admin
 class UserAdmin(BaseUserAdmin):
-    inlines = (ModeratorInline,ModeratorInline,)
+    inlines = (ModeratorInline,)
     
 # Re-register UserAdmin
 admin.site.unregister(User)

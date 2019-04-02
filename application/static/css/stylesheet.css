@@ -1337,3 +1337,5 @@ span.badge.red {
 	display: none;
 }
 
+/*add * after required field*/
+.required:before { content: "*"; }

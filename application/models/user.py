@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Permission,User
 from django_countries.fields import CountryField
 from django.forms import ModelForm
 from captcha.fields import ReCaptchaField
@@ -9,6 +9,7 @@ from django.utils import six
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.contenttypes.models import ContentType
 
 class Moderator(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -17,6 +18,43 @@ class Moderator(models.Model):
     email_confirmed = models.BooleanField(default=False)
     is_moderator=models.BooleanField(default=False)
     is_country_moderator=models.BooleanField(default=False)
+    def save(self, force_insert=False, force_update=False, *args, **kwargs):
+
+        if self.is_moderator or self.is_country_moderator:
+            #user.has_perm('analyse_provisional_spaces')
+
+            self.user.is_staff=True
+            permission = Permission.objects.get(
+                        codename='analyse_provisional_spaces',
+                        
+                        )
+            self.user.user_permissions.add(permission)
+            if self.is_country_moderator:                
+                permission = Permission.objects.get(
+                codename='upload_provisonal_spaces',
+                
+                )
+                self.user.user_permissions.add(permission)
+            else:
+                permission = Permission.objects.get(
+                codename='upload_provisonal_spaces',
+                
+                )
+                self.user.user_permissions.remove(permission)
+        else :
+               self.user.is_staff=False
+               permission = Permission.objects.get(
+                codename='analyse_provisional_spaces',
+                
+                )
+               self.user.user_permissions.remove(permission)
+               permission = Permission.objects.get(
+                codename='upload_provisonal_spaces',
+                
+                )
+               self.user.user_permissions.remove(permission)
+        self.user.save()
+        super(Moderator, self).save(force_insert, force_update, *args, **kwargs)
 class UserForm(UserCreationForm):
     email=forms.EmailField(label='Your email', max_length=100)
     country=CountryField(blank_label='(select country)').formfield()
