@@ -240,7 +240,21 @@ class SpaceForm(ModelForm):
         self.fields.pop('phone')
         for field in ['name','latitude','longitude','address1','city','postal_code','country','website',]:
             self.fields[field].required = True
+class SpaceEditForm(ModelForm):
 
+    captcha = ReCaptchaField()
+    ownership_type =  forms.ModelMultipleChoiceField(
+        queryset=OwnershipOption.objects.all(), to_field_name="description", required=False)
+    governance_type =  forms.ModelMultipleChoiceField(
+        queryset=GovernanceOption.objects.all(), to_field_name="description", required=False)
+    network_affiliation =  forms.ModelMultipleChoiceField(
+        queryset=AffiliationOption.objects.all(), to_field_name="description", required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(SpaceEditForm, self).__init__(*args, **kwargs)
+        self.fields.pop('email')
+        self.fields.pop('phone')
+       
     class Meta:
         model = Space
         fields = '__all__'
