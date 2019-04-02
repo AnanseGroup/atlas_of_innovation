@@ -13,7 +13,7 @@ from django.http import Http404, HttpResponseRedirect
 from django import forms
 
 from application.models import Space, DataCreditLog
-from application.models.spaces import SpaceForm
+from application.models.spaces import SpaceForm,SpaceEditForm
 from application.models.spaces import DataCreditLog
 from django.forms.models import model_to_dict
 
@@ -220,7 +220,7 @@ add_space = SpaceCreate.as_view()
 
 class SpaceEdit(LoginRequiredMixin, UpdateView):
     '''* **Edit a permanently space**'''
-    form_class = SpaceForm
+    form_class = SpaceEditForm
     model = Space
     template_name = 'space_edit.html'
     login_url = '/admin/'
