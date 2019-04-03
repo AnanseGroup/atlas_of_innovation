@@ -71,8 +71,9 @@ class UserForm(UserCreationForm):
 class MailResetPasswordForm(forms.Form):
         email = forms.EmailField(required=True)
 class ResetPasswordForm(forms.Form):
-        password1=forms.CharField(min_length=8)
-        password2=forms.CharField(min_length=8)
+        password=forms.CharField(min_length=8,widget=forms.PasswordInput)
+        confirm_password=forms.CharField(min_length=8,widget=forms.PasswordInput)
+
 class AccountActivationTokenGenerator(PasswordResetTokenGenerator):
     def _make_hash_value(self, user, timestamp):
         return (

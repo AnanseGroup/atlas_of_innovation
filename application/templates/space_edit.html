@@ -1,5 +1,11 @@
 {% include "snippets/head.html" %}
 {% include "snippets/header.html" %}
+{% if space.id%}
+{{space}}
+<div class="row"> 
+   <a id="cardtitle" class="waves-effect waves-light btn" href="{% url 'space_profile' space.id %} "><i class="material-icons left">arrow_back</i>Space profile </a>
+  </div>
+{%endif%}
 <br><br><br>
 <div class="row" style="font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', sans-serif;">
   <div class="col s12 m6 offset-m3">
