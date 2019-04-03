@@ -6,6 +6,8 @@ from django.contrib.auth.models import Permission
 import re
 from django.conf import settings
 from application.models import Space
+from application.models.user import Moderator
+from django.contrib.auth.models import Permission,User
 from application.views import IsOwner
 register = template.Library()
 
@@ -79,6 +81,9 @@ def ExistSpaces(arg):
         return False
 @register.filter
 def isAuthorized(user,space):
+    
+    if user.is_superuser:
+        return True
     print(space.province.lower())
     print(user.moderator.province.lower())
     if IsOwner(user.id,space.id):
@@ -94,12 +99,19 @@ def isAuthorized(user,space):
                     return True
     return False
 @register.filter
-def moderateThisSpace(user_id,country,province):
+def moderateThisSpace(user_id,space):
+
+    province=space.province
+    country=space.country
     user=User.objects.get(id=user_id)
+    if user.is_superuser:
+        return True
     moderator=Moderator.objects.get(user=user)
+    
     if moderator.is_moderator:
-        if moderator.province.lower()==province.lower():
-           return True
+        if province is not None:
+            if moderator.province.lower()==province.lower():
+                return True
     if moderator.is_country_moderator:
         if moderator.country == country:
             return True

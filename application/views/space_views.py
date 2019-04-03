@@ -80,8 +80,16 @@ def space_profile(request, id):
         if IsOwner(user.id,id):
             messages.error(request, 'Error, user  its already an owner of this space') 
         else:
-            CreateOwner(user,space)
-            messages.success(request, 'owner added correctly')
+            if IsModeratorOfSpace(request.user,space.province,space.country) or (Owners.objects.filter(user=user).count()<2 and user.moderator.country==space.country):
+                CreateOwner(user,space)
+                messages.success(request, 'owner added correctly')
+            else:
+                if(Owners.objects.filter(user=user).count()>=2):
+                  messages.error(request, 'you reached the limit of own 2 spaces, contact the  page moderator')
+                if user.moderator.country!=space.country:
+                   messages.error(request, 'you only can own a space in your country, contact the page moderator') 
+                messages.error(request, 'owner not added')
+
             return redirect('space_profile', id=id)
     return render(
         request,
@@ -1147,6 +1155,8 @@ def IsOwner(user_id,space_id):
                 return True
             return False
 def IsModeratorOfSpace(user,province,country):
+                if user.is_superuser:
+                    return True
                 if user.moderator.is_moderator:
                     if user.moderator.province and province:
                         return True

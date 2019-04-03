@@ -30,8 +30,9 @@
 </div-->
 {% load app_filters %}
 <div class="row"> 
+   <a id="cardtitle" class="waves-effect waves-light btn" href="{% url 'list_spaces' %}?country={{space.country}}"><i class="material-icons left">arrow_back</i>Spaces list </a>
 {%if user.is_authenticated%}
-{%if  user.is_superuser or user|isAuthorized:space %}
+{%if   user|isAuthorized:space %}
 
 <a id="cardtitle" class="waves-effect waves-light btn" href="{% url 'space_suggestion' space.id %}"><i class="material-icons right">edit</i>Sugessted changes </a>
 <a id="cardtitle" class="waves-effect waves-light btn" href="{% url 'edit_space' space.id %}"><i class="material-icons right">edit</i>Edit</a>
@@ -40,9 +41,12 @@
 {%endif%}
           
         <a id="cardtitle" class="waves-effect waves-light btn" href="{%url 'show_data_credit' space.id %}"><i class="material-icons right">history</i>View History</a>
+
           </div>
 
 {%endif%}
+
+
 <div class="container">
 	<div class="row">
 		<div class="col m12">
@@ -146,10 +150,10 @@
           <div >
             {%if owners is not None%}
               {%for owner in owners%}
-                <h8 class="center-align " >{{owner.user.first_name}}</h8>
-                {%if  user.is_superuser or user|isAuthorized:space %}
-                <h8 class="center-align">{{owner.user.email}}</h8>
-                {%if user.moderator.is_moderator or user.moderator.is_country_moderator%}
+                <h8 class="center-align row" >{{owner.user.first_name}} {{owner.user.last_name}}</h8>
+                {%if user|isAuthorized:space %}
+                <h8 class="center-align row">{{owner.user.email}}</h8>
+                {%if user.id|moderateThisSpace:space %}
                  <a id="cardtitle" class="waves-effect waves-light btn" href="{% url 'remove_owner' space.id owner.user.id %}?next={{request.path}}"><i class="material-icons right">delete_forever</i>Remove owner </a>
                  {%endif%}
                  <br/>
@@ -167,8 +171,8 @@
                   <a href="{% url 'login'%}?next={{request.path}}">login</a>  or <a href="{% url 'signup' %}?next={{request.path}}">signup</a>
                 {%endif%}
             {%endif%}
-             {%if  user.is_superuser or user|isAuthorized:space %}
-             {%if user.moderator.is_moderator or user.moderator.is_country_moderator%}
+             {%if  user.id|moderateThisSpace:space %}
+             
               <p>
               <a class="toggle" href="#example">Add owner</a>
              </p>
@@ -181,7 +185,7 @@
                   <input class="btn waves-effect waves-light" type="submit" name="upvote" value="save Owner" />
               </form>
               </div>
-              {%endif%}
+              
               {%endif%}
          </div>
         </div>
