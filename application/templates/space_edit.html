@@ -6,12 +6,15 @@
     <div class="card hoverable">
       <div class="card-content">
         <span class="card-title" id="wTitle">Space information</span>
+         you can get your latitude and longitude on <a target="_blank" href="https://www.latlong.net/"> this</a> page. 
         <form action="" method="post">{% csrf_token %}
           {% for field in form %}
 <div class="fieldWrapper{% if field.field.required %} required{% endif %}">
   {{ field.errors }}
   {{ field.label_tag }}: {{ field }}
+
 </div>
+
 {% endfor %}
             <!-- {{ form.as_p }} -->
             <!--<input type="submit" value="Send message" />-->
