@@ -240,6 +240,10 @@ class SpaceForm(ModelForm):
         self.fields.pop('phone')
         for field in ['name','latitude','longitude','address1','city','postal_code','country','website',]:
             self.fields[field].required = True
+    class Meta:
+        model = Space
+        fields = '__all__'
+        exclude=('fhash',)
 class SpaceEditForm(ModelForm):
 
     captcha = ReCaptchaField()
