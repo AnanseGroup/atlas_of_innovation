@@ -223,7 +223,7 @@ class DataCreditLog(models.Model):
     ip_address = models.GenericIPAddressField()
     credit = models.CharField(max_length=100, null=True, blank=True)
     date = models.DateTimeField(null=False, auto_now=True)
-
+    is_provisional=models.BooleanField(default=False)#used for provisional spaces
 class SpaceForm(ModelForm):
 
     captcha = ReCaptchaField()
