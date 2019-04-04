@@ -1024,15 +1024,18 @@ def password_reset_confirm(request, uidb64, token):
     if request.method == 'POST':
         form = ResetPasswordForm(request.POST)
         if( form.is_valid):
-            print(form['password1'].value())
-            if(form['password1'].value()==form['password2'].value()):
-                user.set_password(form['password1'].value())
+            print(form['password'].value())
+            if(form['password'].value()==form['confirm_password'].value()):
+                user.set_password(form['password'].value())
+
+
                 user.save()
                 login(request, user)
                 messages.info(request, 'passsword reset successfully!')
                 return redirect('/')
             else:
                 messages.info(request, 'passwords not match!')
+                print('/'+request.path_info)
                 return HttpResponseRedirect(request.path_info)
     
     messages.info(request, 'The page not exist!')

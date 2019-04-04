@@ -233,7 +233,7 @@ class SpaceForm(ModelForm):
         queryset=GovernanceOption.objects.all(), to_field_name="description", required=False)
     network_affiliation =  forms.ModelMultipleChoiceField(
         queryset=AffiliationOption.objects.all(), to_field_name="description", required=False)
-
+    is_provisional=models.BooleanField(default=False)
     def __init__(self, *args, **kwargs):
         super(SpaceForm, self).__init__(*args, **kwargs)
         self.fields.pop('email')
