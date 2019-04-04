@@ -236,9 +236,9 @@ class SpaceForm(ModelForm):
     is_provisional=models.BooleanField(default=False)
     def __init__(self, *args, **kwargs):
         super(SpaceForm, self).__init__(*args, **kwargs)
-        self.fields.pop('email')
+        #self.fields.pop('email')
         self.fields.pop('phone')
-        for field in ['name','latitude','longitude','address1','city','postal_code','country','website',]:
+        for field in ['name','latitude','longitude','address1','city','postal_code','country','website','email']:
             self.fields[field].required = True
     class Meta:
         model = Space
@@ -256,7 +256,7 @@ class SpaceEditForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(SpaceEditForm, self).__init__(*args, **kwargs)
-        self.fields.pop('email')
+        #self.fields.pop('email')
         self.fields.pop('phone')
        
     class Meta:
