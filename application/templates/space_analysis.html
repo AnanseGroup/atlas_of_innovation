@@ -214,7 +214,7 @@
 			<input  id="espace-country1" class="mspace1 nrmodal" value="" readonly />
 			<select style="display:inline-block;"  id="espace-country" class="mspace1 nrmodal" value="">
 			
-				<option value="">---------</option>
+				<option value="">Country</option>
 
 {% for country in countries %}
 
@@ -432,8 +432,6 @@
 			onOpenStart: function(modal, trigger) {
 
 				var id = trigger.id.split("-");
-				console.log(id)
-				console.log('puto')
 				/*  We get the data from the provisional space if the
 					provisonal space modal is called
 				*/
@@ -672,7 +670,6 @@
 				$('#loading').modal('open');
 				$(this).parent().addClass("scale-out").delay(400).queue(function(next){
 					var id = $(this).attr('id').split("-")[1];
-					console.log(id)
 					$(this).remove();
 					next();
 					$('#loading').modal('close');
@@ -817,7 +814,7 @@
 		/* Counts the number of spaces in the collections */
 		function recount_spaces() {
 			var len =$("#approved-collection li").length;
-			console.log(len);
+			
 			var dislen = "New Spaces ("+len+")";
 			$("#approved-tag").html(dislen);
 			var len =$("#excluded-collection li").length;
