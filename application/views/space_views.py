@@ -173,6 +173,7 @@ class SpaceCreate(LoginRequiredMixin, CreateView):
                         new_data_credit = DataCreditLog(**data_credit)
                         new_data_credit.save()
                         moderators=GetModerators(new_space.province,new_space.country)
+                        mails.on_create(new_data_credit, moderators)
                 else:
                     data_credit = {
                            'ip_address': self.request.META['REMOTE_ADDR'],
@@ -184,7 +185,7 @@ class SpaceCreate(LoginRequiredMixin, CreateView):
                     new_data_credit.save()
                     messages.success(self.request, 'The space create successfullsfully, it will be aproved  by page moderator soon', extra_tags='alert')                
                     moderators=GetModerators(new_space.province,new_space.country)
-                mails.on_create(new_data_credit, moderators)
+                    mails.on_create(new_data_credit, moderators)
                 return redirect_url
 add_space = SpaceCreate.as_view()
 
@@ -1173,7 +1174,7 @@ def IsModeratorOfSpace(user,province,country):
                 if user.is_superuser:
                     return True
                 if user.moderator.is_moderator:
-                    if user.moderator.province and province:
+                    if province is not None and user.moderator.province is not None and user.moderator.province == province:
                         return True
                 if user.moderator.is_country_moderator:
                     if user.moderator.country == country:
@@ -1186,8 +1187,11 @@ def DeleteOwner(request,space,user):
     messages.success(request, 'owner deleted')
     return redirect(request.GET.get('next'))
 def GetModerators(province,country):
-                moderators=Moderator.objects.filter(province=province,is_moderator=True)
-                if moderators.count() == 0: 
+                moderators=None
+                if province is not None:
+                    moderators=Moderator.objects.filter(country=country,province=province,is_moderator=True)
+
+                if moderators is not None and moderators.count() == 0: 
                     moderators=Moderator.objects.filter(country=country,is_country_moderator=True)
                 print(moderators)
                 return moderators

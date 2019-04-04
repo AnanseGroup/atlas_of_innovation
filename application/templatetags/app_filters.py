@@ -84,13 +84,12 @@ def isAuthorized(user,space):
     
     if user.is_superuser:
         return True
-    print(space.province.lower())
-    print(user.moderator.province.lower())
+    
     if IsOwner(user.id,space.id):
        print('IsOwner')
        return True
     if(user.moderator.is_moderator):
-            if space.province.lower() == user.moderator.province.lower():
+            if  space.province is not None and space.province.lower() == user.moderator.province.lower():
                     print('province moderator')
                     return True
     if  user.moderator.is_country_moderator:
@@ -100,8 +99,9 @@ def isAuthorized(user,space):
     return False
 @register.filter
 def moderateThisSpace(user_id,space):
-
-    province=space.province
+    province=None
+    if space.province is not None:
+       province=space.province
     country=space.country
     user=User.objects.get(id=user_id)
     if user.is_superuser:
