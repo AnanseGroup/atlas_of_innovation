@@ -159,19 +159,21 @@ class SpaceCreate(LoginRequiredMixin, CreateView):
                         data_credit = {
                            'ip_address': self.request.META['REMOTE_ADDR'],
                            'space_id': new_space.id,
-                           'credit': user.username
-
+                           'credit': user.username,
+                           'is_provisional':True,
                           }
                         new_data_credit = DataCreditLog(**data_credit)
+                        new_data_credit.save()
                         moderators=GetModerators(new_space.province,new_space.country)
                 else:
                     data_credit = {
                            'ip_address': self.request.META['REMOTE_ADDR'],
                            'space_id': new_space.id,
-                           'credit': user.username
-
+                           'credit': user.username,
+                           'is_provisional':True,
                           }
                     new_data_credit = DataCreditLog(**data_credit)
+                    new_data_credit.save()
                     messages.success(self.request, 'The space create successfullsfully, it will be aproved  by page moderator soon', extra_tags='alert')                
                     moderators=GetModerators(new_space.province,new_space.country)
                 mails.on_create(new_data_credit, moderators)
@@ -296,7 +298,7 @@ list_spaces = ListSpaces.as_view()
 def show_data_credit(request, id):
         '''* **shows the historical changes credit for the selected space
         order by date in reverse order**'''
-        data = DataCreditLog.objects.filter(space_id=id).order_by('-date')
+        data = DataCreditLog.objects.filter(space_id=id).exclude(is_provisional=True).order_by('-date')
         usernames = []
         for creditlog in data:
             try:
@@ -355,7 +357,7 @@ def analyze_spaces(request):
     if not request.user.is_superuser and (request.user.moderator.is_country_moderator or request.user.moderator.is_moderator):
         country_list=[request.user.moderator.country]
     permited_all_spaces_in_country= (request.user.is_superuser or request.user.moderator.is_country_moderator )
-    print(permited_all_spaces_in_country)
+    
     for country in country_list:
         spaces = Space.objects.filter(country=country).all()
 
@@ -363,7 +365,7 @@ def analyze_spaces(request):
             pspaces = ProvisionalSpace.objects.filter(country=country, override_analysis=False, discarded=False).all()
         else:
             pspaces = ProvisionalSpace.objects.filter(country=country,province=request.user.moderator.province, override_analysis=False, discarded=False).all()
-            print(pspaces)
+           
 
         ''' (Pedro) The list that will hold the id of the spaces we need to 
             filter so they won't go to the approved list '''
@@ -463,7 +465,7 @@ def analyze_spaces(request):
                 pspaces = ProvisionalSpace.objects.filter(country=country, override_analysis=False, discarded=False).exclude(id__in=pop_list).all()
             else:
                 pspaces = ProvisionalSpace.objects.filter(country=country,province=request.user.moderator.province, override_analysis=False, discarded=False).exclude(id__in=pop_list).all()
-            print(pspaces)
+            
             approved_spaces.extend([model_to_dict(pspace,fields=fields) for pspace in pspaces])
         else:
             ''' If there are no spaces to compare we add all provision spaces
@@ -502,7 +504,7 @@ def analyze_spaces(request):
         #print(pspace[0]['id'],'excluded')
         analized_spaces.append(pspace[0]['id'])
             
-    print(analized_spaces)
+    
     if request.user.is_superuser:
         country_error_spaces=ProvisionalSpace.objects.all().exclude(id__in=analized_spaces)
 
@@ -871,26 +873,36 @@ def provisional_space(request):
         if data is None:
             print('data is none')#spaces = ProvisionalSpace.objects.filter(override_analysis=True).all()
         else:
-            print(isinstance(data,str))
+            
             if isinstance(data,str):
               data=ast.literal_eval(data)
-
+              
               for id in data:
-                print(id)
                 try:
+                    
                   spaces.append(ProvisionalSpace.objects.get(id=id['id']))
                 except Exception:
+                            
                             print(Exception)
+                            
             else:
                 spaces.append(ProvisionalSpace.objects.get(id__in=data['id']))
-
+            
         for space in spaces:
             new_space = Space()
             for field in space._meta.fields:
                 if field.name not in ["id", "discarded", "override_analysis"]:
                     setattr(new_space, field.name, getattr(space, field.name))
             new_space.save()
+            '''adding creditlog if exist for this provisional spaces'''
+            credits=DataCreditLog.objects.filter(space_id=space.id).exclude(is_provisional=False)
+            print(credits)
+            for credit in credits:
+                credit.space_id=new_space.id
+                credit.is_provisional=False
+                credit.save()
             space.delete()
+            
         return JsonResponse({'success':1}, safe=False)
 
 @staff_member_required
