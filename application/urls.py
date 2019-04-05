@@ -41,10 +41,10 @@ urlpatterns = [
     path(r'admin/', admin.site.urls),
     
     path('signup', views.signup, name='signup'),
-    re_path(r'login/', auth_views.LoginView),
-    path(r'logout/', auth_views.LogoutView,{'next_page': '/'}),
+    re_path(r'login/', auth_views.LoginView.as_view(), name='login'),
+    path(r'logout/', auth_views.LogoutView.as_view(),{'next_page': '/'}, name='logout'),
     path('reset_password',views.password_reset,name='password_reset'),
-    path('reset_done',auth_views.PasswordResetDoneView,name='password_reset_done'),
+    path('reset_done',auth_views.PasswordResetDoneView.as_view(),name='password_reset_done'),
     url(r'password_reset_confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',views.password_reset_confirm,name='password_reset_confirm'),
     #activation email
     url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
