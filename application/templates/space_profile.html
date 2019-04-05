@@ -142,15 +142,15 @@
       </div>
    
      <div class="col m6">
-      <div class="card hoverable">
-        <div class="card-content">
+      <div class="card hoverable  center-align">
+        <div class="card-content row ">
           <span class="card-title text center-align" id="cardtitle">Owners</span>
           <div >
             {%if owners is not None%}
               {%for owner in owners%}
                 <h8 class="center-align row" >{{owner.user.first_name}} {{owner.user.last_name}}</h8>
                 {%if user|isAuthorized:space %}
-                <h8 class="center-align row">{{owner.user.email}}</h8>
+                <h8 class="right-align row">{{owner.user.email}}</h8>
                 {%if user.id|moderateThisSpace:space %}
                  <a id="cardtitle" class="waves-effect waves-light btn" href="{% url 'remove_owner' space.id owner.user.id %}?next={{request.path}}"><i class="material-icons right">delete_forever</i>Remove owner </a>
                  {%endif%}
@@ -162,7 +162,7 @@
                   <h8 class="center-align" >Are you the owner? to save your account as owner  click</h8>
                   <form action="" method="post">{% csrf_token %}
                   <input type="hidden" name="user_id" value="{{ user.id }}">
-                  <input class="btn waves-effect waves-light" type="submit" name="upvote" value="HERE" />
+                  <input class="btn  waves-light " type="submit" name="upvote" value="HERE" />
                   </form>
                 {%else%}
                   <h8 class="center-align" >Are you the owner? to save as owner </h8>

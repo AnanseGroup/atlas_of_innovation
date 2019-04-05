@@ -318,7 +318,7 @@ def show_data_credit(request, id):
         return render(
         request,
         'show_data_credit.html',
-        {"data":data,"usernames":usernames,}     
+        {"data":data,"usernames":usernames,'id':id}     
     )
 def get_userid(self,i):
         return self[i]
@@ -529,18 +529,21 @@ def analyze_spaces(request):
     
 
     data = request.GET.copy()
+    discarded_id=[]
+    processed_id=[]
+    for pspaces in discarded_spaces:
+        discarded_id.append({'id' : pspaces['id']})
+    for pspaces in processed_spaces:
+        processed_id.append({'id' : pspaces['id']})
     if data and data.get("json_list"):
         return JsonResponse({'approved': approved_spaces,
                              'problem': problem_spaces,
                              'excluded': excluded_spaces,
+                             'discarded_id': discarded_id,
+                              'processed_id':processed_id
                             })
     else:
-        discarded_id=[]
-        processed_id=[]
-        for pspaces in discarded_spaces:
-            discarded_id.append({'id' : pspaces['id']})
-        for pspaces in processed_spaces:
-            processed_id.append({'id' : pspaces['id']})
+        
         return render(request, 'space_analysis.html', {'approved': approved_spaces, 
                                                    'problem': problem_spaces,
                                                    'excluded': excluded_spaces,
@@ -880,7 +883,7 @@ def provisional_space(request):
             data = None
         spaces=[]
         if data is None:
-            print('data is none')#spaces = ProvisionalSpace.objects.filter(override_analysis=True).all()
+            spaces = ProvisionalSpace.objects.filter(override_analysis=True).all()
         else:
             
             if isinstance(data,str):

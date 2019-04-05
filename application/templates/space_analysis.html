@@ -526,7 +526,7 @@
 			$.ajax({
 				type: 'DELETE',
 				dataType: "json",
-				data: JSON.stringify(id),
+				data: JSON.stringify(),
 				url: '/provisional_space/',
 				success: function (data) {
 					$('#loading').modal('close');	
@@ -546,7 +546,7 @@
 			$.ajax({
 				type: 'PATCH',
 				dataType: "json",
-				data: JSON.stringify(id),
+				data: JSON.stringify(),
 				url: '/provisional_space/',
 				success: function (data) {
 					$('#loading').modal('close');	

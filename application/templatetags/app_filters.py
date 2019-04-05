@@ -116,5 +116,9 @@ def moderateThisSpace(user_id,space):
         if moderator.country == country:
             return True
     return False
-
-
+@register.filter
+def isEqual(string1,string2):
+    
+    if(string1==string2):
+        return True
+    return False
