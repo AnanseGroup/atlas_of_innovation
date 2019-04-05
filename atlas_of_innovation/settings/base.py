@@ -153,3 +153,4 @@ STATIC_URL = '/static/'
 # POST_OFFICE = {
 #     'DEFAULT_PRIORITY': 'now'
 # }
+LOGOUT_REDIRECT_URL = '/'
