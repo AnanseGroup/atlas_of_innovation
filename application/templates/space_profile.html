@@ -169,6 +169,7 @@
                   <a href="{% url 'login'%}?next={{request.path}}">login</a>  or <a href="{% url 'signup' %}?next={{request.path}}">signup</a>
                 {%endif%}
             {%endif%}
+            {%if user.is_authenticated%}
              {%if  user.id|moderateThisSpace:space %}
              
               <p>
@@ -183,7 +184,7 @@
                   <input class="btn waves-effect waves-light" type="submit" name="upvote" value="save Owner" />
               </form>
               </div>
-              
+              {%endif%}
               {%endif%}
          </div>
         </div>

@@ -769,6 +769,8 @@ def handle_csv(request,file):
 
                           }
                     new_data_credit = DataCreditLog(**data_credit)
+                    new_data_credit.is_provisional=True
+                    new_data_credit.save()
                     moderators=GetModerators(new_space.province,new_space.country) 
                     for moderator in moderators:
                         if not ( moderator in contacted_moderators):
