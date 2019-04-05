@@ -315,7 +315,7 @@ def show_data_credit(request, id):
         return render(
         request,
         'show_data_credit.html',
-        {"data":data,"usernames":usernames,}     
+        {"data":data,"usernames":usernames,'id':id}     
     )
 def get_userid(self,i):
         return self[i]

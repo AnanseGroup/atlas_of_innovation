@@ -1,5 +1,6 @@
 {% include "snippets/head.html" %}
 {% include "snippets/header.html" %}
+{% load app_filters %}
 {% if space.id%}
 <div class="row"> 
    <a id="cardtitle" class="waves-effect waves-light btn" href="{% url 'space_profile' space.id %} "><i class="material-icons left">arrow_back</i>Space profile </a>
@@ -11,14 +12,19 @@
     <div class="card hoverable">
       <div class="card-content">
         <span class="card-title" id="wTitle">Space information</span>
-         you can get your latitude and longitude on <a target="_blank" href="https://www.latlong.net/"> this</a> page. 
+         
         <form action="" method="post">{% csrf_token %}
           {% for field in form %}
 <div class="fieldWrapper{% if field.field.required %} required{% endif %}">
   {{ field.errors }}
   {{ field.label_tag }}: {{ field }}
 
+  
+  {%if  'latitude'|isEqual:field.name%}
+  you can get your latitude and longitude on <a target="_blank" href="https://www.latlong.net/"> this</a> page. 
+  {%endif%}
   </div>
+
 {% endfor %}
             <!-- {{ form.as_p }} -->
             <!--<input type="submit" value="Send message" />-->
