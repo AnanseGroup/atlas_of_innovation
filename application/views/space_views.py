@@ -26,7 +26,7 @@ import datetime
 import csv
 import tlsh
 import itertools
-
+import math
 from django.db.models import Count
 from application.serializers import SpaceSerializer
 from django.http import HttpResponse, JsonResponse
@@ -145,9 +145,9 @@ class SpaceCreate(LoginRequiredMixin, CreateView):
                 new_space.fhash = calculate_fhash(new_space)
                 print(new_space.fhash)
                 new_space.save() 
-                if user.is_staff:
-                    new_space=ProvisionalSpace.objects.get(id=new_space.id)
-                    if not problemsPspace(self.request,new_space):
+                new_space=ProvisionalSpace.objects.get(id=new_space.id)
+                redirect_url=redirect('contribute')
+                if not problemsPspace(self.request,new_space) and new_space.fhash:
                         redirect_url = super(SpaceCreate, self).form_valid(form)
                         space = self.object
                         space.province=space.province.strip().lower().capitalize()
@@ -162,7 +162,7 @@ class SpaceCreate(LoginRequiredMixin, CreateView):
                         }
                         new_data_credit = DataCreditLog(**data_credit)
                         new_data_credit.save()
-                    else:
+                else:
                         messages.success(self.request, 'The space was problems, an autorized moderator need to fix it in the analizer', extra_tags='alert')
                         data_credit = {
                            'ip_address': self.request.META['REMOTE_ADDR'],
@@ -174,18 +174,6 @@ class SpaceCreate(LoginRequiredMixin, CreateView):
                         new_data_credit.save()
                         moderators=GetModerators(new_space.province,new_space.country)
                         mails.on_create(new_data_credit, moderators)
-                else:
-                    data_credit = {
-                           'ip_address': self.request.META['REMOTE_ADDR'],
-                           'space_id': new_space.id,
-                           'credit': user.username,
-                           'is_provisional':True,
-                          }
-                    new_data_credit = DataCreditLog(**data_credit)
-                    new_data_credit.save()
-                    messages.success(self.request, 'The space create successfullsfully, it will be aproved  by page moderator soon', extra_tags='alert')                
-                    moderators=GetModerators(new_space.province,new_space.country)
-                    mails.on_create(new_data_credit, moderators)
                 return redirect_url
 add_space = SpaceCreate.as_view()
 
@@ -443,6 +431,7 @@ def analyze_spaces(request):
 
         if spaces:
             for a, b in itertools.product(spaces, pspaces):
+               if a.fhash: 
                 try:
                     num = tlsh.diffxlen(a.fhash, b.fhash)
                     if num<5:
@@ -461,6 +450,25 @@ def analyze_spaces(request):
                                                num])
 
                             pop_list.append(b.id)
+                except:
+                    '''There are many ways this can make an exception for once
+                    the spaces may not have a fhash because is missing data so
+                    we take a look
+                    '''
+                    pass
+               else:
+                try:
+                  if not b.override_analysis and not b.discarded and b.id not in pop_list:#can be matched previusly
+                    num1=abs(a.latitude-b.latitude)
+                    num2=abs(a.longitude-b.longitude)
+
+                    if num1<.003 and num2 <.0053*cos(num1):
+                        if not b.override_analysis and not b.discarded:#can be discarted in perfect match
+                                problem_spaces.append([model_to_dict(a,fields=fields),
+                                                   model_to_dict(b,fields=fields),
+                                                   num])
+
+                                pop_list.append(b.id)
                 except:
                     '''There are many ways this can make an exception for once
                     the spaces may not have a fhash because is missing data so
@@ -556,6 +564,7 @@ def analyze_spaces(request):
 def problemsPspace(request,pspace):
             spaces = Space.objects.all()
             problems = [] 
+            nohash =[]
             critical = 0
             error = 0 
             ''' (Pedro) added the critical flag thinking maybe in the future some
@@ -591,9 +600,17 @@ def problemsPspace(request,pspace):
             ''' Provisional spaces with critical errors cant be added to the match 
             comparison so we filter those spaces '''
             if spaces:
+            
              for a, b in itertools.product(spaces, [pspace]):
+                
+              if a.fhash:
+                    
+
                 try:
                     num = tlsh.diffxlen(a.fhash, b.fhash)
+
+                    
+                        
                     if num < 66: 
                         ''' If we find a match we add those spaces to our 
                             problem list'''
@@ -604,15 +621,22 @@ def problemsPspace(request,pspace):
                     we take a look
                     '''
                     pass
+              else:
+                num1=abs(a.latitude-b.latitude)
+                num2=abs(a.longitude-b.longitude)
+
+                if num1<.003 and num2 <.0053*cos(num1):#rectangle of 666.666m per side
+                    problems.append({"desc":"space has one posible coincidence  whit a space","crit":1})
             if problems:
                 for problem in problems:
                     messages.success(request, 'The space have a problem:'+ problem['desc'], extra_tags='alert')
+                print('1')    
                 return 1
+            print('0') 
             return 0
             '''We filter the spaces yet again so the ones with a match problem 
             don't make the approved list'''
             
-
 
 @staff_member_required
 @user_is_autorized_to_upload
@@ -632,7 +656,7 @@ def handle_csv(request,file):
         '''**process the spaces in the file uploaded,
         applying the nesesary changes to ensure the new spaces have the correct format and can be 
         saved as provisional spaces to analize it**'''
-
+        send_to_default_moderator=0
 
         data_filename = file
 
@@ -772,13 +796,18 @@ def handle_csv(request,file):
                     new_data_credit.is_provisional=True
                     new_data_credit.save()
                     moderators=GetModerators(new_space.province,new_space.country) 
-                    for moderator in moderators:
-                        if not ( moderator in contacted_moderators):
-                            print(moderator)
-                            contacted_moderators.append(moderator)
-                            if not moderator.user==request.user:
-                                mails.on_create(new_data_credit,[moderator])
+                    if moderators is not None:
+                        for moderator in moderators:
+                            if not ( moderator in contacted_moderators):
                                 print(moderator)
+                                contacted_moderators.append(moderator)
+                                if not moderator.user==request.user:
+                                    mails.on_create(new_data_credit,[moderator])
+                                    print(moderator)
+                    else:
+                        if not send_to_default_moderator:
+                            mails.on_create(new_data_credit,moderators)
+                            send_to_default_moderator=1
                 except Exception as e:
                     
                     raise e
@@ -799,7 +828,6 @@ def calculate_fhash(new_space):
         space_info.append(new_space.postal_code)
     space_stuff = " ".join(space_info).replace(",", "").replace("-","").replace(".","").replace("_","").replace("+","")
     space_string = ' '.join(space_stuff.split()).encode("raw_unicode_escape")
-    print(tlsh.forcehash(space_string))
     return tlsh.forcehash(space_string)
 
 @staff_member_required
