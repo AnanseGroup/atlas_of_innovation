@@ -613,7 +613,11 @@ def problemsPspace(request,pspace):
                     num = tlsh.diffxlen(a.fhash, b.fhash)
 
                     
-                        
+                    if num<5:
+                        b.override_analysis=False
+                        b.discarded=True
+                        b.save(); 
+                        problems.append({"desc":"space exist in db","crit":1})  
                     if num < 66: 
                         print('match')
                         ''' If we find a match we add those spaces to our 
