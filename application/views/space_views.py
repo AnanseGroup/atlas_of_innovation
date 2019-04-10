@@ -345,7 +345,7 @@ def analyze_spaces(request):
     
     '''Spaces that match other spaces'''
     problem_spaces = []
-    
+    problem_spaces2 =[]#used for spaces match triguered by  distance
     ''' Discarded spaces'''
     discarded_spaces = []
     
@@ -458,17 +458,18 @@ def analyze_spaces(request):
                     pass
                else:
                 try:
-                  if not b.override_analysis and not b.discarded and b.id not in pop_list:#can be matched previusly
+                  if not b.override_analysis and not b.discarded :#can be perfect matched previusly
                     num1=abs(a.latitude-b.latitude)
                     num2=abs(a.longitude-b.longitude)
 
-                    if num1<.003 and num2 <.0053*cos(num1):
+                    if num1<.003 and num2 <abs(.0053*math.cos(num1)):
                         if not b.override_analysis and not b.discarded:#can be discarted in perfect match
-                                problem_spaces.append([model_to_dict(a,fields=fields),
+                                problem_spaces2.append([model_to_dict(a,fields=fields),
                                                    model_to_dict(b,fields=fields),
                                                    num])
 
                                 pop_list.append(b.id)
+                                print('distance')
                 except:
                     '''There are many ways this can make an exception for once
                     the spaces may not have a fhash because is missing data so
@@ -478,6 +479,7 @@ def analyze_spaces(request):
 
             '''We filter the spaces yet again so the ones with a match problem 
             don't make the approved list'''
+
             if permited_all_spaces_in_country:
                 pspaces = ProvisionalSpace.objects.filter(country=country, override_analysis=False, discarded=False).exclude(id__in=pop_list).all()
             else:
@@ -558,7 +560,8 @@ def analyze_spaces(request):
                                                    'discarded': discarded_spaces,
                                                    'processed': processed_spaces,
                                                    'discarded_id': discarded_id,
-                                                   'processed_id':processed_id
+                                                   'processed_id':processed_id,
+                                                   'problem2': problem_spaces2
                                                    })
 
 def problemsPspace(request,pspace):
@@ -605,13 +608,14 @@ def problemsPspace(request,pspace):
                 
               if a.fhash:
                     
-
+                
                 try:
                     num = tlsh.diffxlen(a.fhash, b.fhash)
 
                     
                         
                     if num < 66: 
+                        print('match')
                         ''' If we find a match we add those spaces to our 
                             problem list'''
                         problems.append({"desc":"space has one coincidence","crit":1})
@@ -622,11 +626,21 @@ def problemsPspace(request,pspace):
                     '''
                     pass
               else:
-                num1=abs(a.latitude-b.latitude)
-                num2=abs(a.longitude-b.longitude)
-
-                if num1<.003 and num2 <.0053*cos(num1):#rectangle of 666.666m per side
+                print('not fhash')
+                try:
+                    num1=abs(a.latitude-b.latitude)
+                    num2=abs(a.longitude-b.longitude)
+                except:
+                    print(a.latitude)
+                    print(a.longitude)
+                    print(b.latitude)
+                    print(b.longitude)
+                    num1=1
+                if num1<.003 and num2 <abs(.0053*math.cos(num1)):#rectangle of 666.666m per side
+                    print('distance match')
                     problems.append({"desc":"space has one posible coincidence  whit a space","crit":1})
+               
+
             if problems:
                 for problem in problems:
                     messages.success(request, 'The space have a problem:'+ problem['desc'], extra_tags='alert')
