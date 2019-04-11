@@ -75,20 +75,20 @@ def space_profile(request, id):
        if user == None:
           user=User.objects.filter(email=request.POST.get('user_email')).first()
        if user == None:
-        messages.error(request, 'Error, user  not exist')
+        messages.error(request, 'Error, user does not exist')
        else: 
         if IsOwner(user.id,id):
-            messages.error(request, 'Error, user  its already an owner of this space') 
+            messages.error(request, 'Error, user is already an owner of this space') 
         else:
             if IsModeratorOfSpace(request.user,space.province,space.country) or (Owners.objects.filter(user=user).count()<2 and user.moderator.country==space.country):
                 CreateOwner(user,space)
-                messages.success(request, 'owner added correctly')
+                messages.success(request, 'Owner added correctly')
             else:
                 if(Owners.objects.filter(user=user).count()>=2):
-                  messages.error(request, 'you reached the limit of own 2 spaces, contact the  page moderator')
+                  messages.error(request, 'You reached the limit of 2 owned spaces, contact the page moderator')
                 if user.moderator.country!=space.country:
-                   messages.error(request, 'you only can own a space in your country, contact the page moderator') 
-                messages.error(request, 'owner not added')
+                   messages.error(request, 'You only can own a space in your country, contact the page moderator') 
+                messages.error(request, 'Owner not added')
 
             return redirect('space_profile', id=id)
     return render(
@@ -143,16 +143,16 @@ class SpaceCreate(LoginRequiredMixin, CreateView):
                 if new_space.province:
                     new_space.province=new_space.province.strip().lower().capitalize()
                 new_space.fhash = calculate_fhash(new_space)
-                print(new_space.fhash)
                 new_space.save() 
                 new_space=ProvisionalSpace.objects.get(id=new_space.id)
                 redirect_url=redirect('contribute')
                 if not problemsPspace(self.request,new_space) and new_space.fhash:
+                    if user.is_staff:
                         redirect_url = super(SpaceCreate, self).form_valid(form)
                         space = self.object
                         space.province=space.province.strip().lower().capitalize()
                         space.save()
-                        messages.success(self.request, 'The space create success', extra_tags='alert')
+                        messages.success(self.request, 'The space was created successfully', extra_tags='alert')
                         new_space.delete()
                         data_credit = {
                            'ip_address': self.request.META['REMOTE_ADDR'],
@@ -162,8 +162,20 @@ class SpaceCreate(LoginRequiredMixin, CreateView):
                         }
                         new_data_credit = DataCreditLog(**data_credit)
                         new_data_credit.save()
+                    else:
+                        messages.success(self.request, 'The space is valid, a moderator review and acept it soon', extra_tags='alert')
+                        data_credit = {
+                           'ip_address': self.request.META['REMOTE_ADDR'],
+                           'space_id': new_space.id,
+                           'credit': user.username,
+                           'is_provisional':True,
+
+                        }
+                        new_data_credit = DataCreditLog(**data_credit)
+                        new_data_credit.save()
+
                 else:
-                        messages.success(self.request, 'The space was problems, an autorized moderator need to fix it in the analizer', extra_tags='alert')
+                        messages.success(self.request, 'The space has problems, a moderator will get a notification to solve this problem', extra_tags='alert')
                         data_credit = {
                            'ip_address': self.request.META['REMOTE_ADDR'],
                            'space_id': new_space.id,
@@ -258,7 +270,7 @@ class SpaceEdit(LoginRequiredMixin, UpdateView):
                 '''
                 
                 new_data_credit.save()
-                messages.success(self.request, 'The space changes success', extra_tags='alert')
+                messages.success(self.request, 'The space changes were successful', extra_tags='alert')
             else:#if is not an administrator then is just a suggestion
                 redirect_url = redirect('contribute')
                 # suggestion ={
@@ -275,9 +287,9 @@ class SpaceEdit(LoginRequiredMixin, UpdateView):
                 if moderators is None:
                     moderators=GetModerators(space.province,space.country)         
                 mails.on_change(new_data_credit, moderators)
-                messages.success(self.request, 'The space suggestion will be evaluate by an moderator soon', extra_tags='alert')
+                messages.success(self.request, 'The space suggestion will be evaluated by a moderator soon', extra_tags='alert')
         else:
-            messages.error(self.request,'The form has not change',extra_tags='alert')
+            messages.error(self.request,'The form has not changed',extra_tags='alert')
         return redirect_url
 
             
@@ -441,15 +453,29 @@ def analyze_spaces(request):
                         problem_spaces=[x for x in problem_spaces if x[1]['id']!=b.id]
                         pop_list.append(b.id)
                     else:
-                      if num < 66: 
-                        ''' If we find a match we add those spaces to our 
+                      if num < 80: 
+                            ''' If we find a match we add those spaces to our 
                             problem list'''
-                        if not b.override_analysis and not b.discarded:#can be discarted in perfect match
+                        
                             problem_spaces.append([model_to_dict(a,fields=fields),
                                                model_to_dict(b,fields=fields),
                                                num])
 
                             pop_list.append(b.id)
+                      else:
+                          num1=abs(a.latitude-b.latitude)
+                          num2=abs(a.longitude-b.longitude)
+
+                          if num1<.003 and num2 <abs(.0053*math.cos(num1)):
+                                    #if not b.override_analysis and not b.discarded:#can be discarted in perfect match
+                                    problem_spaces2.append([model_to_dict(a,fields=fields),
+                                                       model_to_dict(b,fields=fields),
+                                                       num])
+
+                                    pop_list.append(b.id)
+                                    print('distance')      
+
+                     
                 except:
                     '''There are many ways this can make an exception for once
                     the spaces may not have a fhash because is missing data so
@@ -458,12 +484,12 @@ def analyze_spaces(request):
                     pass
                else:
                 try:
-                  if not b.override_analysis and not b.discarded :#can be perfect matched previusly
+                  
                     num1=abs(a.latitude-b.latitude)
                     num2=abs(a.longitude-b.longitude)
 
                     if num1<.003 and num2 <abs(.0053*math.cos(num1)):
-                        if not b.override_analysis and not b.discarded:#can be discarted in perfect match
+                                #if not b.override_analysis and not b.discarded:#can be discarted in perfect match
                                 problem_spaces2.append([model_to_dict(a,fields=fields),
                                                    model_to_dict(b,fields=fields),
                                                    num])
@@ -492,6 +518,9 @@ def analyze_spaces(request):
             approved_spaces.extend([model_to_dict(pspace,fields=fields) for pspace in pspaces])
 
         # Lets add the discarded spaces
+        for space in problem_spaces2:
+            problem_spaces.append(space)
+        problem_spaces2=[]
         if permited_all_spaces_in_country:
            dspaces = ProvisionalSpace.objects.filter(country=country, override_analysis=False, discarded=True).all()
         else:
@@ -593,7 +622,8 @@ def problemsPspace(request,pspace):
                 critical = 1
                 error = 1
             if not pspace.fhash:
-                problems.append({"desc": "Space has no hash: see note at header", "crit":1})
+                problems.append({"desc": "need bee reviewed by admin", "crit":1})
+                print('pspace.fhash',pspace.fhash)
                 critical = 1
                 error = 1
             if not pspace.country:
@@ -617,12 +647,17 @@ def problemsPspace(request,pspace):
                         b.override_analysis=False
                         b.discarded=True
                         b.save(); 
-                        problems.append({"desc":"space exist in db","crit":1})  
-                    if num < 66: 
-                        print('match')
-                        ''' If we find a match we add those spaces to our 
-                            problem list'''
-                        problems.append({"desc":"space has one coincidence","crit":1})
+                        problems.append({"desc":"Space already exists in the data base","crit":1})  
+                    else:
+                        if num < 80: 
+                            print('match')
+                            ''' If we find a match we add those spaces to our 
+                                problem list'''
+                            problems.append({"desc":"A similar space already exist in the data base","crit":1})
+                        else:
+                            if num < 100:
+                                problems.append({"desc":"Space may be a duplicate, contact the page moderator","crit":1})
+
                 except:
                     '''There are many ways this can make an exception for once
                     the spaces may not have a fhash because is missing data so
@@ -630,15 +665,11 @@ def problemsPspace(request,pspace):
                     '''
                     pass
               else:
-                print('not fhash')
+                
                 try:
                     num1=abs(a.latitude-b.latitude)
                     num2=abs(a.longitude-b.longitude)
                 except:
-                    print(a.latitude)
-                    print(a.longitude)
-                    print(b.latitude)
-                    print(b.longitude)
                     num1=1
                 if num1<.003 and num2 <abs(.0053*math.cos(num1)):#rectangle of 666.666m per side
                     print('distance match')
@@ -647,7 +678,7 @@ def problemsPspace(request,pspace):
 
             if problems:
                 for problem in problems:
-                    messages.success(request, 'The space have a problem:'+ problem['desc'], extra_tags='alert')
+                    messages.success(request, 'The space has a problem:'+ problem['desc'], extra_tags='alert')
                 print('1')    
                 return 1
             print('0') 
@@ -691,7 +722,7 @@ def handle_csv(request,file):
                 complete_spaces = [{key: value if not value == '' else None \
                                 for key, value in row.items()} for row in reader]
             except:
-                messages.error(request, 'The file has an error, to fix it you can open in libre office and save "Use Text CSV Format"', extra_tags='alert')
+                messages.error(request, 'The file has an error, to fix it, you can open it in free office and save it as "Use Text CSV Format"', extra_tags='alert')
                 complete_spaces = []
             processed_spaces = []
             contacted_moderators=[]
@@ -846,6 +877,7 @@ def calculate_fhash(new_space):
         space_info.append(new_space.postal_code)
     space_stuff = " ".join(space_info).replace(",", "").replace("-","").replace(".","").replace("_","").replace("+","")
     space_string = ' '.join(space_stuff.split()).encode("raw_unicode_escape")
+    print(len(space_stuff))
     return tlsh.forcehash(space_string)
 
 @staff_member_required
@@ -915,8 +947,9 @@ def provisional_space(request):
         
         if data is None:
            spaces = ProvisionalSpace.objects.filter(discarded=True).delete()
+           print('all')
         else:
-
+           print('by id')
            if isinstance(data,str):
               data=ast.literal_eval(data)
               for id in data:
@@ -982,6 +1015,8 @@ def space_csv(request):
     if request.method == 'POST':
         data = request.POST.copy() 
         id = data.pop('id') 
+        print(id)
+        print(id[0])
         space = Space.objects.filter(id=id[0]).first()
         if space:
             for key, value in data.items():
@@ -1015,7 +1050,7 @@ def signup(request):
                     }),
                     
                     )
-            messages.info(request, 'The activation mail was sent!')
+            messages.info(request, 'The activation mail was sent')
             return redirect('/contribute')
     else:
         form = UserForm()
@@ -1036,7 +1071,7 @@ def activate(request, uidb64, token):
         login(request, user)
         return redirect('home')
     else:
-        messages.info(request, 'The page not exist!')
+        messages.info(request, 'The page does not exist!')
         return redirect('/')
 
 def password_reset(request):
@@ -1065,9 +1100,9 @@ def password_reset(request):
                         }),
                         
                         )
-                messages.info(request, 'The Reset Password mail was sent!')
+                messages.info(request, 'The reset password mail was sent!')
             else:
-                messages.info(request, 'The Email not exist in db!')
+                messages.info(request, 'The email does not exist in db!')
                 return redirect('/reset_password')
             return redirect('/contribute')
     else:
@@ -1095,14 +1130,14 @@ def password_reset_confirm(request, uidb64, token):
 
                 user.save()
                 login(request, user)
-                messages.info(request, 'passsword reset successfully!')
+                messages.info(request, 'Password resetted successfully!')
                 return redirect('/')
             else:
-                messages.info(request, 'passwords not match!')
+                messages.info(request,'Passwords do not match!')
                 print('/'+request.path_info)
                 return HttpResponseRedirect(request.path_info)
     
-    messages.info(request, 'The page not exist!')
+    messages.info(request, 'The page does not exist!')
     return redirect('/')
 
 
@@ -1124,7 +1159,7 @@ def Suggestions(request,space_id):
 @login_required
 def Discart_suggestion(request,suggestion_id):
     Suggestion.objects.filter(id=suggestion_id).update(active=False)
-    messages.info(request, 'The suggested change was discarted!')
+    messages.info(request, 'The suggested change was discarded!')
     return redirect(request.GET.get('next'))
 @login_required
 def Acept_suggestion(request,pk,suggestion_id):

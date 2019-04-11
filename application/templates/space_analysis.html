@@ -83,63 +83,7 @@
 			</div>
 		</div>
 	</div>
-	{%if problem2|length %}
-	<div id="problem2" class="col s12 ">
-		<div class="card hoverable">
-			<a class="modal-trigger" style="display: block;margin: 20px auto;width: 97%;" href="#distancenote">Note About Match by distance</a>
-			<div class="card-content">
-			<span class="card-title" id="wTitle">Match problems by distance</span>
-				<ul class="collection" id="problem-collection">
-					{% for space in problem2 %}
-					<li class="collection-item avatar scale-transition" id="lispace-{{space.1.id}}--{{space.0.id}}">
-						<p>
-							<table class="centered highlight" style="width:96%">
-								<thead>
-								<tr>
-									<th> </th>
-									<th>Provisional Space</th>
-									<th>Space in DB</th>
-								</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td>Name</td>
-										<td>{{space.1.name}}</td>
-										<td>{{space.0.name}}</td>
-									</tr>
-									<tr>
-										<td>Address</td>
-										<td>{{space.1.address1}}</td>
-										<td>{{space.0.address1}}</td>
-									</tr>
-									<tr>
-										<td>City</td>
-										<td>{{space.1.city}}</td>
-										<td>{{space.0.city}}</td>
-									</tr>
-									<tr>
-										<td>Province</td>
-										<td>{{space.1.province}}</td>
-										<td>{{space.0.province}}</td>
-									</tr>
-									<tr>
-										<td>Postal Code</td>
-										<td>{{space.1.postal_code}}</td>
-										<td>{{space.0.postal_code}}</td>
-									</tr>
-								</tbody>
-							</table>
-						</p>
-						<a class="secondary-content modal-trigger merge-space" id="mspace-{{space.0.id}}-{{space.1.id}}" href="#modal2"><i class="material-icons">edit</i></a>
-						<a class="secondary-content process-space " style="margin-top:40px" id="dspace-{{space.1.id}}" href="#!"><i class="material-icons green-text text-darken-2">check_circle</i></a>
-						<a class="secondary-content discard-space" style="margin-top:100px" id="dspace-{{space.1.id}}" href="#!"><i class="material-icons red-text text-darken-2">remove_circle</i></a>
-					</li>
-					{% endfor %}
-				</ul>
-			</div>
-		</div>
-	</div>
-	{%endif%}
+	
 	<div id="problem" class="col s12 ">
 		<div class="card hoverable">
 			<div class="card-content">
@@ -264,23 +208,7 @@
 			<a href="#!" class="modal-close waves-effect waves-green btn-flat">Got it!</a>
 		</div>
 	</div>
-	<!-- Note about hashes -->
-	<div id="distancenote" class="modal modal-d">
-		<div class="modal-content">
-			<p> Ideally, every space has a fingerprint (or hash) that identifies the
-			data in that space, we use this hash to compare the data in this space
-			to the data in other spaces, if a threshold is met, we assume the spaces
-			are the same and that's how we create the Match Problem table.</p>
-			<p>But we need a minimum amount of data to create a hash (50 bytes or so)
-			try to fill all the fields in this space so we can generate a hash for that space</p>
-			<p> Is possible that even with all the fields completed the hash won't generate because the data is not enough to fill 50 bytes </p>
-			<p>When spaces in db not have hash, we compare the distance directly in a square of 600 * 600 meters approx in the case of provisional space is in the square around the db space we trigger a match by distance trying avoiding  a duplicate spaces in db.	</p>
-			<p>Could be  many distance coincidence for each space!!!.	</p>
-		</div>
-		<div class="modal-footer">
-			<a href="#!" class="modal-close waves-effect waves-green btn-flat">Got it!</a>
-		</div>
-	</div>
+	
 
 	<!-- Provisional Space Modal -->
 	<div id="modal1" class="modal modal-d">
@@ -397,96 +325,7 @@
 				</div>
 				
 				<div class="col s4">
-					<a class="waves-effect waves-light btn save-dbspace">Save DB Space</a>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- Match Problem Modal -->
-	<div id="modal3" class="modal modal-d modal-fixed-footer">
-		<div class="modal-content">
-			<div  class="row">
-				<div class="col s5"><h3>Provisional Space</h3></div>
-				<div class="col s2"></div>
-				<div class="col s5"><h3>Space in DB</h3></div>
-			</div>
-			<div class="row">
-				<div class="col s5">
-					<input type="hidden" class="mspace1 prmodal" id="mspace1-id" value=""/>
-					<input type="text" class="mspace1 prmodal" placeholder="Name" id="mspace1-name" value=""/>
-					<input type="text" class="mspace1 prmodal" placeholder="Address" id="mspace1-address1" value="" />
-					<input type="text" class="mspace1 prmodal" placeholder="City" id="mspace1-city" value="" />
-					<input type="text" class="mspace1 prmodal" placeholder="Province" id="mspace1-province" value="" />
-					<input type="text" class="mspace1 prmodal" placeholder="Postal code" id="mspace1-postal_code" value="" />
-					<input type="text" class="mspace1 prmodal" placeholder="Latitude" id="mspace1-latitude" value="" />
-					<input type="text" class="mspace1 prmodal" placeholder="Longitude" id="mspace1-longitude" value="" />
-					<input type="text" class="mspace1 prmodal" placeholder="Website" id="mspace1-website" value="" />
-					<input type="text" class="mspace1 prmodal" placeholder="E-Mail" id="mspace1-email" value="" />
-				</div>
-				<div class="col s2">
-					<!-- Merger buttons -->
-					<div class="row mrow">
-						<a class="waves-effect waves-teal btn-flat leftm-arr mergerbtn" id="sendl-name"><i class="material-icons">arrow_back</i></a>
-						<a class="waves-effect waves-teal btn-flat rightm-arr mergerbtn" id="sendr-name"><i class="material-icons">arrow_forward</i></a>
-					</div>
-					<div class="row mrow">
-						<a class="waves-effect waves-teal btn-flat leftm-arr mergerbtn" id="sendl-address1"><i class="material-icons">arrow_back</i></a>
-						<a class="waves-effect waves-teal btn-flat rightm-arr mergerbtn"  id="sendr-address1"><i class="material-icons">arrow_forward</i></a>
-					</div>
-					<div class="row mrow">
-						<a class="waves-effect waves-teal btn-flat leftm-arr mergerbtn" id="sendl-city"><i class="material-icons">arrow_back</i></a>
-						<a class="waves-effect waves-teal btn-flat rightm-arr mergerbtn" id="sendr-city"><i class="material-icons">arrow_forward</i></a>
-					</div>
-					<div class="row mrow">
-						<a class="waves-effect waves-teal btn-flat leftm-arr mergerbtn" id="sendl-province"><i class="material-icons">arrow_back</i></a>
-						<a class="waves-effect waves-teal btn-flat rightm-arr mergerbtn" id="sendr-province"><i class="material-icons">arrow_forward</i></a>
-					</div>
-					<div class="row mrow">
-						<a class="waves-effect waves-teal btn-flat leftm-arr mergerbtn" id="sendl-postal_code"><i class="material-icons">arrow_back</i></a>
-						<a class="waves-effect waves-teal btn-flat rightm-arr mergerbtn" id="sendr-postal_code"><i class="material-icons">arrow_forward</i></a>
-					</div>
-					<div class="row mrow">
-						<a class="waves-effect waves-teal btn-flat leftm-arr mergerbtn" id="sendl-latitude"><i class="material-icons">arrow_back</i></a>
-						<a class="waves-effect waves-teal btn-flat rightm-arr mergerbtn" id="sendr-latitude"><i class="material-icons">arrow_forward</i></a>
-					</div>
-					<div class="row mrow">
-						<a class="waves-effect waves-teal btn-flat leftm-arr mergerbtn" id="sendl-longitude"><i class="material-icons">arrow_back</i></a>
-						<a class="waves-effect waves-teal btn-flat rightm-arr mergerbtn" id="sendr-longitude"><i class="material-icons">arrow_forward</i></a>
-					</div>
-					<div class="row mrow">
-						<a class="waves-effect waves-teal btn-flat leftm-arr mergerbtn" id="sendl-website"><i class="material-icons">arrow_back</i></a>
-						<a class="waves-effect waves-teal btn-flat rightm-arr mergerbtn" id="sendr-website"><i class="material-icons">arrow_forward</i></a>
-					</div>
-					<div class="row mrow">
-						<a class="waves-effect waves-teal btn-flat leftm-arr mergerbtn" id="sendl-email"><i class="material-icons">arrow_back</i></a>
-						<a class="waves-effect waves-teal btn-flat rightm-arr mergerbtn" id="sendr-email"><i class="material-icons">arrow_forward</i></a>
-					</div>
-				</div>
-				<div class="col s5">
-					<input type="hidden" class="mspace2" id="mspace2-id" value=""/>
-					<input type="text" class="mspace2" placeholder="Name" id="mspace2-name" value=""/>
-					<input type="text" class="mspace2" placeholder="Address" id="mspace2-address1" value="" />
-					<input type="text" class="mspace2" placeholder="City" id="mspace2-city" value="" />
-					<input type="text" class="mspace2" placeholder="Province" id="mspace2-province" value="" />
-					<input type="text" class="mspace2" placeholder="Postal code" id="mspace2-postal_code" value="" />
-					<input type="text" class="mspace2" placeholder="Latitude" id="mspace2-latitude" value="" />
-					<input type="text" class="mspace2" placeholder="Longitude" id="mspace2-longitude" value="" />
-					<input type="text" class="mspace2" placeholder="Website" id="mspace2-website" value="" />
-					<input type="text" class="mspace2" placeholder="E-Mail" id="mspace2-email" value="" />
-				</div>
-			</div>
-		</div>
-		<div class="modal-footer">
-			<div class="row">
-				<div class="col s4">
-					<a class="waves-effect waves-light btn save-pspace" id="prmodal">Save Provisional Space</a>
-				</div>
-				<div class="col s3 offset-s1">
-					<a class="waves-effect waves-light modal-close red lighten-2 btn" style="float:left">Cancel</a>
-				</div>
-				
-				<div class="col s4">
-					<a class="waves-effect waves-light btn save-dbspace">Save DB Space</a>
+					<a class="waves-effect waves-light btn save-dbspace" id="mspace2">Save DB Space</a>
 				</div>
 			</div>
 		</div>
@@ -620,6 +459,7 @@
 					database space and the provisional space
 				*/
 				}else if(id[0]== 'mspace'){
+
 					$.ajax({
 						type: 'GET',
 						dataType: "json",
@@ -631,6 +471,7 @@
 								}
 						}
 					});
+
 					$.ajax({
 						type: 'GET',
 						dataType: "json",
@@ -648,11 +489,17 @@
 
 		/* Saves the database space */
 		$('.save-dbspace').click(function(){
+			
+			
 			data = {};
 			$( ".mspace2" ).each(function( index ) {
+
 				var key = $(this).attr('id').split('-')[1];
-				data[key] = $( this ).val();
+				var value=$(this).val();
+				data[key] = value;
+				
 			});
+			
 			$.ajax({
 				type: 'POST',
 				dataType: "json",
@@ -673,6 +520,7 @@
 				var key = $(this).attr('id').split('-')[1];
 				data[key] = $( this ).val();
 			});
+			
 			$.ajax({
 				type: 'POST',
 				dataType: "json",
@@ -692,7 +540,7 @@
 			$.ajax({
 				type: 'DELETE',
 				dataType: "json",
-				data: JSON.stringify(),
+				data: JSON.stringify(id),
 				url: '/provisional_space/',
 				success: function (data) {
 					$('#loading').modal('close');	
@@ -712,7 +560,7 @@
 			$.ajax({
 				type: 'PATCH',
 				dataType: "json",
-				data: JSON.stringify(),
+				data: JSON.stringify(id),
 				url: '/provisional_space/',
 				success: function (data) {
 					$('#loading').modal('close');	
@@ -769,6 +617,7 @@
 					$("#approved-collection").html("");
 					$('#loading').modal('close');
 					M.toast({html: 'All provisional spaces processed'});
+					rerun_analysis();
 					recount_spaces();
 				}
 			});
@@ -792,7 +641,7 @@
 				success: function (data){ 
 					$("#"+type+"-collection").html("");
 					$('#loading').modal('close');
-					M.toast({html: 'All provisional spaces undo'})
+					M.toast({html: 'All provisional spaces undone'})
 					rerun_analysis();
 				}
 			});
@@ -823,6 +672,7 @@
 							Fhash: '+data[0].fhash+'<br/>'+
 							'</p>'+'<a class="secondary-content reset-space" href="#!" id="undosp-'+data[0].id+'"><i class="material-icons">undo</i></a>'+ '<a class="secondary-content delete-space" style="margin-top:100px" id="dspace-'+data[0].id+'" href="#!"><i class="material-icons red-text text-darken-2">remove_circle</i></a>' )
 							new_elem.appendTo("#discard-collection");
+							rerun_analysis();
 							recount_spaces();
 						}
 					});
@@ -856,6 +706,7 @@
 							'</p>'+'<a class="secondary-content reset-space" href="#!" id="undosp-'+data[0].id+'"><i class="material-icons">undo</i></a>'+'<a class="secondary-content commit-space" style="margin-top:40px" id="dspace-'+data[0].id+'" href="#!"><i class="material-icons green-text text-darken-2">check_circle</i></a>' )
 							new_elem.appendTo("#processed-collection");
 							recount_spaces();
+							rerun_analysis();
 						}
 					});
 				});
@@ -877,7 +728,7 @@
 						url: '/provisional_space/',
 						data: JSON.stringify({reset_flags:'1', id:[id]}),
 						success: function (data){
-							M.toast({html: 'Provisional space undo'});
+							M.toast({html: 'Provisional space undone'});
 							rerun_analysis();
 						}
 					});
