@@ -19,9 +19,10 @@ def createTemplates():
 		    
 		    html_content='Hi <strong>{{ name }}</strong>  a new space was created , click <a href={{url}}>here</a> to go provisional spaces analizer'
 		)
-
-createTemplates()
-
+try:
+	createTemplates()
+except:
+	pass
 #mail sender, on space change 
 
 def on_create(DataCreditLog,moderators):
