@@ -1,0 +1,46 @@
+atlas\_of\_innovation.settings package
+======================================
+
+Submodules
+----------
+
+atlas\_of\_innovation.settings.base module
+------------------------------------------
+
+.. automodule:: atlas_of_innovation.settings.base
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+atlas\_of\_innovation.settings.development module
+-------------------------------------------------
+
+.. automodule:: atlas_of_innovation.settings.development
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+atlas\_of\_innovation.settings.production module
+------------------------------------------------
+
+.. automodule:: atlas_of_innovation.settings.production
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+atlas\_of\_innovation.settings.staging module
+---------------------------------------------
+
+.. automodule:: atlas_of_innovation.settings.staging
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: atlas_of_innovation.settings
+    :members:
+    :undoc-members:
+    :show-inheritance:

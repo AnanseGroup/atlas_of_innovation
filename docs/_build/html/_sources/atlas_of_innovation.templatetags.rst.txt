@@ -1,0 +1,22 @@
+atlas\_of\_innovation.templatetags package
+==========================================
+
+Submodules
+----------
+
+atlas\_of\_innovation.templatetags.my\_templatetag module
+---------------------------------------------------------
+
+.. automodule:: atlas_of_innovation.templatetags.my_templatetag
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: atlas_of_innovation.templatetags
+    :members:
+    :undoc-members:
+    :show-inheritance:
