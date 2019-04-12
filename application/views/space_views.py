@@ -521,6 +521,8 @@ def analyze_spaces(request):
         for space in problem_spaces2:
             problem_spaces.append(space)
         problem_spaces2=[]
+        print(problem_spaces)
+        problem_spaces.sort(key=lambda pspace: pspace[0]['id'])
         if permited_all_spaces_in_country:
            dspaces = ProvisionalSpace.objects.filter(country=country, override_analysis=False, discarded=True).all()
         else:
