@@ -9,6 +9,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 # To get environment values
 import os
+# To get booleans from strings
+from ast import literal_eval
 
 # To get booleans from strings
 from ast import literal_eval
@@ -43,7 +45,7 @@ SITE_ID = 1
 MIDDLEWARE = [
     'application.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware', 
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -70,7 +72,9 @@ TEMPLATES = [
                 'my_templatetag': 'atlas_of_innovation.templatetags.my_templatetag',
     
             }
+
         },
+
     },
 ]
 
@@ -127,12 +131,11 @@ USE_TZ = True
 TIME_ZONE = 'UTC'
 
 # ReCaptcha
-RECAPTCHA_PUBLIC_KEY = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'# '6Lf_uiQUAAAAALicrb1JbiITWdIdOTuQzIHnnodJ'
-RECAPTCHA_PRIVATE_KEY = '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe'#'6Lf_uiQUAAAAABHjt9ryEqxIOPTSMDeEQSrz7O-q'
-NOCAPTCHA = True
-# RECAPTCHA_PUBLIC_KEY = os.environ['RECAPTCHA_PUBLIC_KEY']
-# RECAPTCHA_PRIVATE_KEY = os.environ['RECAPTCHA_PRIVATE_KEY']
-# NOCAPTCHA = literal_eval(os.getenv('NO_CAPTCHA', 'True'))
+
+RECAPTCHA_PUBLIC_KEY = os.environ['RECAPTCHA_PUBLIC_KEY']
+RECAPTCHA_PRIVATE_KEY = os.environ['RECAPTCHA_PRIVATE_KEY']
+NOCAPTCHA = literal_eval(os.getenv('NO_CAPTCHA', 'True'))
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
