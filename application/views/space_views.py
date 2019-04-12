@@ -9,6 +9,11 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.conf import settings
 from django.contrib import messages
 
+
+from django.http import Http404, HttpResponseRedirect
+from django import forms
+
+
 from django.http import Http404, HttpResponseRedirect
 from django import forms
 
@@ -30,8 +35,11 @@ import math
 from django.db.models import Count
 from application.serializers import SpaceSerializer
 from django.http import HttpResponse, JsonResponse
+
 from django.contrib.auth.mixins import LoginRequiredMixin
+
 from django.contrib.sites.shortcuts import get_current_site
+
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from post_office import mail
@@ -446,6 +454,7 @@ def analyze_spaces(request):
                if a.fhash: 
                 try:
                     num = tlsh.diffxlen(a.fhash, b.fhash)
+
                     if num<5:
                         b.override_analysis=False
                         b.discarded=True
@@ -454,7 +463,7 @@ def analyze_spaces(request):
                         pop_list.append(b.id)
                     else:
                       if num < 80: 
-                            ''' If we find a match we add those spaces to our 
+                            ''' If we find a match we add
                             problem list'''
                         
                             problem_spaces.append([model_to_dict(a,fields=fields),
@@ -696,18 +705,23 @@ def upload_file(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
+
             handle_csv(request,request.FILES['file'])
+
             return HttpResponseRedirect('/analyze/provisional_spaces/')
     else:
         form = UploadFileForm()
     return render(request, 'space_upload.html', {'form': form})
 
+
 def handle_csv(request,file):
+
 
         '''**process the spaces in the file uploaded,
         applying the nesesary changes to ensure the new spaces have the correct format and can be 
         saved as provisional spaces to analize it**'''
         send_to_default_moderator=0
+
 
         data_filename = file
 
@@ -720,12 +734,14 @@ def handle_csv(request,file):
         with open(djangoSettings.BASE_DIR+"/temp.csv", encoding="utf-8") as csvfile:
             reader = csv.DictReader(csvfile)
             # replace empty strings with None
+
             try:
                 complete_spaces = [{key: value if not value == '' else None \
                                 for key, value in row.items()} for row in reader]
             except:
                 messages.error(request, 'The file has an error, to fix it, you can open it in free office and save it as "Use Text CSV Format"', extra_tags='alert')
                 complete_spaces = []
+
             processed_spaces = []
             contacted_moderators=[]
             for space in complete_spaces:
@@ -914,14 +930,15 @@ def provisional_space(request):
         return JsonResponse({'success':1})
     if request.method == "PUT":
 
+
         spaces_list=[]
+
 
         if(isinstance(request.body,(bytes, bytearray))):
             str_response = request.body.decode('utf-8')
             data = json.loads(str_response)
         else:
             data = json.loads(request.body)
-
 
 
         if data and data['id']:

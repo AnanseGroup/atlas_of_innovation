@@ -91,7 +91,7 @@ function createPopup(space) {
  	if (space.website){
 		popupText += "<a class='popup-website-link' \
 						target='_blank' \
-						href='http://"+space.website+"'>"
+						href='"+space.website+"'>"
 						+ space.website + "</a>";
 	}
 

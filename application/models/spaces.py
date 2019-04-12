@@ -210,12 +210,14 @@ class ProvisionalSpace(models.Model):
     network_affiliation = models.ManyToManyField(AffiliationOption, blank=True)
 
     other_data = JSONField(null=True, blank=True)
+
     
     class Meta:
         permissions = (
             ("analyse_provisional_spaces", "Grants permission to use the analyser"),
             ("upload_provisonal_spaces", "Grants permission to use the uploader"),
         )
+
 
     def get_absolute_url(self):
         return reverse('space_profile', kwargs={'id':self.id})

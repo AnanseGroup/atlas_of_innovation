@@ -3,12 +3,14 @@ from datetime import date, timedelta
 from application.models import ProvisionalSpace
 from itertools import chain
 from django.contrib.auth.models import Permission
+
 import re
 from django.conf import settings
 from application.models import Space
 from application.models.user import Moderator
 from django.contrib.auth.models import Permission,User
 from application.views import IsOwner
+
 register = template.Library()
 
 @register.filter
@@ -52,6 +54,7 @@ def check_permission(user, permission):
     if perm_list:
         return True
     return False
+
 def getattribute(value, arg):
     """Gets an attribute of an object dynamically from a string name"""
     numeric_test = re.compile("^\d+$")
@@ -122,3 +125,4 @@ def isEqual(string1,string2):
     if(string1==string2):
         return True
     return False
+
