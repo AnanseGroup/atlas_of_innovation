@@ -3,7 +3,7 @@ from post_office.models import EmailTemplate
 from post_office import mail
 from django.contrib.auth.models import User
 from django.conf import settings as djangoSettings
-
+'''Create the email templates on db'''
 def createTemplates():
 	if not EmailTemplate.objects.filter(name='onchange_notification'):
 		EmailTemplate.objects.create(
@@ -19,11 +19,12 @@ def createTemplates():
 		    
 		    html_content='Hi <strong>{{ name }}</strong>  a new space was created , click <a href={{url}}>here</a> to go provisional spaces analizer'
 		)
+'''Error when post office is not installed '''
 try:
 	createTemplates()
 except:
 	pass
-#mail sender, on space change 
+#mail sender, on space create
 
 def on_create(DataCreditLog,moderators):
 	url = djangoSettings.URL+"analyze/provisional_spaces/"
@@ -39,7 +40,7 @@ def on_create(DataCreditLog,moderators):
 			print(email)
 			mail.send([email],template='oncreate_notification',context={'url':url,'name':name,},)
 
-
+#mail sender, on space change
 def on_change(DataCreditLog,moderators):  
 	url = djangoSettings.URL+"space/"+str(DataCreditLog.space_id)
 	credit=str(DataCreditLog.credit)

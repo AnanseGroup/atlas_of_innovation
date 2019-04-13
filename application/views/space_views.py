@@ -65,6 +65,7 @@ from django import template
 from application.decorators import user_is_autorized_in_Space,user_is_autorized_to_upload,user_is_autorized_to_analize
 
 import ast
+'''Shows profile of spaces '''
 def space_profile(request, id):
     space = Space.objects.get(id=id)
     owners= Owners.objects.filter(space=space)
@@ -88,15 +89,18 @@ def space_profile(request, id):
         if IsOwner(user.id,id):
             messages.error(request, 'Error, user is already an owner of this space') 
         else:
-            if IsModeratorOfSpace(request.user,space.province,space.country) or (Owners.objects.filter(user=user).count()<2 and user.moderator.country==space.country):
+            if IsModeratorOfSpace(request.user,space.province,space.country): # and user.moderator.country==space.country):
                 CreateOwner(user,space)
                 messages.success(request, 'Owner added correctly')
             else:
-                if(Owners.objects.filter(user=user).count()>=2):
-                  messages.error(request, 'You reached the limit of 2 owned spaces, contact the page moderator')
-                if user.moderator.country!=space.country:
-                   messages.error(request, 'You only can own a space in your country, contact the page moderator') 
-                messages.error(request, 'Owner not added')
+                # if(Owners.objects.filter(user=user).count()>=2):
+                #   messages.error(request, 'You reached the limit of 2 owned spaces, contact the page moderator')
+                # if user.moderator.country!=space.country:
+                #    messages.error(request, 'You only can own a space in your country, contact the page moderator') 
+                # messages.error(request, 'Owner not added')
+                 new_suggestion = CreateSuggestion(space,request.user)
+                 CreateFieldSuggestion('owner',None,request.user,new_suggestion)
+                 messages.success(request, 'Owner suggestion will be reviewed by administrator soon', extra_tags='alert')
 
             return redirect('space_profile', id=id)
     return render(
