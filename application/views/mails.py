@@ -27,7 +27,7 @@ except:
 #mail sender, on space create
 
 def on_create(DataCreditLog,moderators):
-	url = djangoSettings.URL+"analyze/provisional_spaces/"
+	url = djangoSettings.URL+"/analyze/provisional_spaces/"
 	credit=str(DataCreditLog.credit)
 	print('send to')
 	print(moderators)
@@ -42,7 +42,7 @@ def on_create(DataCreditLog,moderators):
 
 #mail sender, on space change
 def on_change(DataCreditLog,moderators):  
-	url = djangoSettings.URL+"space/"+str(DataCreditLog.space_id)
+	url = djangoSettings.URL+"/space/"+str(DataCreditLog.space_id)
 	credit=str(DataCreditLog.credit)
 	print('send to')
 	print(moderators)

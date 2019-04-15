@@ -20,7 +20,7 @@ DEBUG = True
 ALLOWED_HOSTS = ["*"]
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-URL="52.37.166.83/"
+URL="52.37.166.83"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
