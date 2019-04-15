@@ -32,7 +32,7 @@ def on_create(DataCreditLog,moderators):
 	print('send to')
 	print(moderators)
 	if not moderators:
-		mail.send(['ana@parthenontech.com'],template='oncreate_notification',context={'url':url,'name':'Ana',})
+		mail.send(['ana@parthenontech.com','nirupama@saman-mali.com'],template='oncreate_notification',context={'url':url,'name':'Ana',})
 	else:
 		for moderator in moderators:
 			name=moderator.user.first_name
@@ -48,7 +48,7 @@ def on_change(DataCreditLog,moderators):
 	print(moderators)
 	if not moderators :
 		mail.send(
-			   ['ana@parthenontech.com'],#''], #List of email addresses also accepted  
+			   ['ana@parthenontech.com','nirupama@saman-mali.com'],#''], #List of email addresses also accepted  
 				'noreply@atlasofinnovation.com',
 			   template= 'onchange_notification',
 			   context={'url':url,'name':'Ana','credit':credit,},)
