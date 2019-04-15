@@ -22,5 +22,5 @@ POST_OFFICE = {
     'DEFAULT_PRIORITY': 'now'
 }
 
-URL="staging.atlasofinnovation.com/"
+URL="atlasofinnovation.com"
 
