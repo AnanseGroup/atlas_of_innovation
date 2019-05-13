@@ -1092,6 +1092,7 @@ def activate(request, uidb64, token):
         user.moderator.email_confirmed = True
         user.save()
         login(request, user)
+        messages.info(request, 'Welcome to Atlas of Innovation, your account was activated successfully!')
         return redirect('home')
     else:
         messages.info(request, 'The page does not exist!')

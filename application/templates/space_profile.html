@@ -149,7 +149,7 @@
             {%if owners is not None%}
               {%for owner in owners%}
                 <h8 class="center-align row" >{{owner.user.first_name}} {{owner.user.last_name}}</h8>
-                {%if user|isAuthorized:space %}
+                {%if user.is_authenticated and user|isAuthorized:space %}
                 <h8 class="right-align row">{{owner.user.email}}</h8>
                 {%if user.id|moderateThisSpace:space %}
                  <a id="cardtitle" class="waves-effect waves-light btn" href="{% url 'remove_owner' space.id owner.user.id %}?next={{request.path}}"><i class="material-icons right">delete_forever</i>Remove owner </a>
