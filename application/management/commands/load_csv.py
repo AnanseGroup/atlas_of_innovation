@@ -133,7 +133,7 @@ class Command(BaseCommand):
                     data_credit = {
                                'ip_address': '127.0.0.1',
                                'space_id': new_space.id,
-                               'credit': 'CSV / '+new_space.data_credit
+                               'credit': 'CSV / '+str(new_space.data_credit)
                               }
                     new_data_credit = DataCreditLog(**data_credit)
                     new_data_credit.save()

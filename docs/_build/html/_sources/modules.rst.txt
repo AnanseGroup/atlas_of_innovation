@@ -1,0 +1,8 @@
+vagrant
+=======
+
+.. toctree::
+   :maxdepth: 4
+
+   application
+  
