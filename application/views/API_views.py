@@ -7,7 +7,6 @@ from django.http import HttpResponse,JsonResponse
 from django.db.models import Q
 
 def filter_spaces(request):
-    '''**These views render the database as JSON**'''
     filter_terms = request.GET
     spaces = Space.objects.all()
 

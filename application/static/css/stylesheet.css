@@ -1,4 +1,3 @@
-
 html,body {
 	margin: 0;
 	padding: 0;
@@ -78,20 +77,16 @@ a img {
 	margin-top: 10px;
 }
 
-
 #sponsor-giz {
 	left: 20px;
 	top: 15px;
-	min-height: 75px;
-	position: relative;
-
+	height: 75px;
+	position: absolute;
 }
+
 #sponsor-giz img {
-	
-max-height:80px;
- max-width:10vw; 
+	height: 100%;
 }
-
 
 #sponsor-fab-foundation {
 	left: 42px;
@@ -102,13 +97,9 @@ max-height:80px;
 
 #filter-bar {
 	position: relative;
-	max-height: 15vw;
-	max-width: 100%;
-	
+	height: 60px;
+	width: 100%;
 	/*text-align: center;*/
-}
-.container-bar{
-	vertical-align: middle;
 }
 
 .filter-buttons {
@@ -227,27 +218,17 @@ max-height:80px;
 	color: black;
 	text-decoration: none;
 }
-.padding-t{
-	 padding-top: 3vw !important;
-}
+
 #info-bar {
-	font-weight: bold;
 	position: relative;
 	text-align: center;
 	/*background-color: rgba(0,0,0,0.03);*/
-}
-.header{
-	font-weight: bold;
-	text-align: center;
-	margin: auto;
-	font-size: 0.9em;
 }
 
 #info-bar .header {
 	text-align: center;
 	max-width: 800px;
 	margin: auto;
-	font-size: 0.9em;
 }
 
 #info-bar .sponsors {
@@ -317,25 +298,9 @@ max-height:80px;
 	border-bottom-left-radius: 100px !important;
     border-bottom-right-radius: 100px !important;
 }
-.button-collapse {
-    display: none;
-    position:absolute;
-		padding-top: 47px;
-}
-.button-collapse-container{
 
-}
-
-
-
-.side-nav li>a{
-	font-family: 'Source Sans Pro', sans-serif;
-	font-weight: 300;
-	font-size: 1.7em;
-	text-decoration: none !important;
-}
-.navigation-bar-container {
-	min-height: 92px;
+#navigation-bar-container {
+	height: 95px;
 	width: 100%;
 	display: inline-flex;
 	box-shadow: -2px 2px 2.8px rgba(0,0,0,.1);
@@ -349,19 +314,10 @@ max-height:80px;
 
 .navigation-bar-logo {
 	float: left;
-	
-	float: left;
-    max-height: 80px;
-    
+	height: 74px;
 	margin-left: 42px;
 	margin-top: 10px;
 	margin-right: 78px;
-
-}
-.navigation-bar-img{
-	padding-left:10px;
-	height: 70px; 
-	position: absolute;top:1.3vw;
 }
 
 .navigation-bar {
@@ -381,15 +337,12 @@ max-height:80px;
 	margin-top: 38px;
 	margin-right: 42px;
 	text-decoration: none;
-	 vertical-align: middle;
 }
 
 .selected-navigation-bar-button {
 	text-decoration: underline;
 }
-select{
-	display: block;
-}
+
 .navigation-bar-contact-container {
 	position: fixed;
 	right: 42px;
@@ -485,8 +438,6 @@ select{
 	background-size: contain;
 	background-repeat: no-repeat;
 	background-position: right;
-	background-color:#FFFF;
-
 }
 
 .container {
@@ -523,10 +474,10 @@ select{
 }
 
 .page-intro-section {
-	width: 70vw;
+	width: 650px;
 	margin: 75px auto;
 	text-align: center;
-	
+	font-size: 14px;
 	line-height: 1.5;	
 }
 
@@ -543,10 +494,6 @@ select{
 
 .page-content a {
 	color: #00d4d2;
-}
-.discs li{
-		margin-left: 40px;
-	    list-style-type: disc !important;
 }
 .page-content .section-header {
 	text-align: center;
@@ -649,7 +596,7 @@ select{
 
 #map-container {
 	position: relative;
-	max-height: 75vW;
+	height: 90%;
 	height: -moz-calc(100% - 305px);
 	height: -webkit-calc(100% - 305px);
 	height: calc(100% - 305px);	
@@ -676,7 +623,6 @@ select{
 	left: 50%;
 	margin-left: -84px;
   margin-top: 75px;
-  font-size: 1.17em;
 }
 
 .loader,
@@ -801,21 +747,12 @@ select{
 	height: 60px;
 	font-weight: 300;
 }
-.wiki-content .column-content  {
+.wiki-content .column-content .column-header h3 {
 	font-weight: 300;	
 	float: left;
 	margin-top: 0;
 }
-.column-header h3 {
-	font-size:  1.5rem;	
-	float: left;
-	margin-top: 0;
-}
-.page-content h3{
-	display: block;
-    font-size: 1.17em;
-    font-weight: bold;
-}
+
 .wiki-content .column-header .see-all {
 	display: block;
 	float: left;
@@ -968,12 +905,11 @@ select{
 .wiki-content .columns div:last-of-type .column-content {
 	border: none;
 }
-
 .wiki-content .column-content .column-header {
 	height: 60px;
 	font-weight: 300;
 }
-.wiki-content .column-content  {
+.wiki-content .column-content .column-header h3 {
 	font-weight: 300;	
 	float: left;
 	margin-top: 0;
@@ -1004,12 +940,9 @@ select{
 }
 
 /* DELETE SPACE EMAIL */
-
 .email-us h5 {
 	text-align:right;
-	
-	
-	
+	font-size: 0.9rem;
 }
 
 /* CONTRIBUTORS */
@@ -1046,106 +979,10 @@ select{
 .center-list-25.map-moderators li {
 	margin-bottom: 2.5rem !important;
 }
-@media only screen and (max-width: 768px){
-	
-  #map-page-title {
-	
-	font-size: 2.5em;
-	
-   }
- .button-collapse {
-    display: block;
-   }
-    h5{
-    	font-size: .89em;
-    }
- #sponsor-giz img {
-   	max-height:100vw;
- 	max-width:20vw; 
-	
-	padding-top: 2vw;
-    }
-	
- .email-us h5 {
-	
-	font-size: 1.2rem;
-	font-weight: bold;
-    }
- .page-intro-section {
-	font-size: 1.5em;
-   }
- .page-menu  ul li {
-   	font-size: 2em;
-   }
-
-}
-@media only screen and (max-device-width: 996px){
-  .button-collapse {
-    display: block;
-   }
-  #map-page-title {
-	
-	font-size: 2.5em;
-	
-   }
-  
-  #sponsor-giz img {
-   	max-height:100vw;
- 	max-width:17vw; 
-	
-	padding-top: 2vw;
-    }
-  h5{
-		font-size: 24px;
-	}
-  .email-us h5 {
-	
-	
-	font-size: 1.2rem;
-	font-weight: bold;
-    }
-  .page-intro-section {
-	font-size: 2em;
-    }
-  .page-menu  ul li {
-   	font-size: 2.5em;
-    }
-  .page-content {
-	font-size: 1.5em
-    }
-  .wiki-list {
-	font-size: 2em;
-	}
-  .page-intro-section .intro-header {
-	font-size: 2.5em;}
-  .navigation-bar-container {
-	min-height: 15vw;}
-  .navigation-bar-logo img{
-	
-	height: 12vw; 
-	position: absolute;top:1.3vw;
-	}
-  #map-container {
-	position: relative;
-	max-height: 85vw;
-	height: -moz-calc(100% - 105px);
-	height: -webkit-calc(100% - 105px);
-	height: calc(100% - 105px);	
-	}
- body{
-		min-height: 100%;
-	}
-
-}
-
-
 
 .email-us h5 a{
 	font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', sans-serif;
 	color: #00d4d2;
-	font-size: 1rem;
-	font-weight: bold;
-	 text-decoration: underline;
 }
 
 /*PRIMARY SPACE TYPE COLORS*/
@@ -1305,38 +1142,3 @@ span.badge.red {
 	margin-left: -10px;
 } 
 
-.logout{
-	position: absolute;
-    right:  70px;
-}
-.msg {
-  width:100%;
-  border: 1px solid;
-  padding:10px;
-  margin: 20px;
-  color: grey;
-}
-.msg-error {
- 
-  border-color: #d32f2f;
-  background-color: #ef5350;
-  color: white;
-}
-.msg-alert {
-  
-   border-color: #ef6c00;
-  background-color: #ff9800;
-  color: white;
-}
-
-.msg-info{
-  border-color: #0288d1;
-  background-color: #29b6f6;
-  color: white;
-}
-.toggle-content{
-	display: none;
-}
-
-/*add * after required field*/
-.required:before { content: "*"; }
