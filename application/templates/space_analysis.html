@@ -1,5 +1,12 @@
 <html>
-{%include "snippets/head.html"%}
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville|Source+Sans+Pro:200,300,300i,400,600|Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="/static/css/stylesheet.css"/>
+  <link rel="stylesheet" type="text/css" href="/static/css/wikipage.css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/static/css/materialize/css/materialize.min.css"/>
+  <script src="/static/css/materialize/js/materialize.min.js"></script>
+</head>
     {% include "snippets/header.html" %}
 <br><br><br>
 
@@ -20,14 +27,10 @@
 </div>
 <div class="row" style="font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', sans-serif;">
 	<div class="col s12">
-
 		<ul class="tabs" id="tabs">
 			<li class="tab col s2"><a class="tabb" id="approved-tag" href="#approved">New Spaces ({{ approved | length }})</a></li>
 			<li class="tab col s2"><a class="tabb" id="excluded-tag" href="#dataerr">Data errors ({{ excluded | length }})</a></li>
 			<li class="tab col s2"><a class="tabb" id="problem-tag" href="#problem">Match Problem ({{ problem | length }})</a></li>
-			{%if problem2|length %}
-			<li class="tab col s2"><a class="tabb" id="problem-tag" href="#problem2">Match by distance ({{ problem2 | length }})</a></li>
-			{%endif%}
 			<li class="tab col s2"><a class="tabb" id="discarded-tag" href="#discarded">Discarded ({{ discarded | length }})</a></li>
 			<li class="tab col s2"><a class="tabb" id="processed-tag" href="#processed">Processed ({{ processed | length }})</a></li>
 
@@ -84,12 +87,10 @@
 			</div>
 		</div>
 	</div>
-	
 	<div id="problem" class="col s12 ">
 		<div class="card hoverable">
 			<div class="card-content">
 			<span class="card-title" id="wTitle">Match problems</span>
-			<p class="center-align"style="color:red;">The spaces may have a lot of  matches, check the list to make sure you solved all the match problems for the spaces, before aprove them.</p>
 				<ul class="collection" id="problem-collection">
 					{% for space in problem %}
 					<li class="collection-item avatar scale-transition" id="lispace-{{space.1.id}}--{{space.0.id}}">
@@ -142,15 +143,14 @@
 			</div>
 		</div>
 	</div>
-	<div id="discarded" class="col s12 ">
-		<div class="card hoverable discarted" >
+	<div id="discarded" class="col s12">
+		<div class="card hoverable">
 			<div class="card-content">
 			<span class="card-title" id="wTitle">Discarded</span>
-			<p >
+			<p>
 				<a class="waves-effect waves-light btn undo-all" href="#!" id="undo-discard">Undo All Spaces</a>
-				<a style="float:right" class="waves-effect waves-light btn modal-trigger red discard-all accent-2"   href="#delete-forever">DELETE FOREVER</a>
+				<a style="float:right" class="waves-effect waves-light btn modal-trigger red  accent-2" href="#delete-forever">DELETE FOREVER</a>
 			</p>
-		
 				<ul class="collection" id="discard-collection">
 					{% for space in discarded %}
 					<li class="collection-item avatar" id="lispace-{{space.id}}">
@@ -162,7 +162,6 @@
 							Fhash: {{space.fhash}}<br/>
 						</p>
 						<a class="secondary-content reset-space" id="pspace-{{space.id}}" href="#!"><i class="material-icons">undo</i></a>
-						<a class="secondary-content delete-space" style="margin-top:100px" id="dspace-{{space.0.id}}" href="#!"><i class="material-icons red-text text-darken-2">remove_circle</i></a>
 					</li>
 					{% endfor %}
 				</ul>
@@ -188,7 +187,6 @@
 							Fhash: {{space.fhash}}<br/>
 						</p>
 						<a class="secondary-content reset-space" id="pspace-{{space.id}}" href="#!"><i class="material-icons">undo</i></a>
-						<a class="secondary-content commit-space" style="margin-top:40px" id="dspace-{{space.0.id}}" href="#!"><i class="material-icons green-text text-darken-2">check_circle</i></a>
 					</li>
 					{% endfor %}
 				</ul>
@@ -212,24 +210,11 @@
 			<a href="#!" class="modal-close waves-effect waves-green btn-flat">Got it!</a>
 		</div>
 	</div>
-	
 
 	<!-- Provisional Space Modal -->
 	<div id="modal1" class="modal modal-d">
-		{% load countries %}
-{% get_countries as countries %}
 		<div class="modal-content">
 			<input type="hidden" class="mspace1 nrmodal" id="espace-id" value=""/>
-			<input  id="espace-country1" class="mspace1 nrmodal" value="" readonly />
-			<select style="display:inline-block;"  id="espace-country" class="mspace1 nrmodal" value="">
-			
-				<option value="">Country</option>
-
-{% for country in countries %}
-
-            <option value="{{ country.0 }}">{{ country.1 }}</option>
-            {% endfor %}
-            </select>
 			<input type="text" id="espace-name" class="mspace1 nrmodal" placeholder="Name" value=""/>
 			<input type="text" id="espace-address1" class="mspace1 nrmodal" placeholder="Address" value="" />
 
@@ -330,14 +315,13 @@
 		<div class="modal-footer">
 			<div class="row">
 				<div class="col s4">
-					<a class="waves-effect waves-light btn save-pspace" id="prmodal">Save Provisional Space</a>
-				</div>
-				<div class="col s3 offset-s1">
 					<a class="waves-effect waves-light modal-close red lighten-2 btn" style="float:left">Cancel</a>
 				</div>
-				
 				<div class="col s4">
-					<a class="waves-effect waves-light btn save-dbspace" id="mspace2">Save DB Space</a>
+					<a class="waves-effect waves-light btn save-pspace" id="prmodal">Save Provisional Space</a>
+				</div>
+				<div class="col s4">
+					<a class="waves-effect waves-light btn save-dbspace">Save DB Space</a>
 				</div>
 			</div>
 		</div>
@@ -363,7 +347,7 @@
 					<a class="waves-effect waves-light modal-close red lighten-2 btn" style="float:left">Cancel</a>
 				</div>
 				<div class="col s4">
-					<a class="waves-effect waves-light btn delete-discarded"  id="{{discarded_id}}" href="#">YES! Delete them all</a>
+					<a class="waves-effect waves-light btn" id="delete-discarded" href="#">YES! Delete them all</a>
 				</div>
 			</div>
 		</div>
@@ -378,7 +362,7 @@
 					<a class="waves-effect waves-light modal-close red lighten-2 btn" style="float:left">Cancel</a>
 				</div>
 				<div class="col s4">
-					<a class="waves-effect waves-light btn commit-spaces" id="{{processed_id}}" href="#">YES! Commit them </a>
+					<a class="waves-effect waves-light btn" id="commit-spaces" href="#">YES! Commit them </a>
 				</div>
 			</div>
 		</div>
@@ -429,24 +413,32 @@
 		});
 		/* CSRF stuff ends */
 
-		/*save current tab on refresh*/
-		$('a[class="tabb"]').on('click', function(e) {
-    		localStorage.setItem('activeTab', $(e.target).attr('href'));
-    	});
+			$('a[class="tabb"]').on('click', function(e) {
+    localStorage.setItem('activeTab', $(e.target).attr('href'));
+    
+});
 		var activeTab = localStorage.getItem('activeTab');
 
-		$('.tabs').tabs();
-		var elem = document.querySelector('.tabs');
-		var options = {}
-		var instance = M.Tabs.init(elem, options);
-		if (activeTab) {
-						activeTab=activeTab.replace(/#/g, '');
-						instance.select(activeTab);
-   						//console.log(activeTab);
-		}
+// En la consola te va a mostrar la pestaña donde hiciste el último click y lo
+// guarda en "activeTab". Te dejo el console para que lo veas. Y cuando refresques
+// el browser, va a quedar activa la última donde hiciste el click.
+$('.tabs').tabs();
+//activeTab=activeTab.replace(/#/g, '');
+var elem = document.querySelector('.tabs');
+//var instance = M.Tabs.getInstance(elem);
 
+var options = {}
+
+var instance = M.Tabs.init(elem, options);
+if (activeTab) {
+	activeTab=activeTab.replace(/#/g, '');
+	//$('.tabs').tabs('select',activeTab);
+	instance.select(activeTab);
+   
+   console.log(activeTab);
+}
 		
-             /*end  save current tab*/                 
+                              
 		
 
 		$('.modal-h').modal();
@@ -466,9 +458,6 @@
 						success: function (data){
 								for(var k in data){
 									$("#espace-"+k).val(data[k]);
-									if(k== "country"){
-										$("#espace-"+k+'1').val(data[k]);
-									}
 								}
 						}
 					})
@@ -476,7 +465,6 @@
 					database space and the provisional space
 				*/
 				}else if(id[0]== 'mspace'){
-
 					$.ajax({
 						type: 'GET',
 						dataType: "json",
@@ -488,7 +476,6 @@
 								}
 						}
 					});
-
 					$.ajax({
 						type: 'GET',
 						dataType: "json",
@@ -506,17 +493,11 @@
 
 		/* Saves the database space */
 		$('.save-dbspace').click(function(){
-			
-			
 			data = {};
 			$( ".mspace2" ).each(function( index ) {
-
 				var key = $(this).attr('id').split('-')[1];
-				var value=$(this).val();
-				data[key] = value;
-				
+				data[key] = $( this ).val();
 			});
-			
 			$.ajax({
 				type: 'POST',
 				dataType: "json",
@@ -537,7 +518,6 @@
 				var key = $(this).attr('id').split('-')[1];
 				data[key] = $( this ).val();
 			});
-			
 			$.ajax({
 				type: 'POST',
 				dataType: "json",
@@ -550,48 +530,37 @@
 				}
 			});
 		});
-	/* Deletes all the discarded provisional spaces */
-		$('.modal-content').on('click', '.delete-discarded', function(){
-			$('#loading').modal('open');
-			var id = $(this).attr('id');
+
+		/* Deletes all the discarded provisional spaces */
+		$('#delete-discarded').click( function(){
 			$.ajax({
 				type: 'DELETE',
 				dataType: "json",
-				data: JSON.stringify(id),
 				url: '/provisional_space/',
 				success: function (data) {
-					$('#loading').modal('close');	
 					$('.modal-h').modal('close');
 					$("#discard-collection").html("");
-					M.toast({html: 'Provisional spaces deleted successfully'})
 					recount_spaces();
-					
+					M.toast({html: 'Provisional spaces deleted successfully'})
 				}
 			});
 		});
 
 		/* Adds and deletes all the processed provisional spaces */
-		$('.modal-content').on('click','.commit-spaces',function(){
-			$('#loading').modal('open');
-			var id = $(this).attr('id');
+		$('#commit-spaces').click(function(){
 			$.ajax({
 				type: 'PATCH',
 				dataType: "json",
-				data: JSON.stringify(id),
 				url: '/provisional_space/',
 				success: function (data) {
-					$('#loading').modal('close');	
 					$('.modal-h').modal('close');
 					$("#processed-collection").html("");
-					M.toast({html: 'Provisional spaces commited successfully'})
 					recount_spaces();
-					
+					M.toast({html: 'Provisional spaces commited successfully'})
 				}
 			});
 		});
 
-
-		
 		/* Handles the merger buttons */
 		$('.mergerbtn').click(function(){
 			var id = $(this).attr('id').split("-");
@@ -609,7 +578,6 @@
 
 		/* Handles processing all spaces */
 		$("#process-all").click(function() {
-			$('#loading').modal('open');
 			var ids = [];
 			$('#approved-collection li').each(function(i){
 				ids.push($(this).attr("id").split('-')[1])
@@ -628,23 +596,18 @@
 						Province: '+data[i].province+'<br/> \
 						Postal Code: '+data[i].postal_code+'<br/> \
 						Fhash: '+data[i].fhash+'<br/>'+
-						'</p>'+'<a class="secondary-content reset-space" href="#!" id="undosp-'+data[i].id+'"><i class="material-icons">undo</i></a>'+'<a class="secondary-content commit-space" style="margin-top:40px" id="dspace-'+data[i].id+'" href="#!"><i class="material-icons green-text text-darken-2">check_circle</i></a>'  )
+						'</p>'+'<a class="secondary-content reset-space" href="#!" id="undosp-'+data[i].id+'"><i class="material-icons">undo</i></a>' )
 						new_elem.appendTo("#processed-collection");
 					}
 					$("#approved-collection").html("");
-					$('#loading').modal('close');
 					M.toast({html: 'All provisional spaces processed'});
-					rerun_analysis();
 					recount_spaces();
 				}
 			});
 		});
 
-
-		/* Handles undo all spaces */
-
+		/* Handles processing all spaces */
 		$(".undo-all").click(function(){
-			$('#loading').modal('open');
 			var ids = [];
 			type = $(this).attr("id").split('-')[1];
 			$('#'+type+'-collection li').each(function(i){
@@ -657,8 +620,7 @@
 				data: JSON.stringify({reset_flags:'1', id:ids}),
 				success: function (data){ 
 					$("#"+type+"-collection").html("");
-					$('#loading').modal('close');
-					M.toast({html: 'All provisional spaces undone'})
+					M.toast({html: 'All provisional spaces undo'})
 					rerun_analysis();
 				}
 			});
@@ -691,9 +653,8 @@
 							Province: '+data[0].province+'<br/> \
 							Postal Code: '+data[0].postal_code+'<br/> \
 							Fhash: '+data[0].fhash+'<br/>'+
-							'</p>'+'<a class="secondary-content reset-space" href="#!" id="undosp-'+data[0].id+'"><i class="material-icons">undo</i></a>'+ '<a class="secondary-content delete-space" style="margin-top:100px" id="dspace-'+data[0].id+'" href="#!"><i class="material-icons red-text text-darken-2">remove_circle</i></a>' )
+							'</p>'+'<a class="secondary-content reset-space" href="#!" id="undosp-'+data[0].id+'"><i class="material-icons">undo</i></a>' )
 							new_elem.appendTo("#discard-collection");
-							rerun_analysis();
 							recount_spaces();
 						}
 					});
@@ -708,7 +669,7 @@
 				$('#loading').modal('open');
 				$(this).parent().addClass("scale-out").delay(400).queue(function(next){
 					var id = $(this).attr('id').split("-")[1];
-
+					
 					$(this).remove();
 					next();
 					$('#loading').modal('close');
@@ -727,10 +688,9 @@
 							Province: '+data[0].province+'<br/> \
 							Postal Code: '+data[0].postal_code+'<br/> \
 							Fhash: '+data[0].fhash+'<br/>'+
-							'</p>'+'<a class="secondary-content reset-space" href="#!" id="undosp-'+data[0].id+'"><i class="material-icons">undo</i></a>'+'<a class="secondary-content commit-space" style="margin-top:40px" id="dspace-'+data[0].id+'" href="#!"><i class="material-icons green-text text-darken-2">check_circle</i></a>' )
+							'</p>'+'<a class="secondary-content reset-space" href="#!" id="undosp-'+data[0].id+'"><i class="material-icons">undo</i></a>' )
 							new_elem.appendTo("#processed-collection");
 							recount_spaces();
-							rerun_analysis();
 						}
 					});
 				});
@@ -756,7 +716,7 @@
 						url: '/provisional_space/',
 						data: JSON.stringify({reset_flags:'1', id:[id]}),
 						success: function (data){
-							M.toast({html: 'Provisional space undone'});
+							M.toast({html: 'Provisional space undo'});
 							rerun_analysis();
 						}
 					});
@@ -765,27 +725,23 @@
 		);
 
 		/* Runs the analysis again asyncronously */
-
-		function rerun_analysis()
-		{
+		function rerun_analysis(){
 			$('#loading').modal('open');
 
 			 setTimeout(function(){// wait for 5 secs(2)
-
-           		location.reload(); // then reload the page.(3)
-            				}, 500); 
-			/*
-			$.ajax({
-
-
-	
-
+           location.reload(); // then reload the page.(3)
+      }, 500); 
+			$('#loading').modal('close');
+			/*$.ajax({
 
 				type: 'GET',
 				dataType: "json",
 				url: '/analyze/provisional_spaces/',
 				data: {json_list:'1'},
 				success: function (space){
+					$('#approved-collection').html('');
+					$('#excluded-collection').html('');
+					$('#problem-collection').html('');
 					for(var i = 0; i < space.approved.length; i++) {
 						data = space.approved[i];
 						new_elem = $('<li class="collection-item avatar scale-transition" id="lispace-'+data.id+'"><p>'+
@@ -813,7 +769,7 @@
 						Fhash: '+data[0].fhash+'<br/> \
 						Problems: <br/> '+ problems +
 						'</p>'+'<a class="secondary-content modal-trigger approved-space" id="pspace-'+data[0].id+'" href="#modal1"><i class="material-icons">edit</i></a><a class="secondary-content process-space " style="margin-top:40px" id="dspace-'+data[0].id+'" href="#!"><i class="material-icons green-text text-darken-2">check_circle</i></a><a class="secondary-content discard-space" style="margin-top:100px" id="dspace-'+data[0].id+'" href="#!"><i class="material-icons red-text text-darken-2">remove_circle</i></a>')
-						new_elem.appendTo("#excluded-collection").load();
+						new_elem.appendTo("#excluded-collection");
 					}
 					for(var i = 0; i < space.problem.length; i++) {
 						data = space.problem[i]
@@ -864,7 +820,6 @@
 		/* Counts the number of spaces in the collections */
 		function recount_spaces() {
 			var len =$("#approved-collection li").length;
-			
 			var dislen = "New Spaces ("+len+")";
 			$("#approved-tag").html(dislen);
 			var len =$("#excluded-collection li").length;
@@ -879,53 +834,7 @@
 			var len =$("#processed-collection li").length;
 			var dislen = "Processed ("+len+")";
 			$("#processed-tag").html(dislen);
-			
-			
 		}
-
-		/* Handles the delete only one space event */
-		$('.collection').on('click', '.delete-space',
-			function() {
-				$(this).parent().addClass("scale-out").delay(400).queue(function(next){
-					var id = $(this).attr('id').split("-")[1];
-					$(this).remove();
-					next();
-					$.ajax({
-						type: 'DELETE',
-						dataType: "json",
-						url: '/provisional_space/',
-						data: JSON.stringify({discarded:'1', id:[id]}),
-						success: function (data){
-							M.toast({html: 'Provisional space deleted'});
-							
-							recount_spaces();
-						}
-					});
-				});
-			}
-		);
-
-		/* Handles the commit only one space event */
-		$('.collection').on('click', '.commit-space',
-			function() {
-				$(this).parent().addClass("scale-out").delay(400).queue(function(next){
-					var id = $(this).attr('id').split("-")[1];
-					$(this).remove();
-					next();
-					$.ajax({
-						type: 'PATCH',
-						dataType: "json",
-						url: '/provisional_space/',
-						data: JSON.stringify({commited:'1', id:[id]}),
-						success: function (data){
-							M.toast({html: 'Provisional space saved in db'});
-							
-							recount_spaces();
-						}
-					});
-				});
-			}
-		);
 
 	});
 

@@ -1,5 +1,0 @@
-############
-views
-############
-
-this sections contains most of the modules that manage the logic of Atlas of innovation, we could agrupate in space creation and modify, users signup , mails and last but not least importer that includes all the spaces analizer  .

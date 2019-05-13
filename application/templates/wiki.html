@@ -16,14 +16,10 @@
 				<div class="column-header">
 					<h3>Countries</h3>
 					<a href="#_" class="see-all">See All</a>
-					there are {{spaces}} Spaces
 				</div>
 				<ul class="wiki-list">
-					{% load app_filters %}
 					{% for code, name in countries %}
-						{%if  code|ExistSpaces %}
 						<a href="{% url 'list_spaces' %}?country={{code}}"<li>{{name}}<!--span class="count pink">(${random.randrange(1,100)})</span--></li></a> <br/>
-						{%endif%}
 					{% endfor %}
 				</ul>
 			</div>
