@@ -323,8 +323,11 @@
           <br>
           <ul class="collection">
              {% for field, value in space.other_data.items %}
-                {% if value %}
+                {% if value  %}
+                  {%ifnotequal value "NULL"%}
                   <li class="collection-item"><p><strong>{{field}}:</strong> {{value}}</p></li>
+                 {% endifnotequal %}
+
                 {% endif %}
              {% endfor %}
            </ul>

@@ -466,7 +466,7 @@ def analyze_spaces(request):
                         problem_spaces=[x for x in problem_spaces if x[1]['id']!=b.id]
                         pop_list.append(b.id)
                     else:
-                      if num < 80: 
+                      if num < 100: 
                             ''' If we find a match we add
                             problem list'''
                         
@@ -1115,7 +1115,7 @@ def password_reset(request):
                 mail.send(
                         [form.cleaned_data.get('email')], # List of email addresses also accepted
                         'from@example.com',
-                        subject='Reset tour Atlas Password',
+                        subject='Reset your Atlas Password',
                         message=render_to_string('reset_password_email.html', {
                             'user': user,
                             'domain': djangoSettings.URL,
@@ -1311,6 +1311,9 @@ def GetOwners(space_id):
         return None
     users=[]
     for owner in owners:
-        users.append(owner.user.moderator)
+        try:
+         users.append(owner.user.moderator)
+        except:
+         print("no moderator")
     print(users)
     return users
