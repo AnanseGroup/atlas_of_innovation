@@ -4,7 +4,7 @@ var country = url.searchParams.get("country");
 var type_filter = "country";
 var name_filter = country;
 var name_f = name_filter.split('+').join(' ');
-$.get('/api/space/filter/?country='+country, function(spaces) {
+$.get('/api/space/filter/?country='+country+'&fields=id,name', function(spaces) {
 	if(spaces!="") {
 		$('#wiki-list-content').prepend(
 			$('<span>')
