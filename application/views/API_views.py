@@ -35,11 +35,12 @@ def filter_spaces(request):
     if 'network_affiliation' in filter_terms:
         spaces = spaces.filter(network_affiliation__name=filter_terms['network_affiliation'])
 
-    fields = ['latitude','longitude','name','city','country','website','short_description', 'id']
+    fields = ['latitude','longitude','name','city','country','website','short_description','id']
     if 'fields' in filter_terms:
          fields = set(fields) & set(filter_terms['fields'].split(","))
-    fields.extend(['validated', 'recently_updated'])
-    serializer = SpaceSerializer(spaces, fields=fields, many=True)
+    fields2 = list(fields)
+    fields2.extend(['validated', 'recently_updated'])
+    serializer = SpaceSerializer(spaces, fields=fields2, many=True)
 
     return JsonResponse(serializer.data, safe=False)
 
