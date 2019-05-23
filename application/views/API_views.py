@@ -41,9 +41,10 @@ def filter_spaces(request):
     if 'fields' in filter_terms:
          fields = set(fields) & set(filter_terms['fields'].split(","))
     fields2 = list(fields)
-    fields2.extend(['validated', 'recently_updated'])
-    if spaces is not None:
-       serializer = SpaceSerializer(spaces, fields=fields2, many=True)
+    if spaces is not None and not 'not_extend' in filter_terms:
+       fields2.extend(['validated', 'recently_updated'])
+    print(spaces)
+    serializer = SpaceSerializer(spaces, fields=fields2, many=True)
 
     return JsonResponse(serializer.data, safe=False)
 
