@@ -19,7 +19,7 @@ EMAIL_HOST_USER = 'atlasofinnovation@gmail.com'
 EMAIL_HOST_PASSWORD = '4tl4sofinnovation'
 EMAIL_PORT = 587
 POST_OFFICE = {
-    'DEFAULT_PRIORITY': 'now'
+   
 }
 
 URL="atlasofinnovation.com"

@@ -1103,7 +1103,6 @@ def password_reset(request):
     when it perform any change  o create a new space a email is send to correspondent moderator to validate the changes**'''
     if request.method == 'POST':
         form = MailResetPasswordForm(request.POST)
-        print("aqui")
         if form.is_valid():
             print("is valid")
             try:

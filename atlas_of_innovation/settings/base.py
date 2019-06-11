@@ -92,6 +92,7 @@ DATABASES = {
         'PASSWORD': os.environ.get('RDS_PASSWORD'),
         'HOST': os.environ.get('RDS_HOSTNAME'),
         'PORT': os.environ.get('RDS_PORT'),
+        'CONN_MAX_AGE': 0,
     }
 }
 
