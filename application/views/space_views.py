@@ -1063,8 +1063,9 @@ def signup(request):
             user.moderator.save()
             mail.send(
                     [form.cleaned_data.get('email')], # List of email addresses also accepted
-                    'from@example.com',
+                    'noreply@atlasofinnovation.com',
                     subject='Activate Your Atlas Account',
+                    priority='now',
                     message=render_to_string('account_activation_email.html', {
                         'user': user,
                         'domain': djangoSettings.URL,
@@ -1113,8 +1114,9 @@ def password_reset(request):
             if(user is not None):
                 mail.send(
                         [form.cleaned_data.get('email')], # List of email addresses also accepted
-                        'from@example.com',
+                        'noreply@atlasofinnovation.com',
                         subject='Reset your Atlas Password',
+                        priority='now',
                         message=render_to_string('reset_password_email.html', {
                             'user': user,
                             'domain': djangoSettings.URL,
