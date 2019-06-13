@@ -1,10 +1,11 @@
 var url_string = window.location.href;
 var url = new URL(url_string);
 var country = url.searchParams.get("country");
+if(country){
 var type_filter = "country";
 var name_filter = country;
 var name_f = name_filter.split('+').join(' ');
-$.get('/api/space/filter/?country='+country+'&fields=id,name', function(spaces) {
+$.get('/api/space/filter/?country='+country+'&fields=id,name&not_extend', function(spaces) {
 	if(spaces!="") {
 		$('#wiki-list-content').prepend(
 			$('<span>')
@@ -46,3 +47,4 @@ $.get('/api/space/filter/?country='+country+'&fields=id,name', function(spaces) 
 		);
 	}
 });
+}

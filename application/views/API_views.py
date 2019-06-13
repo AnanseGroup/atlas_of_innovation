@@ -10,7 +10,7 @@ def filter_spaces(request):
     '''**These views render the database as JSON**'''
     filter_terms = request.GET
     spaces = Space.objects.all()
-
+    print(spaces)
     if 'name' in filter_terms:
         spaces = spaces.filter(name__icontains=filter_terms['name'])
 
@@ -40,9 +40,10 @@ def filter_spaces(request):
     if 'fields' in filter_terms:
          fields = set(fields) & set(filter_terms['fields'].split(","))
     fields2 = list(fields)
-    fields2.extend(['validated', 'recently_updated'])
+    if spaces is not None and not 'not_extend' in filter_terms:
+       fields2.extend(['validated', 'recently_updated'])
+    
     serializer = SpaceSerializer(spaces, fields=fields2, many=True)
-
     return JsonResponse(serializer.data, safe=False)
 
 # We're not going to allow for programmatic creation/editing/deleting for fear

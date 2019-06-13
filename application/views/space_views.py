@@ -1063,7 +1063,7 @@ def signup(request):
             user.moderator.save()
             mail.send(
                     [form.cleaned_data.get('email')], # List of email addresses also accepted
-                    'from@example.com',
+                    'noreply@atlasofinnovation.com',
                     subject='Activate Your Atlas Account',
                     message=render_to_string('account_activation_email.html', {
                         'user': user,
@@ -1103,7 +1103,6 @@ def password_reset(request):
     when it perform any change  o create a new space a email is send to correspondent moderator to validate the changes**'''
     if request.method == 'POST':
         form = MailResetPasswordForm(request.POST)
-        print("aqui")
         if form.is_valid():
             print("is valid")
             try:
@@ -1114,7 +1113,7 @@ def password_reset(request):
             if(user is not None):
                 mail.send(
                         [form.cleaned_data.get('email')], # List of email addresses also accepted
-                        'from@example.com',
+                        'noreply@atlasofinnovation.com',
                         subject='Reset your Atlas Password',
                         message=render_to_string('reset_password_email.html', {
                             'user': user,

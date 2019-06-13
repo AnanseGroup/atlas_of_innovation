@@ -92,6 +92,7 @@ DATABASES = {
         'PASSWORD': os.environ.get('RDS_PASSWORD'),
         'HOST': os.environ.get('RDS_HOSTNAME'),
         'PORT': os.environ.get('RDS_PORT'),
+        'CONN_MAX_AGE': 0,
     }
 }
 
@@ -153,7 +154,7 @@ STATIC_URL = '/static/'
 # EMAIL_HOST_USER = 'atlasofinnovation@gmail.com'
 # EMAIL_HOST_PASSWORD = '4tl4sofinnovation'
 # EMAIL_PORT = 587
-# POST_OFFICE = {
-#     'DEFAULT_PRIORITY': 'now'
-# }
+POST_OFFICE = {
+     'DEFAULT_PRIORITY': 'high'
+ }
 LOGOUT_REDIRECT_URL = '/'
