@@ -1065,7 +1065,6 @@ def signup(request):
                     [form.cleaned_data.get('email')], # List of email addresses also accepted
                     'noreply@atlasofinnovation.com',
                     subject='Activate Your Atlas Account',
-                    priority='now',
                     message=render_to_string('account_activation_email.html', {
                         'user': user,
                         'domain': djangoSettings.URL,
@@ -1116,7 +1115,6 @@ def password_reset(request):
                         [form.cleaned_data.get('email')], # List of email addresses also accepted
                         'noreply@atlasofinnovation.com',
                         subject='Reset your Atlas Password',
-                        priority='now',
                         message=render_to_string('reset_password_email.html', {
                             'user': user,
                             'domain': djangoSettings.URL,
