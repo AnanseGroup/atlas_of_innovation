@@ -49,9 +49,12 @@
 				<div style="width:100%">
 					<h2 id="wTitle">{{space.name}}</h2>
 					{% if space.website %}
-					<a id="wWebsite" href="{{space.website}}" target="_blank">{{space.website}}</a>
+          <a
+            target=_blank
+            href="http://{{space.website}}">
+            {{space.website}}</a>
 					{% else %}
-					<a id="wWebsite" href="{%url 'space_profile' space.id %}" target="_blank">
+					<a id="wWebsite" href="{%url 'space_profile' space.id %}">
 					Link to Atlas Profile</a>
 					{% endif %}
 					<blockquote style="border-left: 5px solid #00d4d2;margin:auto">
