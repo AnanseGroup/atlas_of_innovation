@@ -27,15 +27,15 @@ def hide_phone(value):
 @register.filter
 def get_provisional_sum(user):
     if user.is_superuser:
-        print('superuser')
+        
         return ProvisionalSpace.objects.count()
     if user.moderator.is_country_moderator:
-        print('is country moderator')
+       
         sum = ProvisionalSpace.objects.filter(country=user.moderator.country).count()
     else:
-        print('is province moderator')
+       
         sum = ProvisionalSpace.objects.filter(country=user.moderator.country,province=user.moderator.province).count()
-    print(sum)
+    
     return sum 
 
 @register.filter
@@ -61,7 +61,7 @@ def getattribute(value, arg):
     if hasattr(value, str(arg)):
        if value._meta.get_field(arg).get_internal_type()=='ManyToManyField':
          value=getattr(value,arg).first()
-         print(value)
+         
          if value is not None:
             return value.name 
          else:
@@ -89,15 +89,15 @@ def isAuthorized(user,space):
         return True
     
     if IsOwner(user.id,space.id):
-       print('IsOwner')
+       
        return True
     if(user.moderator.is_moderator):
             if  space.province is not None and space.province.lower() == user.moderator.province.lower():
-                    print('province moderator')
+                   # print('province moderator')
                     return True
     if  user.moderator.is_country_moderator:
             if(space.country == user.moderator.country):
-                    print('country moderator')
+                   # print('country moderator')
                     return True
     return False
 @register.filter

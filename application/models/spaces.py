@@ -124,10 +124,8 @@ def keep_track_save(sender, instance, created, **kwargs):
             space_info.append(instance.postal_code)
         space_stuff = " ".join(space_info).replace(",", "").replace("-","").replace(".","").replace("_","").replace("+","")
         space_string = ' '.join(space_stuff.split()).encode("raw_unicode_escape")
-        print(instance.fhash)
         new_hash=tlsh.forcehash(space_string)
         instance.fhash= new_hash
-        print(instance.fhash)
 
 post_save.connect(keep_track_save, sender=Space)
 class ProvisionalSpace(models.Model):

@@ -46,8 +46,7 @@ class Command(BaseCommand):
        moderator = None
       if moderator is None:
         moderator = Moderator.objects.create(user=Admin)
-    print(moderator)
-    print(Admin)
+    
    try:
     createTemplates()
    except:

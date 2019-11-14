@@ -45,7 +45,7 @@ def user_is_autorized_to_analize(function):
         if list(set(chain(request.user.user_permissions.filter(codename='analyse_provisional_spaces').values_list('codename', flat=True), Permission.objects.filter(group__user=request.user, codename='analyse_provisional_spaces').values_list('codename', flat=True)))):
             
             return function(request, *args, **kwargs)
-        print('no permission')
+        
         raise PermissionDenied
     wrap.__doc__ = function.__doc__
     wrap.__name__ = function.__name__
