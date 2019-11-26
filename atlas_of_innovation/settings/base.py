@@ -12,6 +12,10 @@ import os
 # To get booleans from strings
 from ast import literal_eval
 
+# To get booleans from strings
+from ast import literal_eval
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -31,7 +35,12 @@ INSTALLED_APPS = [
     'django_countries',
     'rest_framework',
     'captcha',
+    'post_office',
+    'django.contrib.sites',
 ]
+
+SITE_ID = 1
+
 
 MIDDLEWARE = [
     'application.middleware.CorsMiddleware',
@@ -83,6 +92,7 @@ DATABASES = {
         'PASSWORD': os.environ.get('RDS_PASSWORD'),
         'HOST': os.environ.get('RDS_HOSTNAME'),
         'PORT': os.environ.get('RDS_PORT'),
+        'CONN_MAX_AGE': 0,
     }
 }
 
@@ -122,11 +132,29 @@ USE_TZ = True
 TIME_ZONE = 'UTC'
 
 # ReCaptcha
+
 RECAPTCHA_PUBLIC_KEY = os.environ['RECAPTCHA_PUBLIC_KEY']
 RECAPTCHA_PRIVATE_KEY = os.environ['RECAPTCHA_PRIVATE_KEY']
 NOCAPTCHA = literal_eval(os.getenv('NO_CAPTCHA', 'True'))
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+#Set post_office.EmailBackend as your EMAIL_BACKEND
+
+
+# SESSION_COOKIE_AGE = 60 * 60 * 24 * 30
+# TEMPLATE_STRING_IF_INVALID="invalid field name"
+# EMAIL_BACKEND = 'post_office.EmailBackend'
+# #use gmailserver
+# EMAIL_USE_TLS = True
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST_USER = 'atlasofinnovation@gmail.com'
+# EMAIL_HOST_PASSWORD = '4tl4sofinnovation'
+# EMAIL_PORT = 587
+POST_OFFICE = {
+     'DEFAULT_PRIORITY': 'high'
+ }
+LOGOUT_REDIRECT_URL = '/'

@@ -1,5 +1,5 @@
 <html>
-<head>
+<!-- <head>
   <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville|Source+Sans+Pro:200,300,300i,400,600" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="/static/css/wikipage.css"/>
   <link rel="stylesheet" type="text/css" href="/static/css/stylesheet.css"/>
@@ -8,7 +8,8 @@
   <script src="/static/css/materialize/js/materialize.min.js"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-</head>
+</head> -->
+{% include "snippets/head.html" %}
     {% include "snippets/header.html" %}
     {% load app_filters %}
  <div class="wBlockHeader">
@@ -27,9 +28,24 @@
     <a href="/" id="wnavigation-bar-document-revision-button" class="navigation-bar-button">Revision</a>
 	</div>
 </div-->
-{% if not space.validated %}
+{% load app_filters %}
+<div class="row"> 
+   <a id="cardtitle" class="waves-effect waves-light btn" href="{% url 'list_spaces' %}?country={{space.country}}"><i class="material-icons left">arrow_back</i>Spaces list </a>
+{%if user.is_authenticated%}
+{%if   user|isAuthorized:space %}
+
+<a id="cardtitle" class="waves-effect waves-light btn" href="{% url 'space_suggestion' space.id %}"><i class="material-icons right">edit</i>Sugessted changes </a>
 <a id="cardtitle" class="waves-effect waves-light btn" href="{% url 'edit_space' space.id %}"><i class="material-icons right">edit</i>Edit</a>
-{% endif %}
+{%else%}
+<a id="cardtitle" class="waves-effect waves-light btn" href="{% url 'edit_space' space.id %}"><i class="material-icons right">edit</i>Suggest an edit</a>
+{%endif%}
+          
+        <a id="cardtitle" class="waves-effect waves-light btn" href="{%url 'show_data_credit' space.id %}"><i class="material-icons right">history</i>View History</a>
+
+          </div>
+
+{%endif%}
+
 
 <div class="container">
 	<div class="row">
@@ -119,6 +135,7 @@
           <p >{{space.date_closed}}</p>
           {% endif %}
         </div>
+       
         <div class="col m6">
           {% if space.business_model %}
           <h6>Access, Cost Structure, and/or Membership model</h6>
@@ -126,8 +143,58 @@
           {% endif %}
         </div>
       </div>
+   
+     <div class="col m6">
+      <div class="card hoverable  center-align">
+        <div class="card-content row ">
+          <span class="card-title text center-align" id="cardtitle">Owners</span>
+          <div >
+            {%if owners is not None%}
+              {%for owner in owners%}
+                <h8 class="center-align row" >{{owner.user.first_name}} {{owner.user.last_name}}</h8>
+                {%if user.is_authenticated and user|isAuthorized:space %}
+                <h8 class="right-align row">{{owner.user.email}}</h8>
+                {%if user.id|moderateThisSpace:space %}
+                 <a id="cardtitle" class="waves-effect waves-light btn" href="{% url 'remove_owner' space.id owner.user.id %}?next={{request.path}}"><i class="material-icons right">delete_forever</i>Remove owner </a>
+                 {%endif%}
+                 <br/>
+                {%endif%}
+              {%endfor%}
+            {%else%}
+                {%if user.is_authenticated%}
+                  <h8 class="center-align" >Are you the owner? to save your account as owner  click</h8>
+                  <form action="" method="post">{% csrf_token %}
+                  <input type="hidden" name="user_id" value="{{ user.id }}">
+                  <input class="btn  waves-light " type="submit" name="upvote" value="HERE" />
+                  </form>
+                {%else%}
+                  <h8 class="center-align" >Are you the owner? to save as owner </h8>
+                  <a href="{% url 'login'%}?next={{request.path}}">login</a>  or <a href="{% url 'signup' %}?next={{request.path}}">signup</a>
+                {%endif%}
+            {%endif%}
+            {%if user.is_authenticated%}
+             {%if  user.id|moderateThisSpace:space %}
+             
+              <p>
+              <a class="toggle" href="#example">Add owner</a>
+             </p>
+              <div class="toggle-content" id="example">
+              <form action="" method="post">{% csrf_token %}
+                  <p class = "blue-text text-darken-2"> The user email must be exist in the site</p>
+                  <input type="hidden" name="user_id" >
+                   <label >User Email:</label>
+                  <input type="email" name="user_email">
+                  <input class="btn  waves-light" type="submit" name="upvote" value="save Owner" />
+              </form>
+              </div>
+              {%endif%}
+              {%endif%}
+         </div>
+        </div>
+      </div>
+     </div>
     </div>
-
+   
     <div class="row">
     {% if space.users %}
     <div class="col m4">
@@ -259,8 +326,11 @@
           <br>
           <ul class="collection">
              {% for field, value in space.other_data.items %}
-                {% if value %}
+                {% if value  %}
+                  {%ifnotequal value "NULL"%}
                   <li class="collection-item"><p><strong>{{field}}:</strong> {{value}}</p></li>
+                 {% endifnotequal %}
+
                 {% endif %}
              {% endfor %}
            </ul>
@@ -278,3 +348,5 @@
 {% include "snippets/delete-space.html" %}
 </body>
 </html>
+
+  
