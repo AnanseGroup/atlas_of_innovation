@@ -24,7 +24,7 @@ def on_create(DataCreditLog,moderators):
 			email= moderator.user.email
 			
 			email = moderator.user.email
-			mail.send([email],'noreply@atlasofinnovation.com',template='oncreate_notification',context={'url':url,'name':name,},)
+			mail.send([email],'noreply@atlasofinnovation.com',headers={'Reply-to': 'anansegroup@gmail.com'},template='oncreate_notification',context={'url':url,'name':name,},)
 
 #mail sender, on space change
 def on_change(DataCreditLog,moderators):  
@@ -33,7 +33,7 @@ def on_change(DataCreditLog,moderators):
 	# print('send to')
 	# print(moderators)
 	if not moderators :
-		mail.send(['ana@parthenontech.com','shewaw1@gmail.com'],'noreply@atlasofinnovation.com',template='onchange_notification',context={'url':url,'name':'Admin',})
+		mail.send(['ana@parthenontech.com','shewaw1@gmail.com'],'noreply@atlasofinnovation.com',template='onchange_notification',headers={'Reply-to': 'anansegroup@gmail.com'},context={'url':url,'name':'Admin',})
 
 	else:
 	   for moderator  in moderators:
