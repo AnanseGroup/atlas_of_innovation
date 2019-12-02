@@ -33,7 +33,7 @@ class Command(BaseCommand):
     except:
       Admin= None
     if Admin is None:
-      User.objects.create_superuser(username='admin', password='173685', email='ana@parthenontech.com', is_staff=True, is_superuser=True)
+      User.objects.create_superuser(username='admin', password='', email='ana@parthenontech.com', is_staff=True, is_superuser=True)
       Admin= User.objects.get(username='admin')
       moderator = Moderator.objects.create(user=Admin)
     else :
